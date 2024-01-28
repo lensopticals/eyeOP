@@ -1,16 +1,16 @@
-import { ApiError } from "../utils/ApiError.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
-export const verifyJWT = asyncHandler(async (req, _, next) => {
+export const verifyJWT = async (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
 
     const token = authHeader?.split(" ")[1] || req.cookies?.accesstoken;
 
     if (!token) {
-      throw new ApiError(401, "Unauthorized request");
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized request" });
     }
 
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -21,22 +21,26 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     );
 
     if (!user) {
-      throw new ApiError(401, "Invalid Access Token !");
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized request" });
     }
 
     req.user = user;
     next();
   } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid access token");
+    return res
+      .status(401)
+      .json({ success: false, message: "Unauthorized request" });
   }
-});
+};
 
 export const authoriseRoles = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: `${req.user.role} is not allowed to access this resource!`,
+        message: `Permission denied for ${req.user.role}`,
       });
     }
     next();
