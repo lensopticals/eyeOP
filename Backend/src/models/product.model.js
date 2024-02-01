@@ -6,10 +6,14 @@ const productSchema = new Schema({
     type: String,
     required: [true, "Product name is required!"],
   },
-  images: {
-    type: Array,
-    required: [true, "Product images are required!"],
-  },
+  images: [
+    {
+      url: {
+        type: String,
+        required: [true, "Product images are required!"],
+      },
+    },
+  ],
   thumbNail: {
     type: String,
     required: [true, "Thumbnail image of product is required!"],
