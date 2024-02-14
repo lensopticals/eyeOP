@@ -24,7 +24,6 @@ router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/update-account").patch(verifyJWT, updateAccountDetails);
 
 // Admin ===>
-
 router
   .route("/admin/get-users")
   .get(verifyJWT, authoriseRoles("admin"), getAllUser);

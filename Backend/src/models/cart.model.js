@@ -1,8 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
-// Schema for cart items
-
-const cartItemSchema = new mongoose.Schema({
+// Define the Cart schema
+const cartSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
@@ -13,23 +17,9 @@ const cartItemSchema = new mongoose.Schema({
     required: true,
     min: 1,
   },
-  price: {
-    type: Number,
-    required: true,
-  },
-});
-
-// Define the Cart schema
-const cartSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  items: [cartItemSchema],
   total: {
     type: Number,
-    required: true,
+    required: false,
     default: 0,
   },
 });

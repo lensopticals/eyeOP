@@ -6,12 +6,15 @@ dotenv.config();
 
 const port = process.env.PORT || 4000;
 
+
+
 connectDB()
   .then(() => {
     // Listening for error
     app.on("error", (error) => {
       console.log("Error in server!! \n\n", error);
     });
+
     app.listen(port, () => {
       console.log(`Server ⚙️ running on Port ${port}`);
     });
