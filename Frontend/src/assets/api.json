@@ -1,0 +1,266 @@
+[
+    {
+        "name": "Product 1",
+        "modelNo": "M123",
+        "images": [
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-gold-pink-full-rim-geometric-ojos-oj-e15240-c2-eyeglasses_8_june_m_f_8282958_20_06_2023.jpg"
+            },
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-gold-pink-full-rim-geometric-ojos-oj-e15240-c2-eyeglasses_8_june_m_f282409_20_06_2023.jpg"
+            }
+        ],
+        "thumbNail": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/628x301/9df78eab33525d08d6e5fb8d27136e95//o/i/ojos-oj-e15240-c2-eyeglasses_g_9960_26_09_2022.jpg",
+        "description": "Product 1 description",
+        "rating": 4.5,
+        "price": 100,
+        "discountPercentage": 10,
+        "stock": 100,
+        "category": "Category 1",
+        "tag": "Tag 1",
+        "gender": "Men",
+        "frame": {
+            "material": "Acetate",
+            "color": "Black",
+            "shape": "Square",
+            "style": "Full-rim",
+            "size": "Medium",
+            "rimType": "Full-rim",
+            "width": 140,
+            "ageGroup": "Adult"
+        },
+        "brand": "Brand 1",
+        "seller": "Seller 1"
+    },
+    {
+        "name": "Product 2",
+        "modelNo": "M124",
+        "images": [
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-black-full-rim-round-ojos-oj-e14856-c3-eyeglasses_3_feb_ojos_m-f206893_200703_08_02_2023.jpg"
+            },
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-black-full-rim-round-ojos-oj-e14856-c3-eyeglasses_3_feb_ojos_m-f207211_200703_08_02_2023.jpg"
+            }
+        ],
+        "thumbNail": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/628x301/9df78eab33525d08d6e5fb8d27136e95//o/i/pink-transparent-black-full-rim-round-ojos21-oj-e14856-c3-eyeglasses_g_9668_22_04_2022.jpg",
+        "description": "Product 2 description",
+        "rating": 4.0,
+        "price": 120,
+        "discountPercentage": 5,
+        "stock": 50,
+        "category": "Category 2",
+        "tag": "Tag 2",
+        "gender": "Women",
+        "frame": {
+            "material": "Metal",
+            "color": "Silver",
+            "shape": "Round",
+            "style": "Semi-rim",
+            "size": "Medium",
+            "rimType": "Semi-rim",
+            "width": 135,
+            "ageGroup": "Adult"
+        },
+        "brand": "Brand 2",
+        "seller": "Seller 2"
+    },
+    {
+        "name": "Product 1",
+        "modelNo": "M123",
+        "images": [
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-gold-pink-full-rim-geometric-ojos-oj-e15240-c2-eyeglasses_8_june_m_f_8282958_20_06_2023.jpg"
+            },
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-gold-pink-full-rim-geometric-ojos-oj-e15240-c2-eyeglasses_8_june_m_f282409_20_06_2023.jpg"
+            }
+        ],
+        "thumbNail": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/628x301/9df78eab33525d08d6e5fb8d27136e95//o/i/ojos-oj-e15240-c2-eyeglasses_g_9960_26_09_2022.jpg",
+        "description": "Product 1 description",
+        "rating": 4.5,
+        "price": 100,
+        "discountPercentage": 10,
+        "stock": 100,
+        "category": "Category 1",
+        "tag": "Tag 1",
+        "gender": "Men",
+        "frame": {
+            "material": "Acetate",
+            "color": "Black",
+            "shape": "Square",
+            "style": "Full-rim",
+            "size": "Medium",
+            "rimType": "Full-rim",
+            "width": 140,
+            "ageGroup": "Adult"
+        },
+        "brand": "Brand 1",
+        "seller": "Seller 1"
+    },
+    {
+        "name": "Product 2",
+        "modelNo": "M124",
+        "images": [
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-black-full-rim-round-ojos-oj-e14856-c3-eyeglasses_3_feb_ojos_m-f206893_200703_08_02_2023.jpg"
+            },
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-black-full-rim-round-ojos-oj-e14856-c3-eyeglasses_3_feb_ojos_m-f207211_200703_08_02_2023.jpg"
+            }
+        ],
+        "thumbNail": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/628x301/9df78eab33525d08d6e5fb8d27136e95//o/i/pink-transparent-black-full-rim-round-ojos21-oj-e14856-c3-eyeglasses_g_9668_22_04_2022.jpg",
+        "description": "Product 2 description",
+        "rating": 4.0,
+        "price": 120,
+        "discountPercentage": 5,
+        "stock": 50,
+        "category": "Category 2",
+        "tag": "Tag 2",
+        "gender": "Women",
+        "frame": {
+            "material": "Metal",
+            "color": "Silver",
+            "shape": "Round",
+            "style": "Semi-rim",
+            "size": "Medium",
+            "rimType": "Semi-rim",
+            "width": 135,
+            "ageGroup": "Adult"
+        },
+        "brand": "Brand 2",
+        "seller": "Seller 2"
+    },
+    {
+        "name": "Product 1",
+        "modelNo": "M123",
+        "images": [
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-gold-pink-full-rim-geometric-ojos-oj-e15240-c2-eyeglasses_8_june_m_f_8282958_20_06_2023.jpg"
+            },
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-gold-pink-full-rim-geometric-ojos-oj-e15240-c2-eyeglasses_8_june_m_f282409_20_06_2023.jpg"
+            }
+        ],
+        "thumbNail": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/628x301/9df78eab33525d08d6e5fb8d27136e95//o/i/ojos-oj-e15240-c2-eyeglasses_g_9960_26_09_2022.jpg",
+        "description": "Product 1 description",
+        "rating": 4.5,
+        "price": 100,
+        "discountPercentage": 10,
+        "stock": 100,
+        "category": "Category 1",
+        "tag": "Tag 1",
+        "gender": "Men",
+        "frame": {
+            "material": "Acetate",
+            "color": "Black",
+            "shape": "Square",
+            "style": "Full-rim",
+            "size": "Medium",
+            "rimType": "Full-rim",
+            "width": 140,
+            "ageGroup": "Adult"
+        },
+        "brand": "Brand 1",
+        "seller": "Seller 1"
+    },
+    {
+        "name": "Product 2",
+        "modelNo": "M124",
+        "images": [
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-black-full-rim-round-ojos-oj-e14856-c3-eyeglasses_3_feb_ojos_m-f206893_200703_08_02_2023.jpg"
+            },
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-black-full-rim-round-ojos-oj-e14856-c3-eyeglasses_3_feb_ojos_m-f207211_200703_08_02_2023.jpg"
+            }
+        ],
+        "thumbNail": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/628x301/9df78eab33525d08d6e5fb8d27136e95//o/i/pink-transparent-black-full-rim-round-ojos21-oj-e14856-c3-eyeglasses_g_9668_22_04_2022.jpg",
+        "description": "Product 2 description",
+        "rating": 4.0,
+        "price": 120,
+        "discountPercentage": 5,
+        "stock": 50,
+        "category": "Category 2",
+        "tag": "Tag 2",
+        "gender": "Women",
+        "frame": {
+            "material": "Metal",
+            "color": "Silver",
+            "shape": "Round",
+            "style": "Semi-rim",
+            "size": "Medium",
+            "rimType": "Semi-rim",
+            "width": 135,
+            "ageGroup": "Adult"
+        },
+        "brand": "Brand 2",
+        "seller": "Seller 2"
+    },
+    {
+        "name": "Product 1",
+        "modelNo": "M123",
+        "images": [
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-gold-pink-full-rim-geometric-ojos-oj-e15240-c2-eyeglasses_8_june_m_f_8282958_20_06_2023.jpg"
+            },
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-gold-pink-full-rim-geometric-ojos-oj-e15240-c2-eyeglasses_8_june_m_f282409_20_06_2023.jpg"
+            }
+        ],
+        "thumbNail": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/628x301/9df78eab33525d08d6e5fb8d27136e95//o/i/ojos-oj-e15240-c2-eyeglasses_g_9960_26_09_2022.jpg",
+        "description": "Product 1 description",
+        "rating": 4.5,
+        "price": 100,
+        "discountPercentage": 10,
+        "stock": 100,
+        "category": "Category 1",
+        "tag": "Tag 1",
+        "gender": "Men",
+        "frame": {
+            "material": "Acetate",
+            "color": "Black",
+            "shape": "Square",
+            "style": "Full-rim",
+            "size": "Medium",
+            "rimType": "Full-rim",
+            "width": 140,
+            "ageGroup": "Adult"
+        },
+        "brand": "Brand 1",
+        "seller": "Seller 1"
+    },
+    {
+        "name": "Product 2",
+        "modelNo": "M124",
+        "images": [
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-black-full-rim-round-ojos-oj-e14856-c3-eyeglasses_3_feb_ojos_m-f206893_200703_08_02_2023.jpg"
+            },
+            {
+                "url": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/480x480/9df78eab33525d08d6e5fb8d27136e95//model/o/i/pink-transparent-black-full-rim-round-ojos-oj-e14856-c3-eyeglasses_3_feb_ojos_m-f207211_200703_08_02_2023.jpg"
+            }
+        ],
+        "thumbNail": "https://static5.lenskart.com/media/catalog/product/pro/1/thumbnail/628x301/9df78eab33525d08d6e5fb8d27136e95//o/i/pink-transparent-black-full-rim-round-ojos21-oj-e14856-c3-eyeglasses_g_9668_22_04_2022.jpg",
+        "description": "Product 2 description",
+        "rating": 4.0,
+        "price": 120,
+        "discountPercentage": 5,
+        "stock": 50,
+        "category": "Category 2",
+        "tag": "Tag 2",
+        "gender": "Women",
+        "frame": {
+            "material": "Metal",
+            "color": "Silver",
+            "shape": "Round",
+            "style": "Semi-rim",
+            "size": "Medium",
+            "rimType": "Semi-rim",
+            "width": 135,
+            "ageGroup": "Adult"
+        },
+        "brand": "Brand 2",
+        "seller": "Seller 2"
+    }
+]
