@@ -1,5 +1,5 @@
 import React from "react";
-import atcImage from "../Images/add-to-cart.png";
+import atcImage from "../assets/Images/add-to-cart.png";
 const ProductCard = ({ product }) => {
   return (
     <>
@@ -27,7 +27,9 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
         </div>
-        <div className="bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-green-100">Buy now</div>
+        <div className="bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-green-100">
+          Buy now
+        </div>
       </div>
     </>
   );

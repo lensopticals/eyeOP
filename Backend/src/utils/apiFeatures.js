@@ -12,6 +12,9 @@ class ApiFeatures {
               { description: { $regex: this.querystr.keyword, $options: "i" } },
               { category: { $regex: this.querystr.keyword, $options: "i" } },
               { tag: { $regex: this.querystr.keyword, $options: "i" } },
+              { brand: { $regex: this.querystr.keyword, $options: "i" } },
+              { 'frame.material': { $regex: this.querystr.keyword, $options: "i" } },
+              { 'frame.style': { $regex: this.querystr.keyword, $options: "i" } },
             ],
           }
         : {};
