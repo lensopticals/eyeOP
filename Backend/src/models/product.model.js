@@ -20,7 +20,7 @@ const productSchema = new Schema({
     },
   ],
  
-  thumbNail: {
+  thumbnail: {
     type: String,
     required: [true, "Thumbnail image of product is required!"],
   },
@@ -44,22 +44,32 @@ const productSchema = new Schema({
     default: 0,
   },
 
+  category: {
+    type: String,
+  },
+  
   stock: {
     type: Number,
     default: 1,
   },
-
-  category: {
+  
+  skuId:{
     type: String,
+    required: [true, "Stock Unit ID is required!"],
   },
 
-  tag: {
+  productType:{
     type: String,
+    required: [true, "Product type is required!"],
   },
 
   gender: {
     type: String,
-    enum: ['Men', 'Women', 'Unisex'],
+    enum: ['Men', 'Women', 'Unisex', 'kids'],
+  },
+  collection:{
+    type: String,
+    required: [true, "Collection is required!"],
   },
 
   frame: {
@@ -85,19 +95,21 @@ const productSchema = new Schema({
       enum: ['Extra Narrow','Narrow','Medium','Wide','Extra Wide'],
       required: [true, "Size of product is required!"],
     },
-    rimType: {
+    measurement:{
       type: String,
-      enum: ['Full-rim', 'Semi-rim', 'Rimless'],
-      required: [true, 'Frame rim-type is required'],
-    },
-    width:{
-      type: Number,
       required: [true, 'Frame width is required'],
     },
-    ageGroup: {
-      type: String,
-      required: [true, 'Frame age group is required'],
-    },
+  },
+
+  ageGroup: {
+    type: String,
+    enum: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
+    required: [true, 'Frame age group is required'],
+  },
+
+  weight:{
+    type: Number,
+    required: [true, 'Frame weight is required'],
   },
 
   brand: {
@@ -110,7 +122,10 @@ const productSchema = new Schema({
     required: [true, "Seller of product is required!"],
   },
 
+  tag: {
+    type: String,
+  },
+
 },{timestamps:true});
 
 export const Product = mongoose.model("product", productSchema);
-

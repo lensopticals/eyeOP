@@ -33,13 +33,11 @@ const generateAccessAndRefereshTokens = async (userId) => {
 
 const registerController = async (req, res, next) => {
   try {
-    const { name, email, phone, password } = req.body;
-
-    // Get THe details form the user
-    if ([name, email, password].some((field) => field?.trim() === "")) {
+    const { name, email, phone } = req.body;
+    if (!name || !phone) {
       return res
         .status(400)
-        .json({ success: fasle, message: "All fields are necessary" });
+        .json({ success: false, message: "All Fields are required" });
     }
 
     // Check for the existed user
@@ -51,7 +49,7 @@ const registerController = async (req, res, next) => {
     if (isExistingUser) {
       return res.status(409).json({
         success: false,
-        message: "User with this email already exists",
+        message: "User already exists",
       });
     }
 
@@ -74,7 +72,6 @@ const registerController = async (req, res, next) => {
       name,
       phone,
       email,
-      password,
       avatar: "",
     });
 
@@ -111,13 +108,67 @@ const registerController = async (req, res, next) => {
         message: "User Registered Successfully",
       });
   } catch (error) {
+    console.log("Errror: " + error);
     return res
       .status(500)
       .json({ success: false, message: "Something went wrong" });
   }
 };
 
-// User Login Controller =====>
+// Login with phone number
+
+const loginPhoneUser = async (req, res) => {
+  try {
+    const { phone } = req.body;
+
+    if (!phone) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All Fields are required" });
+    }
+
+    const user = await User.findOne({
+      phone,
+    });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Phone no. doesn't exists" });
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
+      user._id
+    );
+
+    const loggedInUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    );
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json({
+        success: true,
+        user: loggedInUser,
+        accessToken,
+        refreshToken,
+        message: "User logged In Successfully",
+      });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
+  }
+};
+
+// User Login email Controller =====>
 
 const loginUser = async (req, res) => {
   try {
@@ -171,6 +222,81 @@ const loginUser = async (req, res) => {
         refreshToken,
         message: "User logged In Successfully",
       });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
+  }
+};
+
+// Login With google account
+
+const googleAuth = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      const { accessToken, refreshToken } =
+        await generateAccessAndRefereshTokens(user._id);
+
+      const loggedInUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+      );
+
+      const options = {
+        httpOnly: true,
+        secure: true,
+      };
+
+      return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json({
+          success: true,
+          user: loggedInUser,
+          accessToken,
+          refreshToken,
+          message: "User logged In Successfully",
+        });
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const myCloud = await uploadOnCloudnary(req.body.avatar);
+
+      const newUser = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: generatedPassword,
+        avatar: myCloud.secure_url,
+        authType: "google",
+      });
+
+      await newUser.save();
+      const { accessToken, refreshToken } =
+        await generateAccessAndRefereshTokens(newUser._id);
+
+      const createdUser = await User.findById(newUser._id).select(
+        "-password -refreshToken"
+      );
+
+      const options = {
+        httpOnly: true,
+        secure: true,
+      };
+
+      return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json({
+          success: true,
+          user: createdUser,
+          accessToken,
+          refreshToken,
+          message: "User logged In Successfully",
+        });
+    }
   } catch (error) {
     return res
       .status(500)
@@ -374,4 +500,6 @@ export {
   refreshAccessToken,
   updateAccountDetails,
   getAllUser,
+  loginPhoneUser,
+  googleAuth,
 };

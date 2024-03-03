@@ -3,6 +3,8 @@ import {
   changeCurrentPassword,
   getAllUser,
   getCurrentUser,
+  googleAuth,
+  loginPhoneUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
@@ -15,6 +17,8 @@ const router = Router();
 
 router.route("/register").post(registerController);
 router.route("/login").post(loginUser);
+router.route("/login-phone").post(loginPhoneUser);
+router.route("/login-google").post(googleAuth);
 
 // secured routes
 router.route("/logout").post(verifyJWT, logoutUser);
