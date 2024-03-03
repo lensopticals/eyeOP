@@ -3,7 +3,7 @@ import { Product } from "../models/product.model.js";
 import { User } from "../models/user.model.js";
 
 // Route 1: Add to cart
-const atc = async (req, res) => {
+const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
     const userId = req.user._id;
@@ -18,9 +18,9 @@ const atc = async (req, res) => {
       res.status(404).json({ success: false, message: "Product is not found" });
     }
     const isCartProduct = await Cart.find({ product: productId, user: userId });
-    if (isCartProduct.length>0) {
+    if (isCartProduct.length > 0) {
       const updated = await Cart.findOneAndUpdate(
-        {product: productId, user: userId},
+        { product: productId, user: userId },
         {
           $set: {
             quantity: isCartProduct[0].quantity + quantity,
@@ -33,7 +33,6 @@ const atc = async (req, res) => {
       return res.status(201).json({
         success: true,
         message: "A existing cart is successfully created!",
-        updated,
       });
     } else {
       let newCart = await Cart.create({
@@ -42,14 +41,14 @@ const atc = async (req, res) => {
         quantity: quantity,
         // total: product.price * parseInt(quantity),
       });
-      
+
       if (!newCart) {
         return res
           .status(403)
           .json({ success: false, message: "Error in Adding Item in cart." });
       }
-      // newCart = await User.populate("user", "-password");
-      // newCart = await Product.populate("product",);
+      // TODO: ADD Aggrigation Pipeline
+
       res.status(201).json({
         success: true,
         message: "New Item Added To Cart successfully!",
@@ -184,11 +183,4 @@ const clearCart = async (req, res) => {
   }
 };
 
-export {
-    atc, 
-    removeCart, 
-    fetchCart, 
-    updateCart,
-    clearCart,
-
-}
+export { addToCart, removeCart, fetchCart, updateCart, clearCart };

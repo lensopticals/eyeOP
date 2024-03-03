@@ -3,10 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
-import cartRoutes from "./routes/cart.route.js";
+import cartRoutes from "./routes/cart.routes.js";
 
 // import orderRoutes from "./routes/order.routes.js";
-
 
 const app = express();
 

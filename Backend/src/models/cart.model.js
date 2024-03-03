@@ -5,21 +5,22 @@ const cartSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: [true, "User is required"],
   },
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
-    required: true,
+    required: [true, "Product is required"],
+    
   },
   quantity: {
     type: Number,
     required: true,
     min: 1,
   },
-  total: {
+  totalPrice: {
     type: Number,
-    required: false,
+    required: [true, "Total price is required"],
     default: 0,
   },
 });
