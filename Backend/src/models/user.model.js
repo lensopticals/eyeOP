@@ -5,14 +5,13 @@ const userSchema = new Schema(
   {
     email: {
       type: String,
-      required: [true, "Email is required"],
       unique: true,
       trim: true,
       lowercase: true,
+      default: "",
     },
     phone: {
-      type: Number,
-      required: [true, "Phone No. is required"],
+      type: String,
       unique: true,
     },
     name: {
@@ -21,7 +20,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      default: "",
     },
     avatar: {
       type: String,
@@ -33,6 +32,15 @@ const userSchema = new Schema(
       type: String,
       enum: ["user", "admin"],
       default: "user",
+    },
+    authType: {
+      type: String,
+      enum: ["phone", "google"],
+      default: "phone",
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

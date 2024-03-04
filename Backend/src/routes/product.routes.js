@@ -4,11 +4,10 @@ import { authoriseRoles, verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.route("/getproduct/:id").get(verifyJWT, getProduct);
-router.route("/fetchallproducts").get(verifyJWT, fetchallproducts);
-router.route("/addproduct").post(verifyJWT, authoriseRoles("user"), addProduct);
-router.route("/updateproduct/:id/").put(verifyJWT, authoriseRoles("user"), updateProduct);
-router.route("/deleteproduct/:id/").delete(verifyJWT, authoriseRoles("admin"), deleteProduct);
-
+router.route("/create-product/:id").get(verifyJWT, getProduct);
+router.route("/all-products").get(verifyJWT, fetchallproducts);
+router.route("/add-product").post(verifyJWT, authoriseRoles("admin"), addProduct);
+router.route("/update-product/:id").put(verifyJWT, authoriseRoles("admin"), updateProduct);
+router.route("/delete-product/:id").delete(verifyJWT, authoriseRoles("admin"), deleteProduct);
 
 export default router;

@@ -157,6 +157,8 @@ export const updateOrder = async (req, res) => {
   }
 };
 
+// Delete Order
+
 export const deleteOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);

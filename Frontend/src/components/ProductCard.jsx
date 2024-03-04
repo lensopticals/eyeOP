@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import heart from "../Images/heart.png";
-import heartRed from "../Images/heart-red.png";
+import heart from "../assets/Images/heart.png";
+import heartRed from "../assets/Images/heart-red.png";
+import atcImage from "../assets/Images/add-to-cart.png";
+
 const ProductCard = ({ product }) => {
   const [whiteList, setWhiteList] = useState(heart);
   const whiteClick = () => {
@@ -42,7 +44,7 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
         <div className="bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-green-100">
-          Add to cart
+          Add to cart Buy now
         </div>
       </div>
     </>

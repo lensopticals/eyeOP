@@ -33,52 +33,15 @@ const orderSchema = new Schema(
       enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
       default: "Pending",
     },
-
-    paymentInfo: {
-      paymentId: {
-        type: String,
-        required: true,
-      },
-      paymentMethod: {
-        type: String,
-        enum: ["credit_card", "UPI", "cash_on_delivery"],
-        required: true,
-      },
+    paymentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Payment",
+      required: true,
     },
     shippingInfo: {
-      name: {
-        type: String,
-        required: [true, "name of the address holder is required"],
-      },
-      email: {
-        type: String,
-        required: [true, "User Email is Required"],
-      },
-      address: {
-        type: String,
-        required: [true, "Address is Required"],
-      },
-      city: {
-        type: String,
-        required: [true, "City is Required"],
-      },
-      state: {
-        type: String,
-        required: [true, "State is Required"],
-      },
-      country: {
-        type: String,
-        default: "India",
-        required: [true, "country is Required"],
-      },
-      pincode: {
-        type: Number,
-        required: [true, "PinCode is Required"],
-      },
-      phone: {
-        type: Number,
-        required: [true, "Phone Number is Required"],
-      },
+      type: Schema.Types.ObjectId,
+      ref: "Address",
+      required: [true, "Shipping Information is Required"]
     },
   },
   { timestamps: true }
