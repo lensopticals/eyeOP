@@ -19,7 +19,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
     const refreshToken = await user.generateRefreshToken();
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-
+    console.log("Token saved successfully\n\n\n\n\n\n");
     return { accessToken, refreshToken };
   } catch (error) {
     return res.status().json({ success: false, message: "" })(
@@ -27,6 +27,18 @@ const generateAccessAndRefereshTokens = async (userId) => {
       "Something went wrong while generating referesh and access token"
     );
   }
+};
+
+const accessCookieOptions = {
+  httpOnly: true,
+  secure: true,
+  expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+};
+
+const refreshCookieOptions = {
+  httpOnly: true,
+  secure: true,
+  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 };
 
 // Register Controller
@@ -90,15 +102,10 @@ const registerController = async (req, res, next) => {
       });
     }
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-
     res
       .status(201)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, accessCookieOptions)
+      .cookie("refreshToken", refreshToken, refreshCookieOptions)
       .json({
         success: true,
         user,
@@ -145,15 +152,10 @@ const loginPhoneUser = async (req, res) => {
       "-password -refreshToken"
     );
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-
     return res
       .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, accessCookieOptions)
+      .cookie("refreshToken", refreshToken, refreshCookieOptions)
       .json({
         success: true,
         user: loggedInUser,
@@ -206,15 +208,10 @@ const loginUser = async (req, res) => {
       "-password -refreshToken"
     );
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-
     return res
       .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, accessCookieOptions)
+      .cookie("refreshToken", refreshToken, refreshCookieOptions)
       .json({
         success: true,
         user: loggedInUser,
@@ -242,15 +239,10 @@ const googleAuth = async (req, res) => {
         "-password -refreshToken"
       );
 
-      const options = {
-        httpOnly: true,
-        secure: true,
-      };
-
       return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
+        .cookie("accessToken", accessToken, accessCookieOptions)
+        .cookie("refreshToken", refreshToken, refreshCookieOptions)
         .json({
           success: true,
           user: loggedInUser,
@@ -280,15 +272,10 @@ const googleAuth = async (req, res) => {
         "-password -refreshToken"
       );
 
-      const options = {
-        httpOnly: true,
-        secure: true,
-      };
-
       return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
+        .cookie("accessToken", accessToken, accessCookieOptions)
+        .cookie("refreshToken", refreshToken, refreshCookieOptions)
         .json({
           success: true,
           user: createdUser,
@@ -298,6 +285,7 @@ const googleAuth = async (req, res) => {
         });
     }
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ success: false, message: "Something went wrong" });
@@ -309,7 +297,6 @@ const googleAuth = async (req, res) => {
 const refreshAccessToken = async (req, res) => {
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
-
   if (!incomingRefreshToken) {
     return res
       .status(401)
@@ -336,19 +323,14 @@ const refreshAccessToken = async (req, res) => {
         .json({ success: false, message: "Refresh token is expired or used" });
     }
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
       user._id
     );
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, accessCookieOptions)
+      .cookie("refreshToken", refreshToken, refreshCookieOptions)
       .json({
         success: true,
         accessToken,
@@ -367,21 +349,30 @@ const refreshAccessToken = async (req, res) => {
 
 const updateAccountDetails = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, phone, avatar } = req.body;
 
-    if (!name || !email) {
+    if (!name && !email && phone) {
       return res
         .status(400)
-        .json({ success: false, message: "All fields are required" });
+        .json({ success: false, message: "No values changed" });
     }
 
-    const user = await User.findByIdAndUpdate(
+    let user = await User.findById(req?.user._id);
+
+    const updateFields = {};
+    if (name && name !== user?.name) updateFields.name = name;
+    if (email && email !== user?.email) updateFields.email = email;
+    if (phone && phone !== user?.phone) updateFields.phone = phone;
+
+    if (avatar) {
+      const myCloud = await uploadOnCloudnary(avatar);
+      updateFields.avatar = myCloud.secure_url;
+    }
+
+    user = await User.findByIdAndUpdate(
       req.user?._id,
       {
-        $set: {
-          name,
-          email,
-        },
+        $set: updateFields,
       },
       { new: true }
     ).select("-password -refreshToken");
@@ -394,7 +385,35 @@ const updateAccountDetails = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ success: false, message: "Something went wrong" });
+      .json({ success: false, message: "failed to update account" });
+  }
+};
+
+// Verify Phone Number
+
+const verifyPhoneNumber = async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No phone number provided" });
+    }
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $set: { phone, isVerified: true },
+      },
+      { new: true }
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Phone Number Updated and verified",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to Verify Phone" });
   }
 };
 
@@ -403,22 +422,30 @@ const updateAccountDetails = async (req, res) => {
 const changeCurrentPassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
-
     const user = await User.findById(req.user?._id);
-    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+    if (user?.isPasswordSet) {
+      const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+      if (!isPasswordCorrect) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid Password" });
+      }
 
-    if (!isPasswordCorrect) {
+      user.password = newPassword;
+      await user.save({ validateBeforeSave: false });
+
       return res
-        .status(400)
-        .json({ success: false, message: "Invalid Password" });
+        .status(200)
+        .json({ success: true, message: "Password changed successfully" });
+    } else {
+      user.password = newPassword;
+      user.isPasswordSet = true;
+      await user.save({ validateBeforeSave: false });
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Password changed successfully" });
     }
-
-    user.password = newPassword;
-    await user.save({ validateBeforeSave: false });
-
-    return res
-      .status(200)
-      .json({ success: true, message: "Password changed successfully" });
   } catch (error) {
     return res
       .status(500)
@@ -502,4 +529,5 @@ export {
   getAllUser,
   loginPhoneUser,
   googleAuth,
+  verifyPhoneNumber,
 };

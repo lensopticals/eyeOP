@@ -78,8 +78,8 @@ const SignUp = () => {
         recaptchaVerifier
       );
       setOtpTime(30);
-      toast.success("OTP Sent Successfully");
       setUserData(confirmation);
+      toast.success("OTP Sent Successfully");
     } catch (error) {
       toast.error("Failed to send OTP");
       console.log("Failed to send OTP: ", error.code);
@@ -97,8 +97,8 @@ const SignUp = () => {
       const data = await userData.confirm(otp);
       setIsPhoneVerified(true);
       setShowPhoneLogin(false);
-      toast.success("OTP verified");
       setPhone(data.user.phoneNumber);
+      toast.success("OTP verified");
     } catch (error) {
       toast.error("Invalid Otp");
     }
