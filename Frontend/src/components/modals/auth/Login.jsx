@@ -13,6 +13,7 @@ import { auth } from "../../../utils/firebase.config";
 import { toast } from "react-toastify";
 import { userLogin, userLoginPhone } from "../../../redux/actions/userActions";
 import { clearErrors } from "../../../redux/features/userSlice";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 const Login = () => {
   const { loading, isAuthenticated, error } = useSelector(
@@ -90,15 +91,18 @@ const Login = () => {
   };
 
   const emailLoginHandler = (e) => {
+    setIsButtonDisabled(true);
     e.preventDefault();
     if (!email || !password) {
       toast.warning("Please enter email and password");
+      setIsButtonDisabled(false);
       return;
     }
 
     dispatch(userLogin({ email, password }));
     setEmail("");
     setPassword("");
+    setIsButtonDisabled(false);
   };
 
   const phoneLoginHandler = async (e) => {
@@ -239,7 +243,7 @@ const Login = () => {
                     <div className="flex items-center justify-center">
                       <button
                         onClick={otpHandler}
-                        className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-purple-600 focus:ring-4 focus:ring-purple-100 bg-purple-500"
+                        className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-slate-700 focus:ring-4 focus:ring-purple-100 bg-slate-600"
                       >
                         Get OTP
                       </button>
@@ -251,7 +255,7 @@ const Login = () => {
                       <button
                         disabled={otp.length < 6 || isButtonDisabled}
                         onClick={phoneLoginHandler}
-                        className="disabled:cursor-not-allowed disabled:bg-purple-300 px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-purple-600 focus:ring-4 focus:ring-purple-100 bg-purple-500"
+                        className="disabled:cursor-not-allowed disabled:bg-slate-500 px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-slate-700 focus:ring-4 focus:ring-slate-100 bg-slate-600"
                       >
                         Verify
                       </button>
@@ -301,13 +305,17 @@ const Login = () => {
                       className="flex items-center w-full px-5 py-4 mr-2 text-sm font-medium outline-none focus:bg-gray-200 placeholder:text-gray-500 bg-gray-100 text-gray-900 rounded-lg"
                     />
                     <button
-                      className="absolute inset-y-1/2 right-5 text-sm text-purple-600 font-bold"
+                      className="absolute inset-y-1/2 right-5 text-sm text-slate-600 font-bold"
                       onClick={(e) => {
                         e.preventDefault();
                         setShowPassword((prev) => !prev);
                       }}
                     >
-                      {showPassword ? "Hide" : "Show"}
+                      {showPassword ? (
+                        <BsEyeSlash className="text-xl" />
+                      ) : (
+                        <BsEye className="text-xl" />
+                      )}
                     </button>
                   </div>
                   <div className="flex items-center mt-4 justify-center">
@@ -321,7 +329,8 @@ const Login = () => {
                   <div className="flex items-center my-4 justify-center">
                     <button
                       onClick={emailLoginHandler}
-                      className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-purple-600 focus:ring-4 focus:ring-purple-100 bg-purple-500"
+                      disabled={isButtonDisabled}
+                      className="px-10 py-3 disabled:cursor-not-allowed disabled:bg-slate-500 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-slate-700 focus:ring-4 focus:ring-slate-200 bg-slate-600"
                     >
                       Sign In
                     </button>
@@ -329,11 +338,11 @@ const Login = () => {
                 </div>
               )}
 
-              <p className="text-sm leading-relaxed text-center text-gray-900">
+              <p className="text-sm leading-relaxed text-center text-slate-500">
                 Not registered yet?{" "}
                 <p
                   onClick={() => dispatch(openAuthModal("signup"))}
-                  className="font-bold cursor-pointer text-purple-700"
+                  className="font-bold cursor-pointer text-slate-800"
                 >
                   Create an Account
                 </p>

@@ -3,19 +3,20 @@ import {
   googleAuth,
   loadUser,
   logoutUser,
+  updatePassword,
+  updateProfile,
   userLogin,
   userLoginPhone,
   userSignup,
+  verifyPhone,
 } from "../actions/userActions";
 
 export const userReducer = createSlice({
   name: "user",
   initialState: {
     user: {},
-    token: localStorage.getItem("token") || null,
     loading: false,
     error: null,
-
     isAuthenticated: false,
     message: "",
   },
@@ -107,3 +108,61 @@ export const userReducer = createSlice({
 });
 
 export const { clearErrors } = userReducer.actions;
+
+export const updateProfileReducer = createSlice({
+  name: "updateProfile",
+  initialState: {
+    loading: true,
+    isUpdated: false,
+    error: null,
+  },
+  reducers: {
+    updateUserReset: (state) => {
+      state.loading = false;
+      state.isUpdated = false;
+    },
+    clearProfileErrors: (state) => {
+      state.error = null;
+      state.loading = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isUpdated = action.payload;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updatePassword.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(updatePassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isUpdated = action.payload;
+      })
+      .addCase(updatePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(verifyPhone.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(verifyPhone.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isUpdated = action.payload;
+      })
+      .addCase(verifyPhone.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export const { updateUserReset, clearProfileErrors } =
+  updateProfileReducer.actions;
