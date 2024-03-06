@@ -105,19 +105,50 @@ export const googleAuth = createAsyncThunk(
 // Update User Profile
 export const updateProfile = createAsyncThunk(
   "user/updateProfile",
-  async ({ name, avatar, email }, { rejectWithValue }) => {
+  async ({ name, avatar, email, phone }, { rejectWithValue }) => {
     try {
       const config = {
-        headers: { "Content-type": "multipart/form-data" },
+        headers: { "Content-type": "application/json" },
       };
       const { data } = await API.patch(
         "/user/update-account",
-        { name, avatar, email },
+        { name, avatar, email, phone },
         config
       );
-      return data.success;
+      if (data?.success) {
+        toast.success(data.message);
+        return data.success;
+      }
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message);
+      return rejectWithValue(
+        error.response?.data?.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
+// Verify Phone Number
+
+export const verifyPhone = createAsyncThunk(
+  "user/verifyPhone",
+  async ({ phone }, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: { "Content-type": "application/json" },
+      };
+      const { data } = await API.post("/user/verify-phone", { phone }, config);
+      if (data?.success) {
+        toast.success(data.message);
+        return data.success;
+      }
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message
+          ? error.response.data.message
+          : error.message
+      );
     }
   }
 );
@@ -130,7 +161,6 @@ export const loadUser = createAsyncThunk(
       const { data } = await API.get("/user/current-user");
       return data;
     } catch (error) {
-      localStorage.clear();
       return rejectWithValue(error.response?.data?.message);
     }
   }
@@ -149,6 +179,48 @@ export const logoutUser = createAsyncThunk(
     } catch (error) {
       localStorage.clear();
       return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+// Refersh accessToken
+
+export const refreshToken = createAsyncThunk(
+  "user/refreshToken",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await API.post("/user/refresh-token");
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message);
+    }
+  }
+);
+
+// Update Password
+
+export const updatePassword = createAsyncThunk(
+  "user/updatePassword",
+  async ({ oldPassword, newPassword }, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: { "Content-type": "application/json" },
+      };
+      const { data } = await API.post(
+        "/user/update-password",
+        { oldPassword, newPassword },
+        config
+      );
+      if (data?.success) {
+        toast.success(data.message);
+        return data.success;
+      }
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message
+          ? error.response.data.message
+          : error.message
+      );
     }
   }
 );

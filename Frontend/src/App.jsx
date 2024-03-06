@@ -1,5 +1,5 @@
 import Layout from "./Layout";
-import ProfilePage from "./Pages/ProfilePage";
+import ProfilePage from "./Pages/User/ProfilePage";
 import ProductCard from "./components/ProductCard";
 import ProductsPage from "./components/ProductsPage";
 import { ToastContainer } from "react-toastify";
@@ -14,6 +14,8 @@ import ProtectedRoutes from "./components/Routes/ProtectedRoutes";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loadUser } from "./redux/actions/userActions";
+import EditProfile from "./Pages/User/EditProfile";
+import ProductByCategory from "./Pages/Product/ProductByCategory";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -32,6 +34,15 @@ function App() {
             </ProtectedRoutes>
           }
         ></Route>
+        <Route
+          path="profile/edit"
+          element={
+            <ProtectedRoutes>
+              <EditProfile />
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route path="/shop/:category" element={<ProductByCategory />} />
       </Route>
     )
   );

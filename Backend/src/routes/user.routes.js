@@ -10,6 +10,7 @@ import {
   refreshAccessToken,
   registerController,
   updateAccountDetails,
+  verifyPhoneNumber,
 } from "../controllers/user.controller.js";
 import { authoriseRoles, verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -23,10 +24,10 @@ router.route("/login-google").post(googleAuth);
 // secured routes
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
-router.route("/change-password").post(verifyJWT, changeCurrentPassword);
+router.route("/update-password").post(verifyJWT, changeCurrentPassword);
 router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/update-account").patch(verifyJWT, updateAccountDetails);
-
+router.route("/verify-phone").post(verifyJWT, verifyPhoneNumber);
 // Admin ===>
 router
   .route("/admin/get-users")
