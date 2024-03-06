@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import heart from "../assets/Images/heart.png";
+import heartRed from "../assets/Images/heart-red.png";
 import atcImage from "../assets/Images/add-to-cart.png";
+
 const ProductCard = ({ product }) => {
+  const [whiteList, setWhiteList] = useState(heart);
+  const whiteClick = () => {
+    if (whiteList == heart) {
+      setWhiteList(heartRed);
+    } else {
+      setWhiteList(heart);
+    }
+  };
   return (
     <>
       <div className="m-2 bg-gray-100 w-[20vw] h-[50vh] p-2 rounded-xl">
@@ -12,7 +23,12 @@ const ProductCard = ({ product }) => {
         <div className="specs m-2">
           <div className="flex">
             <h3 className="text-lg">{product.name}</h3>
-            <img src={atcImage} alt="#" className="w-5 h-5 ml-auto" />
+            <img
+              src={whiteList}
+              alt="#"
+              className="w-5 h-5 ml-auto hover:w-6 hover:h-6"
+              onClick={whiteClick}
+            />
           </div>
           <p className="font-thin mt-1 text-sm">Size: Medium</p>
           <div className="flex mt-1">
@@ -27,8 +43,8 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
         </div>
-        <div className="bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-green-100">
-          Buy now
+        <div className="bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-slate-300">
+          Add to cart
         </div>
       </div>
     </>
