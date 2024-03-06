@@ -43,8 +43,8 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
         </div>
-        <div className="bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-green-100">
-          Add to cart Buy now
+        <div className="bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-slate-300">
+          Add to cart
         </div>
       </div>
     </>

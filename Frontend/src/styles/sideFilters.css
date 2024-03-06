@@ -1,0 +1,47 @@
+.text {
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 3px;
+}
+
+.box {
+    width: 70px;
+    border: 1px solid black;
+    padding-top: 8px;
+    height: 52px;
+}
+.boxImage {
+    width: 40px;
+    margin: auto;
+}
+
+.colors p{
+    margin-left: 5px;
+}
+.circle {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: black;
+    margin: 7px;
+}
+.colors div {
+    margin-left: 1rem;
+    display: flex;
+}
+
+.material div {
+    margin-left: 1rem;
+    display: flex;
+}
+.material p {
+    margin-left: 10px;
+}
+
+.collections div {
+    margin-left: 1rem;
+    display: flex;
+}
+.collections p {
+    margin-left: 10px;
+}
