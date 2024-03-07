@@ -1,0 +1,43 @@
+.filter img {
+    position: relative;
+    top: 2px;
+    width: 1.2rem !important;
+    height: 1.3rem !important;
+}
+.sort img {
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+}
+
+.bottom-bar {
+    display: none !important;
+}
+
+@media (max-width: 630px) {
+    .bottom-bar {
+        display: flex !important;
+    }
+    .sideBar {
+        display: none;
+    }
+    .products {
+        /* width: 100vw !important;  */
+    }
+    .product {
+        width: 12rem !important;
+    }
+
+    .productName {
+        font-size: 1rem !important;
+    }
+    .price {
+        font-size: 0.8rem !important;
+    }
+    .size {
+        font-size: 0.8rem !important;
+    }
+    .atc {
+        font-size: 0.8rem !important;
+    }
+}
+

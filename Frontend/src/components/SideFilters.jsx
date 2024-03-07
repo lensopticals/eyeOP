@@ -3,7 +3,7 @@ import "../styles/sideFilters.css";
 const SideFilters = () => {
   return (
     <>
-      <div className="sideBar w-[24vw] bg-slate-100 py-2">
+      <div className="sideBar w-[22rem] bg-slate-100 py-2">
         <div className="gender m-2 flex gap-6">
           <div className="male border border-black px-2 w-[4rem]">
             <img
@@ -179,7 +179,7 @@ const SideFilters = () => {
           </div>
           <div>
             <input type="checkbox" name="color" id="color" />
-            <span className="circle bg-gray-100"></span>
+            <span className="circle bg-white"></span>
             <p>White</p>
           </div>
           <div>
