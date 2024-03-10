@@ -1,9 +1,9 @@
 import React from "react";
 import "../styles/sideFilters.css";
-const SideFilters = () => {
+const SideFilters = ({width, clas}) => {
   return (
     <>
-      <div className="sideBar w-[22rem] bg-slate-100 py-2">
+      <div className={`${clas} bg-slate-100 py-2`} style={{width: width}}>
         <div className="gender m-2 flex gap-6">
           <div className="male border border-black px-2 w-[4rem]">
             <img
