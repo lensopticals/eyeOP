@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { loadUser } from "./redux/actions/userActions";
 import EditProfile from "./Pages/User/EditProfile";
 import ProductByCategory from "./Pages/Product/ProductByCategory";
+import Navbar from "./components/Navbar";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -51,6 +52,7 @@ function App() {
           }
         ></Route>
         <Route path="/shop/:category" element={<ProductByCategory />} />
+        <Route path="/allProducts/:id" element={<ProductDetails />} />
       </Route>
     )
   );
