@@ -21,7 +21,8 @@
         display: none;
     }
     .products {
-        /* width: 100vw !important;  */
+        height: auto !important;
+        /* grid-template-columns: 1 !important; */
     }
     .product {
         width: 12rem !important;

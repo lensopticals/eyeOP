@@ -16,7 +16,6 @@ const Layout = () => {
       {isOpen && type === "signup" && <SignUp />}
       {isOpen && type === "password" && <UpdatePassword />}
       {isOpen && type === "phone" && <UpdatePhone />}
-
       <Outlet />
       <Footer />
     </>
