@@ -16,8 +16,6 @@ import { useDispatch } from "react-redux";
 import { loadUser } from "./redux/actions/userActions";
 import EditProfile from "./Pages/User/EditProfile";
 import ProductByCategory from "./Pages/Product/ProductByCategory";
-import HomePage from "./Pages/HomePage";
-import UserDashboard from "./Pages/User/UserDashboard";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,8 +24,8 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Layout />}>
-        <Route path="shop" element={<ProductsPage />}></Route>
-        <Route path="" element={<HomePage />} />
+        <Route path="" element={<ProductsPage />}></Route>
+
         <Route
           path="my/profile"
           element={
