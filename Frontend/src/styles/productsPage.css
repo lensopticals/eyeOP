@@ -13,6 +13,10 @@
     display: none !important;
 }
 
+.heart {
+
+}
+
 @media (max-width: 630px) {
     .bottom-bar {
         display: flex !important;
@@ -22,7 +26,13 @@
     }
     .products {
         height: auto !important;
-        /* grid-template-columns: 1 !important; */
+        grid-template-columns: 1 !important;
+        margin-right: 2rem;
+    }
+    .heart {
+        margin-right: 0px !important;
+        width: 1rem !important;
+        height: 1rem !important;
     }
     .product {
         width: 12rem !important;

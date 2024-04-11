@@ -130,7 +130,6 @@ export const updateProfile = createAsyncThunk(
 );
 
 // Verify Phone Number
-
 export const verifyPhone = createAsyncThunk(
   "user/verifyPhone",
   async ({ phone }, { rejectWithValue }) => {
@@ -198,7 +197,6 @@ export const refreshToken = createAsyncThunk(
 );
 
 // Update Password
-
 export const updatePassword = createAsyncThunk(
   "user/updatePassword",
   async ({ oldPassword, newPassword }, { rejectWithValue }) => {

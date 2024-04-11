@@ -1,131 +1,131 @@
 import mongoose, { Schema } from "mongoose";
 
-const productSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "Product name is required!"],
-  },
-
-  modelNo:{
-    type: String,
-    required: [true, "Model number is required!"],
-  },
-
-  images: [
-    {
-        url:{
-          type: String,
-          required: [true, "Product images are required!"],
-        }
-    },
-  ],
- 
-  thumbnail: {
-    type: String,
-    required: [true, "Thumbnail image of product is required!"],
-  },
-
-  description: {
-    type: String,
-  },
-
-  rating: {
-    type: Number,
-    default: 0,
-  },
-
-  price: {
-    type: Number,
-    required: [true, "Product price is required!"],
-  },
-
-  discountPercentage: {
-    type: Number,
-    default: 0,
-  },
-
-  category: {
-    type: String,
-  },
-  
-  stock: {
-    type: Number,
-    default: 1,
-  },
-  
-  skuId:{
-    type: String,
-    required: [true, "Stock Unit ID is required!"],
-  },
-
-  productType:{
-    type: String,
-    required: [true, "Product type is required!"],
-  },
-
-  gender: {
-    type: String,
-    enum: ['Men', 'Women', 'Unisex', 'kids'],
-  },
-  collection:{
-    type: String,
-    required: [true, "Collection is required!"],
-  },
-
-  frame: {
-    material: {
+const productSchema = new Schema(
+  {
+    name: {
       type: String,
-      enum: ['Acetate', 'Metal', 'TR90', 'Other'],
-      required: [true, 'Frame material is required'],
+      required: [true, "Product name is required!"],
     },
-    color: {
+
+    modelNo: {
       type: String,
-      required: [true, 'Frame color is required'],
+      required: [true, "Model number is required!"],
     },
-    shape:{
+
+    images: [
+      {
+        type: String,
+        required: [true, "Product images are required!"],
+      },
+    ],
+
+    thumbnail: {
       type: String,
-      required: [true, 'Frame shape is required'],
+      required: [true, "Thumbnail image of product is required!"],
     },
-    style:{
+
+    description: {
       type: String,
-      required: [true, 'Frame style is required'],
     },
-    size:{
+
+    rating: {
+      type: Number,
+      default: 0,
+    },
+
+    price: {
+      type: Number,
+      required: [true, "Product price is required!"],
+    },
+
+    discountPercentage: {
+      type: Number,
+      default: 0,
+    },
+
+    category: {
       type: String,
-      enum: ['Extra Narrow','Narrow','Medium','Wide','Extra Wide'],
-      required: [true, "Size of product is required!"],
     },
-    measurement:{
+
+    stock: {
+      type: Number,
+      default: 1,
+    },
+
+    skuId: {
       type: String,
-      required: [true, 'Frame width is required'],
+      required: [true, "Stock Unit ID is required!"],
+    },
+
+    productType: {
+      type: String,
+      required: [true, "Product type is required!"],
+    },
+
+    gender: {
+      type: String,
+      enum: ["Men", "Women", "Unisex", "kids"],
+    },
+    collection: {
+      type: String,
+      required: [true, "Collection is required!"],
+    },
+
+    frame: {
+      material: {
+        type: String,
+        enum: ["Acetate", "Metal", "TR90", "Other"],
+        required: [true, "Frame material is required"],
+      },
+      color: {
+        type: String,
+        required: [true, "Frame color is required"],
+      },
+      shape: {
+        type: String,
+        required: [true, "Frame shape is required"],
+      },
+      style: {
+        type: String,
+        required: [true, "Frame style is required"],
+      },
+      size: {
+        type: String,
+        enum: ["Extra Narrow", "Narrow", "Medium", "Wide", "Extra Wide"],
+        required: [true, "Size of product is required!"],
+      },
+      measurement: {
+        type: String,
+        required: [true, "Frame width is required"],
+      },
+    },
+
+    ageGroup: {
+      type: String,
+      enum: ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
+      required: [true, "Frame age group is required"],
+    },
+
+    weight: {
+      type: Number,
+      required: [true, "Frame weight is required"],
+    },
+
+    brand: {
+      type: String,
+      required: [true, "Brand of product is required!"],
+    },
+
+    seller: {
+      type: String,
+      required: [true, "Seller of product is required!"],
+    },
+
+    tag: {
+      type: String,
     },
   },
-
-  ageGroup: {
-    type: String,
-    enum: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
-    required: [true, 'Frame age group is required'],
-  },
-
-  weight:{
-    type: Number,
-    required: [true, 'Frame weight is required'],
-  },
-
-  brand: {
-    type: String,
-    required: [true, "Brand of product is required!"],
-  },
-
-  seller: {
-    type: String,
-    required: [true, "Seller of product is required!"],
-  },
-
-  tag: {
-    type: String,
-  },
-
-},{timestamps:true});
+  { timestamps: true }
+);
 
 export const Product = mongoose.model("product", productSchema);
