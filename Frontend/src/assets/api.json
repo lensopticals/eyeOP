@@ -1,5 +1,6 @@
 [
-    {
+    {   
+        "_id": "123",
         "name": "Product 1",
         "modelNo": "M123",
         "images": [
@@ -33,6 +34,7 @@
         "seller": "Seller 1"
     },
     {
+        "_id": "113",
         "name": "Product 2",
         "modelNo": "M124",
         "images": [
