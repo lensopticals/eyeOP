@@ -4,11 +4,8 @@ import jwt from "jsonwebtoken";
 
 // TODOS =====>
 
-// TODO: Login/signup with google
 // TODO: Forgot password controller
 // TODO: Verify Email
-// TODO: verify phone number with OTP
-// TODO: Login with phone number and OTP
 
 // Generating the refresh And THe access token ====>
 
@@ -19,7 +16,6 @@ const generateAccessAndRefereshTokens = async (userId) => {
     const refreshToken = await user.generateRefreshToken();
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-    console.log("Token saved successfully\n\n\n\n\n\n");
     return { accessToken, refreshToken };
   } catch (error) {
     return res.status().json({ success: false, message: "" })(

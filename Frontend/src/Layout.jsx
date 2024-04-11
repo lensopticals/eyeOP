@@ -7,6 +7,7 @@ import SignUp from "./components/modals/auth/SignUp";
 import { useSelector } from "react-redux";
 import UpdatePassword from "./components/modals/auth/UpdatePassword";
 import UpdatePhone from "./components/modals/auth/UpdatePhone";
+import UpdateEmail from "./components/modals/auth/UpdateEmail";
 const Layout = () => {
   const { isOpen, type } = useSelector((state) => state.authModal);
   return (
@@ -16,6 +17,7 @@ const Layout = () => {
       {isOpen && type === "signup" && <SignUp />}
       {isOpen && type === "password" && <UpdatePassword />}
       {isOpen && type === "phone" && <UpdatePhone />}
+      {isOpen && type === "email" && <UpdateEmail />}
 
       <Outlet />
       <Footer />
