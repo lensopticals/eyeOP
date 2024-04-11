@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import heart from "../assets/Images/heart.png";
 import heartRed from "../assets/Images/heart-red.png";
 import atcImage from "../assets/Images/add-to-cart.png";
+import { useNavigate } from 'react-router-dom';
+// import { getProduct } from "../redux/actions/productActions";
 
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
   const [whiteList, setWhiteList] = useState(heart);
   const whiteClick = () => {
     if (whiteList == heart) {
@@ -12,6 +15,16 @@ const ProductCard = ({ product }) => {
       setWhiteList(heart);
     }
   };
+
+  const atcClick = () => {
+    console.log("atc");
+  }
+
+  const productClick = () => {
+    // getProduct(product._id);
+    navigate(`/allProducts/${product._id}`);
+  }
+
   return (
     <>
       <div className="product m-2 bg-gray-100 w-[20vw] p-2 rounded-xl pb-2">
@@ -19,6 +32,7 @@ const ProductCard = ({ product }) => {
           src={product.thumbNail}
           alt="#"
           className="thumbNail rounded-xl"
+          onClick={productClick}
         />
         <div className="specs m-2">
           <div className="flex">
@@ -26,7 +40,7 @@ const ProductCard = ({ product }) => {
             <img
               src={whiteList}
               alt="#"
-              className="w-5 h-5 ml-auto hover:w-6 hover:h-6 md:w-4 md:h-4 md:hover:w-5 md:hover:h-5 sm:w-3 sm:h-3 sm:hover:w-4 sm:hover:h-4"
+              className="w-5 h-5 ml-auto mr-1 md:w-4 md:h-4 sm:w-3 sm:h-3 heart"
               onClick={whiteClick}
             />
           </div>
@@ -43,7 +57,7 @@ const ProductCard = ({ product }) => {
             </div> */}
           </div>
         </div>
-        <div className="atc bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-slate-300 md:text-sm sm:text-xs">
+        <div className="atc bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-slate-300 md:text-sm sm:text-xs" onClick={atcClick}>
           Add to cart
         </div>
       </div>
