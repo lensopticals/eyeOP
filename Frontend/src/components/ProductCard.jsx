@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import heart from "../assets/Images/heart.png";
 import heartRed from "../assets/Images/heart-red.png";
 import atcImage from "../assets/Images/add-to-cart.png";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 // import { getProduct } from "../redux/actions/productActions";
 
 const ProductCard = ({ product }) => {
@@ -16,14 +16,10 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const atcClick = () => {
-    console.log("atc");
-  }
-
   const productClick = () => {
     // getProduct(product._id);
-    navigate(`/allProducts/${product._id}`);
-  }
+    navigate(`/product/${product._id}`);
+  };
 
   return (
     <>
@@ -36,7 +32,9 @@ const ProductCard = ({ product }) => {
         />
         <div className="specs m-2">
           <div className="flex">
-            <h3 className="productName text-lg md:text-base sm:text-sm">{product.name}</h3>
+            <h3 className="productName text-lg md:text-base sm:text-sm">
+              {product.name}
+            </h3>
             <img
               src={whiteList}
               alt="#"
@@ -44,9 +42,13 @@ const ProductCard = ({ product }) => {
               onClick={whiteClick}
             />
           </div>
-          <p className="size font-thin mt-1 text-sm md:text-xs sm:text-[10px]">Size: Medium</p>
+          <p className="size font-thin mt-1 text-sm md:text-xs sm:text-[10px]">
+            Size: Medium
+          </p>
           <div className="flex mt-1">
-            <h4 className="price text-slate-700 font-semibold md:text-sm sm:text-xs">${product.price}</h4>
+            <h4 className="price text-slate-700 font-semibold md:text-sm sm:text-xs">
+              ${product.price}
+            </h4>
             {/* <div className="colors ml-auto flex">
               <div className="border border-gray-400 rounded-full p-1">
                 <span className="bg-slate-800 rounded-full w-4 h-4 flex items-center justify-center"></span>
@@ -57,7 +59,7 @@ const ProductCard = ({ product }) => {
             </div> */}
           </div>
         </div>
-        <div className="atc bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-slate-300 md:text-sm sm:text-xs" onClick={atcClick}>
+        <div className="atc bg-slate-200 p-1 mt-4 rounded-lg text-center text-black hover:bg-slate-300 md:text-sm sm:text-xs">
           Add to cart
         </div>
       </div>

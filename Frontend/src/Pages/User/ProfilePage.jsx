@@ -48,12 +48,33 @@ const ProfilePage = () => {
                 </div>
                 <div className="card-item">
                   <h4 className="font-bold text-lg text-gray-900">Email</h4>
-                  <p className="text-gray-600 text-md">{user?.email}</p>
+                  <p className="text-gray-600 text-md">
+                    {user?.email || "No Email Provided"}
+                  </p>
+                  {user?.isVerified && user?.authType === "phone" ? (
+                    <p className="font-semibold  flex items-center justify-start text-green-700">
+                      Verified
+                      <IoIosCheckmarkCircleOutline className="text-xl ml-1" />
+                    </p>
+                  ) : (
+                    <>
+                      <p className="text-red-600 mb-2 flex items-end text-md">
+                        Action Needed{" "}
+                        <MdOutlineInfo className="text-red-600 text-xl" />
+                      </p>
+                      <p
+                        onClick={() => dispatch(openAuthModal("phone"))}
+                        className="text-gray-50 cursor-pointer w-24 text-center bg-slate-700 px-4 py-1"
+                      >
+                        Verify
+                      </p>
+                    </>
+                  )}
                 </div>
                 <div className="card-item">
                   <h4 className="font-bold text-lg text-gray-900">Phone</h4>
                   <p className="text-gray-600 mb-1 text-md">{user?.phone}</p>
-                  {user?.isVerified ? (
+                  {user?.isVerified || user?.authType === "phone" ? (
                     <p className="font-semibold  flex items-center justify-start text-green-700">
                       Verified
                       <IoIosCheckmarkCircleOutline className="text-xl ml-1" />
@@ -94,7 +115,7 @@ const ProfilePage = () => {
                         onClick={() => dispatch(openAuthModal("password"))}
                         className="text-blue-800 text-md cursor-pointer underline"
                       >
-                        Update password ?
+                        Update password
                       </p>
                     </div>
                     <div>
@@ -105,20 +126,26 @@ const ProfilePage = () => {
                         onClick={() => dispatch(openAuthModal("address"))}
                         className="text-blue-800 text-md cursor-pointer underline"
                       >
-                        Update address?
+                        Update address
                       </p>
                     </div>
 
                     {/* Update Phone No */}
                     <div>
                       <p className="text-gray-700 text-lg font-semibold">
-                        Change your phone number
+                        Update your phone / Email
                       </p>
                       <p
                         onClick={() => dispatch(openAuthModal("phone"))}
                         className="text-blue-800 text-md cursor-pointer underline"
                       >
-                        Change Phone?
+                        Change Phone
+                      </p>
+                      <p
+                        onClick={() => dispatch(openAuthModal("email"))}
+                        className="text-blue-800 text-md cursor-pointer underline"
+                      >
+                        Update Email
                       </p>
                     </div>
                   </div>

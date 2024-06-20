@@ -1,7 +1,7 @@
-import React, { useEffect } from "react"
-import Glide from "@glidejs/glide"
+import React, { useEffect } from "react";
+import Glide from "@glidejs/glide";
 
-export default function Slider({thumbNail, images}) {
+export default function Slider({ thumbNail, images }) {
   useEffect(() => {
     console.log("Images");
     console.log(images);
@@ -9,7 +9,7 @@ export default function Slider({thumbNail, images}) {
       type: "slider",
       focusAt: "center",
       perView: 1,
-      // autoplay: 3000,
+      autoplay: 1000,
       animationDuration: 700,
       gap: 0,
       classes: {
@@ -17,12 +17,12 @@ export default function Slider({thumbNail, images}) {
           active: "[&>*]:bg-wuiSlate-700",
         },
       },
-    }).mount()
+    }).mount();
 
     return () => {
-      slider.destroy()
-    }
-  }, [])
+      slider.destroy();
+    };
+  }, []);
 
   return (
     <>
@@ -32,10 +32,7 @@ export default function Slider({thumbNail, images}) {
         <div className="overflow-hidden" data-glide-el="track">
           <ul className="whitespace-no-wrap flex-no-wrap [backface-visibility: hidden] [transform-style: preserve-3d] [touch-action: pan-Y] [will-change: transform] relative flex w-full overflow-hidden p-0">
             <li>
-              <img
-                src={thumbNail}
-                className="w-[80%] ml-[10%]"
-              />
+              <img src={thumbNail} className="w-[80%] ml-[10%]" />
             </li>
             {/* <li>
               <img
@@ -102,5 +99,5 @@ export default function Slider({thumbNail, images}) {
       </div>
       {/*<!-- End Slider with controls inside --> */}
     </>
-  )
+  );
 }

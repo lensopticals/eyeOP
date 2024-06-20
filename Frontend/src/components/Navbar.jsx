@@ -23,11 +23,12 @@ const MainHeader = ({ setOpen }) => {
       </Link>
 
       {/* Search Bar */}
-      <div className="w-full px-10 hidden sm:block">
+      <div className="w-full  hidden sm:flex bg-gray-100 rounded items-center justify-between border border-gray-300  ">
+        <CiSearch className="text-xl mx-2 text-slate-600" />
         <input
           type="text"
           placeholder="What are you looking for?"
-          className="bg-gray-100 w-full  outline-none border border-gray-400 rounded px-4 py-2 text-sm"
+          className="bg-gray-100 w-full outline-none focus:bg-gray-50 p-2 text-sm"
         />
       </div>
       {/* Menu */}
@@ -88,7 +89,7 @@ const MainHeader = ({ setOpen }) => {
           >
             <div className="" role="none">
               <NavLink
-                to="/profile"
+                to="/my/dashboard"
                 className={({ isActive }) =>
                   `text-gray-700 ${
                     isActive && "bg-gray-100"
@@ -99,7 +100,8 @@ const MainHeader = ({ setOpen }) => {
                 tabIndex={-1}
                 id="menu-item-0"
               >
-                Profile
+                My Account
+                <p className="text-green-900 text-[0.67rem]">{user?.name}</p>
               </NavLink>
 
               <p
@@ -119,6 +121,7 @@ const MainHeader = ({ setOpen }) => {
         )}
 
         <div
+          id="bars"
           className="cursor-pointer md:hidden px-2 text-2xl"
           onClick={() => setOpen(true)}
         >
@@ -132,8 +135,14 @@ const MainHeader = ({ setOpen }) => {
 const Navbar = () => {
   const customClass = ({ isActive }) =>
     `text-[1.1rem]  duration-200 ${
-      isActive ? "text-black" : "text-gray-500"
-    } border-b inline-block border-gray-100 hover:bg-gray-100 backdrop-blur-sm lg:border-0 whitespace-nowrap hover:text-black  lg:p-0`;
+      isActive ? "text-black border-b-2 border-slate-600" : "text-gray-500"
+    } border-b inline-block border-gray-100 hover:bg-gray-100 backdrop-blur-sm whitespace-nowrap hover:text-black  lg:p-0`;
+
+  document.onclick = (e) => {
+    if (e.target.id !== "sidebar" && e.target.id !== "bars") {
+      setOpen(false);
+    }
+  };
 
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -152,7 +161,10 @@ const Navbar = () => {
           } md:static  w-full h-screen md:h-full 
           md:bg-transparent backdrop-blur-sm md:gap-0 flex flex-col md:flex-row transition-all duration-400 ease-in-out items-end md:justify-evenly md:items-center overflow-y-auto`}
         >
-          <nav className="flex w-[16rem] gap-5 pt-4 md:w-full h-full bg-white md:bg-transparent border-l-2 border-gray-100 md:border-0 px-5 md:p-2 md:gap-9 py-2 flex-col md:flex-row relative">
+          <nav
+            id="sidebar"
+            className="flex w-[16rem] gap-5 pt-4 md:w-full h-full bg-white md:bg-transparent border-l-2 border-gray-100 md:border-0 px-5 md:p-2 md:gap-9 py-2 flex-col md:flex-row relative"
+          >
             <p
               className="text-2xl text-gray-500 border border-gray-800 rounded absolute md:hidden right-4 top-4"
               onClick={() => setOpen(false)}
@@ -165,7 +177,7 @@ const Navbar = () => {
                   <p>
                     Welcome,{" "}
                     <span className="text-md  font-extrabold text-slate-800">
-                      {user?.name || "User"}
+                      {user?.name?.split(" ")[0] || "User"}
                     </span>
                   </p>
                 </div>
@@ -183,6 +195,20 @@ const Navbar = () => {
                 </div>
               )}
             </div>
+            <NavLink
+              to="/"
+              onClick={() => setOpen(false)}
+              className={customClass}
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/shop/products"
+              onClick={() => setOpen(false)}
+              className={customClass}
+            >
+              Shop
+            </NavLink>
             <NavLink
               to="/brands"
               onClick={() => setOpen(false)}

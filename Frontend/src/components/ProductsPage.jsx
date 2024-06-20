@@ -7,13 +7,15 @@ import { toast } from "react-toastify";
 import "../styles/productsPage.css";
 import sortImg from "../assets/Images/sort.png";
 import filterImg from "../assets/Images/filter.png";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts } from "../redux/actions/productAction";
+import { clearErrors } from "../redux/features/productSlice";
 const ProductsPage = () => {
-  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const [filter, setFilter] = useState(false);
   const [sort, setSort] = useState(false);
+
   const handlefilters = () => {
     if (filter) {
       setFilter(false);
@@ -21,24 +23,6 @@ const ProductsPage = () => {
       setFilter(true);
     }
   };
-
-  // useEffect
-  useEffect(() => {
-    getAllProducts();
-  }, []);
-
-  // api call
-  const getAllProducts = async() => {
-    console.log(localStorage.getItem("token"));
-    const config = {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    };
-
-    const {data} = await axios.get('http://localhost:4000/api/v1/products/all-products/');
-    console.log(data);
-    setProducts(data.product);
-
-  }
 
   const handleSort = () => {
     if (sort) {
@@ -48,7 +32,82 @@ const ProductsPage = () => {
     }
   };
 
-  
+  const dispatch = useDispatch();
+  const { loading, error, products, productsCount, resultPerPage } =
+    useSelector((state) => state.product);
+
+  const { keyword } = useParams();
+
+  // Pagination
+
+  const [searchParams, setSearchParams] = useSearchParams(1);
+
+  // Read query parameters
+  const pageParam = Number(searchParams.get("page"));
+  const finalCategory = searchParams.get("category")?.toString();
+
+  // You can read other query parameters similarly
+
+  const handlePageChange = (page) => {
+    searchParams.set("page", page);
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    // Set initial query parameters on component mount
+    if (!searchParams.get("page")) {
+      searchParams.set("page", "1");
+    }
+  }, [searchParams]);
+
+  // Filters
+  // Price
+
+  const [price, setPrice] = useState([0, 15000000]);
+  const priceHandler = (e, newPrice) => {
+    setPrice(e);
+  };
+
+  // Sort By
+
+  // Category
+
+  const [category, setCategory] = useState();
+  const deleteCategoryParam = () => {
+    searchParams.set("page", "1");
+    searchParams.delete("category");
+    setSearchParams(searchParams);
+  };
+
+  useEffect(() => {
+    if (!category) {
+      return;
+    }
+    searchParams.set("category", category);
+    setSearchParams(searchParams);
+  }, [category]);
+
+  useEffect(() => {
+    searchParams.set("page", "1");
+    setSearchParams(searchParams);
+  }, [category, price]);
+
+  useEffect(() => {
+    if (error) {
+      message.error(error);
+      dispatch(clearErrors());
+    }
+
+    dispatch(
+      getProducts({
+        keyword,
+        currentPage: pageParam,
+        price,
+        category: finalCategory,
+      })
+    );
+  }, [keyword, pageParam, price, finalCategory]);
+
   return (
     <div className="overflow-hidden w-[100vw] mt-14">
       {!filter ? (
