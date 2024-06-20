@@ -203,7 +203,7 @@ const Navbar = () => {
               Home
             </NavLink>
             <NavLink
-              to="/shop"
+              to="/shop/products"
               onClick={() => setOpen(false)}
               className={customClass}
             >

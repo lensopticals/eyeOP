@@ -17,6 +17,10 @@ import { loadUser } from "./redux/actions/userActions";
 import EditProfile from "./Pages/User/EditProfile";
 import ProductByCategory from "./Pages/Product/ProductByCategory";
 import Navbar from "./components/Navbar";
+import UserDashboard from "./Pages/User/UserDashboard";
+import ProductDetails from "./Pages/Product/ProductDetails";
+import HomePage from "./Pages/HomePage";
+import CartPage from "./Pages/Cart/CartPage";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -25,7 +29,8 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Layout />}>
-        <Route path="" element={<ProductsPage />}></Route>
+        <Route path="" element={<HomePage />}></Route>
+        <Route path="/shop/products" element={<ProductsPage />}></Route>
 
         <Route
           path="my/profile"
@@ -52,7 +57,15 @@ function App() {
           }
         ></Route>
         <Route path="/shop/:category" element={<ProductByCategory />} />
-        <Route path="/allProducts/:id" element={<ProductDetails />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route
+          path="cart"
+          element={
+            // <ProtectedRoutes>
+            <CartPage />
+            // </ProtectedRoutes>
+          }
+        ></Route>
       </Route>
     )
   );
