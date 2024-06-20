@@ -32,7 +32,7 @@ const createAddress = async (req, res) => {
 
 const getAddress = async (req, res) => {
   try {
-    const address = await Address.find({ user: req.user.id });
+    const address = await Address.find({ user: req.user._id });
 
     if (!address || !address.length > 0) {
       return res.status(400).json({
