@@ -66,9 +66,15 @@ const ProductDetails = () => {
                         images={product?.images}
                       />
                     )}
-                    <p className="absolute top-0 right-0 p-3 bg-red-50 text-red-600">
-                      Out of Stock
-                    </p>
+                    {product && product?.stock > 0 ? (
+                      <p className="absolute top-0 right-0 p-3 bg-emerald-100 text-emerald-600">
+                        In Stock
+                      </p>
+                    ) : (
+                      <p className="absolute top-0 right-0 p-3 bg-red-50 text-red-600">
+                        Out of Stock
+                      </p>
+                    )}
                   </div>
                   <div className="w-full lg:w-1/2 h-full rounded-lg bg-white flex flex-col gap-5 px-4 py-6">
                     <div className="head">
@@ -86,7 +92,7 @@ const ProductDetails = () => {
                       {product?.description}
                     </p>
 
-                    <p className="text-2xl font-normal">{product.price}</p>
+                    <p className="text-2xl font-normal">₹ {product.price}</p>
 
                     <div className="quantity">
                       <h6 className="text-gray-600">Quantity</h6>
