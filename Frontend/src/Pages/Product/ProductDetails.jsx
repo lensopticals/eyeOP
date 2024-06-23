@@ -28,7 +28,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   console.log(id);
   const dispatch = useDispatch();
-  const { product } = useSelector((state) => state.productDetails);
+  const { product } = useSelector((state) => state.productDetail);
 
   console.log(product);
 

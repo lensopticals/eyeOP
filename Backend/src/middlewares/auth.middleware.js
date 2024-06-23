@@ -4,6 +4,7 @@ import { refreshAccessToken } from "../controllers/user.controller.js";
 
 export const verifyJWT = async (req, res, next) => {
   try {
+    console.log("verifing");
     const authHeader = req.headers["authorization"];
 
     const token = authHeader?.split(" ")[1] || req.cookies?.accessToken;

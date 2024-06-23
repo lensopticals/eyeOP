@@ -1,12 +1,11 @@
-import { Address } from "../models/address.model";
+import {Address1} from "../models/address.model.js";
 
 // Create new Address
 
 const createAddress = async (req, res) => {
   try {
     req.body.user = req.user._id;
-    const address = await Address.create(req.body);
-
+    const address = await Address1.create(req.body);
     if (!address) {
       return res.status(400).json({
         success: false,
@@ -28,11 +27,16 @@ const createAddress = async (req, res) => {
   }
 };
 
-// Get the Address
+// test
+const hello = (req, res) => {
+  return res.json({success: true, message: "done"});
+}
 
+// Get the Address
 const getAddress = async (req, res) => {
   try {
-    const address = await Address.find({ user: req.user.id });
+    console.log("backend");
+    const address = await Address1.find({ user: req.user.id });
 
     if (!address || !address.length > 0) {
       return res.status(400).json({
@@ -60,13 +64,13 @@ const getAddress = async (req, res) => {
 const updateAddress = async (req, res) => {
   try {
     const { id } = req.params;
-    let address = await Address.findById(req.params.id);
+    let address = await Address1.findById(req.params.id);
     if (!address) {
       return res
         .status(404)
         .json({ success: false, message: "No address Found" });
     }
-    address = await Address.findByIdAndUpdate(id, req.body, {
+    address = await Address1.findByIdAndUpdate(id, req.body, {
       new: true,
     });
 
@@ -89,7 +93,7 @@ const updateAddress = async (req, res) => {
 const deleteAddress = async (req, res) => {
   try {
     const { id } = req.params;
-    let address = await Address.findById(req.params.id);
+    let address = await Address1.findById(req.params.id);
     if (!address) {
       return res
         .status(404)
@@ -109,4 +113,4 @@ const deleteAddress = async (req, res) => {
   }
 };
 
-export { createAddress, getAddress, updateAddress, deleteAddress };
+export { createAddress, getAddress, updateAddress, deleteAddress, hello };

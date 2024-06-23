@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
+import addressRoutes from "./routes/address.routes.js";
 
 // import orderRoutes from "./routes/order.routes.js";
 
@@ -37,9 +38,9 @@ app.use(function (req, res, next) {
 app.use(cookieParser());
 
 app.use("/api/v1/user", userRoutes);
-
 app.use("/api/v1", productRoutes);
 app.use("/api/v1/cart", cartRoutes);
+app.use("api/v1/address", addressRoutes);
 // app.use("/api/v1", orderRoutes);
 
 export default app;

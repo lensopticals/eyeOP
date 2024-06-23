@@ -11,11 +11,13 @@ import {
   registerController,
   updateAccountDetails,
   verifyPhoneNumber,
+  hello,
 } from "../controllers/user.controller.js";
 import { authoriseRoles, verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
+router.route("/a").get(hello);
 router.route("/register").post(registerController);
 router.route("/login").post(loginUser);
 router.route("/login-phone").post(loginPhoneUser);

@@ -18,7 +18,7 @@ export const getProductDetails = createAsyncThunk(
 export const getProducts = createAsyncThunk(
   "products/getProducts",
   async (
-    { keyword = "", currentPage = 1, price = [0, 50000], category },
+    { keyword = "", currentPage = 1, price = [0, 50000], category},
     { rejectWithValue }
   ) => {
     try {

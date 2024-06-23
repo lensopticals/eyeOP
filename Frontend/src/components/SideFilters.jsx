@@ -1,6 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/sideFilters.css";
+import axios from "axios";
+import API from "../utils/API";
+import { getProducts } from "../redux/actions/productAction";
+import { useDispatch } from "react-redux";
 const SideFilters = ({width, clas}) => {
+  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+
+  const handleFilter = async () => {
+    try {
+      // const response = await API.get(`/all-products?price[gte]=100`);
+      const response = await dispatch(getProducts({ keyword: "", currentPage: 1, price : [0, 1000] }));
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleGender = async (gen) => {
+    try {
+      const response = await dispatch(getProducts({ currentPage: 1, gender: gen }));
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div className={`${clas} bg-slate-100 py-2`} style={{width: width}}>
@@ -44,6 +70,26 @@ const SideFilters = ({width, clas}) => {
           <div className="group flex gap-2 ml-2">
             <input type="checkbox" name="age" id="c3" />
             <p>above 30 yr old.</p>
+          </div>
+        </div>
+
+        <div className="price m-2 mt-4">
+          <h3 className="mb-2">Price</h3>
+          <div className="group flex gap-2  ml-2">
+            <input type="radio" name="price" id="c1" />
+            <p>below 100</p>
+          </div>
+          <div className="group flex gap-2 ml-2">
+            <input type="radio" name="price" id="c1" />
+            <p>below 500</p>
+          </div>
+          <div className="group flex gap-2 ml-2">
+            <input type="radio" name="price" id="c1" />
+            <p>below 1000</p>
+          </div>
+          <div className="group flex gap-2 ml-2">
+            <input type="radio" name="price" id="c1" />
+            <p>above 1000</p>
           </div>
         </div>
 

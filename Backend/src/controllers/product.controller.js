@@ -2,7 +2,7 @@ import { Product } from "../models/product.model.js";
 import { validationResult } from "express-validator";
 import { ApiFeatures } from "../utils/apiFeatures.js";
 
-// Route 1[get]: fetching all products...[Login required]  --/api/products/fetchallproducts/
+// Route 1[get]: fetching all products...[Login required]  --/
 
 const fetchallproducts = async (req, res) => {
   try {

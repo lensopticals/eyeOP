@@ -37,8 +37,12 @@ const refreshCookieOptions = {
   expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 };
 
-// Register Controller
+// test
+const hello = (req, res) => {
+  return res.json({success: true, message: "done"});
+}
 
+// Register Controller
 const registerController = async (req, res, next) => {
   try {
     const { name, email, phone } = req.body;
@@ -526,4 +530,5 @@ export {
   loginPhoneUser,
   googleAuth,
   verifyPhoneNumber,
+  hello,
 };

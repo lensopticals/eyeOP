@@ -21,6 +21,7 @@ import UserDashboard from "./Pages/User/UserDashboard";
 import ProductDetails from "./Pages/Product/ProductDetails";
 import HomePage from "./Pages/HomePage";
 import CartPage from "./Pages/Cart/CartPage";
+import ApplicationForm from "./Pages/Buy/ApplicationForm";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -58,6 +59,7 @@ function App() {
         ></Route>
         <Route path="/shop/:category" element={<ProductByCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/buy" element={<ApplicationForm />} />
         <Route
           path="cart"
           element={

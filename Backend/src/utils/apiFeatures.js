@@ -31,7 +31,10 @@ class ApiFeatures {
       delete queryCopy[key];
     });
 
-    // Filter for price and rating
+    // Filter for price, rating, and gender
+    if (queryCopy.gender) {
+      queryCopy.gender = queryCopy.gender;
+    }
 
     let querystr = JSON.stringify(queryCopy);
     querystr = querystr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
