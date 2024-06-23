@@ -35,13 +35,6 @@ const hello = (req, res) => {
 // Get the Address
 const getAddress = async (req, res) => {
   try {
-<<<<<<< HEAD
-    console.log("backend");
-    const address = await Address1.find({ user: req.user.id });
-=======
-    const address = await Address.find({ user: req.user._id });
->>>>>>> c071d589b2af83e21695ec3c30fc1850f66f53da
-
     if (!address || !address.length > 0) {
       return res.status(400).json({
         success: false,
