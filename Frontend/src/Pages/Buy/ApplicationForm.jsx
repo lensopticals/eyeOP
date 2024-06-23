@@ -53,7 +53,7 @@ const ApplicationForm = () => {
         },
       };
 
-      const res = await API("/address/a");
+      const res = await API("/test/a");
       console.log(res);
       // return data;
     } catch (error) {

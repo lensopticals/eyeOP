@@ -26,14 +26,10 @@ const ProductDetails = () => {
   const { id } = useParams();
   console.log(id);
   const dispatch = useDispatch();
-<<<<<<< HEAD
-  const { product } = useSelector((state) => state.productDetail);
-
-  console.log(product);
-=======
+  // const { product } = useSelector((state) => state.productDetail);
+  // console.log(product);
   const { product, loading } = useSelector((state) => state.productDetail);
   const { cartLoading, cartError } = useSelector((state) => state.cart);
->>>>>>> c071d589b2af83e21695ec3c30fc1850f66f53da
 
   useEffect(() => {
     dispatch(getProductDetails({ id }));
