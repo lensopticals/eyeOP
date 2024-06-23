@@ -4,9 +4,10 @@ import API from "../../utils/API";
 // Get Product Details
 export const getProductDetails = createAsyncThunk(
   "products/getProductDetails",
-  async (id, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue }) => {
     try {
       const { data } = await API.get(`/product/${id}`);
+      // console.log(data);
       return data?.product;
     } catch (error) {
       return rejectWithValue(error?.response?.data?.message);

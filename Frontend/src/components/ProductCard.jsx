@@ -25,7 +25,7 @@ const ProductCard = ({ product }) => {
     <>
       <div className="product m-2 bg-gray-100 w-[20vw] p-2 rounded-xl pb-2">
         <img
-          src={product.thumbNail}
+          src={product.thumbnail}
           alt="#"
           className="thumbNail rounded-xl"
           onClick={productClick}
