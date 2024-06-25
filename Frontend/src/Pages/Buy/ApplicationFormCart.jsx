@@ -5,26 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProductDetails } from "../../redux/actions/productAction";
 
-const ApplicationForm = () => {
+const ApplicationFormCart = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const [product, setProduct] = useState({});
-  const { id } = useParams();
-  useEffect(() => {
-    const getProduct = async () => {
-      const p = await dispatch(getProductDetails({ id: id }));
-      setProduct(p.payload);
-      console.log(p.payload);
-    };
-    getProduct();
-  }, [dispatch]);
+  const { cart } = useSelector((state) => state.cart);
+  const [total, setTotal] = useState(0);
   const nameParts = user.name?.split(" ");
   // var fname = "";
   // for (let i=0; i<nameParts?.length-1; i++) {
   //   fname += nameParts[i];
   // }
-  const [firstName, setFirstName] = useState(nameParts[0]);
-  const [lastName, setLastName] = useState(nameParts[nameParts?.length - 1]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState(user.email);
   const [phone, setPhone] = useState(user.phone);
   const [country, setCountry] = useState("India");
@@ -33,6 +25,24 @@ const ApplicationForm = () => {
   const [state, setState] = useState("");
   const [zip, setZip] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(nameParts);
+    if (
+      typeof nameParts !== "undefined" &&
+      nameParts !== null &&
+      nameParts?.length > 0
+    ) {
+      setFirstName(nameParts[0]);
+      setLastName(nameParts[nameParts?.length - 1]);
+    }
+    console.log(cart);
+    let sum = 0;
+    for (let i = 0; i < cart?.length; i++) {
+      sum += cart[i].total;
+    }
+    setTotal(sum);
+  }, [dispatch]);
 
   const handleFirst = (input) => {
     setFirstName(input);
@@ -247,29 +257,36 @@ const ApplicationForm = () => {
         </div>
 
         <div className="productDetails ml-auto w-[30vw]">
-          <div className="card p-5 w-[17rem] m-auto my-3 border-slate-200 border-2">
-            <img
-              src={product.thumbnail}
-              alt="#"
-              className="w-[12rem] h-[12rem] m-auto mb-2"
-            />
-            <div className="flex">
-              <p>Name: </p>
-              <p className="ml-auto">{product?.name}</p>
-            </div>
-            <div className="flex">
-              <p>Discout: </p>
-              <p className="ml-auto">{product.discountPercentage}%</p>
-            </div>
-            <div className="flex">
-            <p>Price:</p>
-            <p className="ml-auto">${product.price}</p>
-
-            </div>
-          </div>
-          <div className="flex border-slate-150 border-2 w-[17rem] m-auto p-2">
+          {cart?.map((item) => (
+            <>
+              <div className="card p-5 w-[18rem] m-auto my-3 border-slate-200 border-2">
+                <img
+                  src={item.product.thumbnail}
+                  alt="#"
+                  className="w-[13rem] h-[12rem] m-auto mb-2"
+                />
+                <div className="flex">
+                  <p>Name: </p>
+                  <p className="ml-auto">{item.product.name}</p>
+                </div>
+                <div className="flex">
+                  <p>Qty: </p>
+                  <p className="ml-auto">{item.quantity}</p>
+                </div>
+                <div className="flex">
+                  <p>Discout: </p>
+                  <p className="ml-auto">{item.product.discountPercentage}%</p>
+                </div>
+                <div className="flex">
+                  <p>Price:</p>
+                  <p className="ml-auto">${item.total}</p>
+                </div>
+              </div>
+            </>
+          ))}
+          <div className="flex border-slate-150 border-2 w-[18rem] m-auto p-2">
             <h1 className="text-xl ml-3">Total price: </h1>
-            <p className="ml-auto text-xl">${product.price}</p>
+            <p className="ml-auto text-xl">${total}</p>
           </div>
         </div>
       </div>
@@ -277,4 +294,4 @@ const ApplicationForm = () => {
   );
 };
 
-export default ApplicationForm;
+export default ApplicationFormCart;

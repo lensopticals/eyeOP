@@ -9,12 +9,13 @@ import {
 import ReviewSummary from "../../components/product/Reviews/ReviewSummary";
 import ImageModal from "../../components/modals/Product/ImageModal";
 import ImageSlider from "../../components/product/ImageSlider";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductDetails } from "../../redux/actions/productAction";
 import { addToCart } from "../../redux/actions/cartActions";
 import { toast } from "react-toastify";
 import { clearCartErrors } from "../../redux/features/cartSlice";
+import { openAuthModal } from "../../redux/features/modalSlice";
 const ProductDetails = () => {
   const [collapse, setCollapse] = useState(true);
   const [isOpen, setisOpen] = useState(false);
@@ -24,12 +25,12 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
 
   const { id } = useParams();
-  console.log(id);
   const dispatch = useDispatch();
   // const { product } = useSelector((state) => state.productDetail);
   // console.log(product);
   const { product, loading } = useSelector((state) => state.productDetail);
   const { cartLoading, cartError } = useSelector((state) => state.cart);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getProductDetails({ id }));
@@ -45,6 +46,16 @@ const ProductDetails = () => {
   const handleCart = () => {
     dispatch(addToCart({ productId: id, quantity }));
   };
+
+  const handleBuy = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate(`/buy/${id}/`);
+    }
+    else {
+      dispatch(openAuthModal("login"));
+    }
+  }
 
   return (
     <>
@@ -141,13 +152,21 @@ const ProductDetails = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="buy flex gap-2">
+                      <button
+                        onClick={handleCart}
+                        className="py-2 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-36 shadow-sm border-slate-800"
+                      >
+                        {cartLoading ? "Adding..." : "Add to Cart"}
+                      </button>
 
-                    <button
-                      onClick={handleCart}
-                      className="py-2 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-36 shadow-sm border-slate-800"
-                    >
-                      {cartLoading ? "Adding..." : "Add to Cart"}
-                    </button>
+                      <button
+                        onClick={handleBuy}
+                        className="py-2 hover:bg-green-700 hover:text-white active:bg-green-800 disabled:bg-green-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-36 shadow-sm border-slate-800"
+                      >
+                        {cartLoading ? "Buying..." : "Buy now"}
+                      </button>
+                    </div>
 
                     <div className="more">
                       <div

@@ -4,6 +4,7 @@ import {Address1} from "../models/address.model.js";
 
 const createAddress = async (req, res) => {
   try {
+    console.log("create");
     req.body.user = req.user._id;
     const address = await Address1.create(req.body);
     if (!address) {
@@ -35,8 +36,11 @@ const hello = (req, res) => {
 // Get the Address
 const getAddress = async (req, res) => {
   try {
+    console.log("get");
+    let address = await Address1.find({user: req.user._id});
+    console.log(address);
     if (!address || !address.length > 0) {
-      return res.status(400).json({
+      return res.json({
         success: false,
         message: "No Addresses found",
       });

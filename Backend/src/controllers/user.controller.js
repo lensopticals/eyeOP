@@ -37,9 +37,9 @@ const refreshCookieOptions = {
   expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 };
 
-// test
-const hello = (req, res) => {
-  return res.json({success: true, message: "done"});
+// get user details
+const getUser = (req, res) => {
+  return res.json({success: true, message: req.user});
 }
 
 // Register Controller
@@ -530,5 +530,5 @@ export {
   loginPhoneUser,
   googleAuth,
   verifyPhoneNumber,
-  hello,
+  getUser,
 };
