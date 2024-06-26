@@ -23,7 +23,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <>
-      <div className="product m-2 bg-gray-100 w-[20vw] p-2 rounded-xl pb-2">
+      <div className="product m-2 mt-3 bg-gray-100 w-[20vw] p-2 rounded-xl pb-2">
         <img
           src={product.thumbnail}
           alt="#"

@@ -29,6 +29,32 @@ export const userLogin = createAsyncThunk(
   }
 );
 
+// get user details
+
+export const getUser = createAsyncThunk(
+  "user/details",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: { "Content-type": "application/json" },
+        Authentication: `Bearer ${token}`
+      };
+      const { data } = await API.get("/user/details", config);
+      if (data && data?.success) {
+        return data;
+      }
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  }
+);
+
+
 // User login with phone number
 
 export const userLoginPhone = createAsyncThunk(

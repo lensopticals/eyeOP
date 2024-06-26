@@ -9,6 +9,7 @@ import {
   userLoginPhone,
   userSignup,
   verifyPhone,
+  getUser
 } from "../actions/userActions";
 
 export const userReducer = createSlice({

@@ -7,11 +7,13 @@ import {
 } from "../../redux/actions/cartActions";
 import { toast } from "react-toastify";
 import { clearCartErrors } from "../../redux/features/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const [show, setShow] = useState(false);
   const { cart, cartLoading, cartError } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // const [subtotal, setSubtotal] = useState(0);
 
   useEffect(() => {
@@ -31,6 +33,16 @@ function Cart() {
     }, 0);
     return subtotal;
   };
+
+  const handleCart = async() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate(`/buy/`);
+    }
+    else {
+      dispatch(openAuthModal("login"));
+    }
+  }
 
   return (
     <>
@@ -200,7 +212,7 @@ function Cart() {
                           </p>
                         </div>
                         <button
-                          onClick={() => setShow(!show)}
+                          onClick={handleCart}
                           className="text-base leading-none w-full py-3 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white"
                         >
                           Checkout

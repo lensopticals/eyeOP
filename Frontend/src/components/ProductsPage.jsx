@@ -109,7 +109,7 @@ const ProductsPage = () => {
   }, [keyword, pageParam, price, finalCategory]);
 
   return (
-    <div className="overflow-hidden w-[100vw] mt-14">
+    <div className="overflow-hidden w-[100vw] mt-2">
       {!filter ? (
         <div className="flex">
           <SideFilters width="22rem" clas="sideBar" />
