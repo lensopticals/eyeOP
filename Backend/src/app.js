@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
   })
 );
@@ -41,8 +41,8 @@ app.use(cookieParser());
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1", productRoutes);
 app.use("/api/v1/cart", cartRoutes);
-app.use("api/v1/address", addressRoutes);
-app.use("api/v1/test", testRoutes);
+app.use("/api/v1/address", addressRoutes);
+app.use("/api/v1/test", testRoutes);
 // app.use("/api/v1", orderRoutes);
 
 export default app;
