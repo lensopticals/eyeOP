@@ -37,7 +37,6 @@ const fetchallproducts = async (req, res) => {
 // Route 2[get]: Getting single product....[Login required]   --/api/products/:id/
 const getProduct = async (req, res) => {
   try {
-    console.log(req.params.id);
     const product = await Product.findById(req.params.id);
     if (!product) {
       return res

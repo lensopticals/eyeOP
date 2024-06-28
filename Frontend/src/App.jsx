@@ -24,6 +24,9 @@ import CartPage from "./Pages/Cart/CartPage";
 import ApplicationForm from "./Pages/Buy/ApplicationForm";
 import Payment from "./Pages/Buy/Payment";
 import ApplicationFormCart from "./Pages/Buy/ApplicationFormCart";
+import AddressPage from "./Pages/Buy/AddressPage";
+import AddressPageCart from "./Pages/Buy/AddressPageCart";
+import EditAddressPage from "./Pages/Buy/EditAddressPage";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -63,6 +66,9 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/buy/:id" element={<ApplicationForm />} />
         <Route path="/buy/" element={<ApplicationFormCart />} />
+        <Route path="/checkout/address/:id" element={<AddressPage />} />
+        <Route path="/checkout/address/" element={<AddressPageCart />} />
+        <Route path="/address/edit/:id" element={<EditAddressPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route
           path="cart"

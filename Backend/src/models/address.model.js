@@ -40,6 +40,11 @@ const addressSchema = new Schema(
       type: Number,
       required: [true, "Phone Number is Required"],
     },
+    place: {
+      type: String,
+      enum: ["home", "work", "other"],
+      default: "home"
+    }
   },
   { timestamps: true }
 );

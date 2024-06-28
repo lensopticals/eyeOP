@@ -16,6 +16,7 @@ import { addToCart } from "../../redux/actions/cartActions";
 import { toast } from "react-toastify";
 import { clearCartErrors } from "../../redux/features/cartSlice";
 import { openAuthModal } from "../../redux/features/modalSlice";
+import { getAddress } from "../../redux/actions/addressAction";
 const ProductDetails = () => {
   const [collapse, setCollapse] = useState(true);
   const [isOpen, setisOpen] = useState(false);
@@ -47,15 +48,21 @@ const ProductDetails = () => {
     dispatch(addToCart({ productId: id, quantity }));
   };
 
-  const handleBuy = () => {
+  const handleBuy = async () => {
     const token = localStorage.getItem("token");
+    const { payload } = await dispatch(getAddress());
+    // console.log(payload.address);
     if (token) {
-      navigate(`/buy/${id}/`);
-    }
-    else {
+      if (payload.address.length > 0) {
+        navigate(`/checkout/address/${id}/`);
+      }
+      else {
+        navigate(`/buy/${id}/`);
+      }
+    } else {
       dispatch(openAuthModal("login"));
     }
-  }
+  };
 
   return (
     <>

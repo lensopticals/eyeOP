@@ -4,6 +4,7 @@ import {
   createAddress,
   updateAddress,
   deleteAddress,
+  getAddressById,
 } from "../actions/addressAction.js";
 
 export const addressReducer = createSlice({
@@ -35,6 +36,20 @@ export const addressReducer = createSlice({
         state.address = action.payload;
       })
       .addCase(getAddress.rejected, (state, action) => {
+        state.addressLoading = false;
+        state.success = false;
+        state.addressError = action.payload;
+      })
+      .addCase(getAddressById.pending, (state) => {
+        state.addressLoading = true;
+        state.success = false;
+      })
+      .addCase(getAddressById.fulfilled, (state, action) => {
+        state.addressLoading = false;
+        state.success = true;
+        state.address = action.payload;
+      })
+      .addCase(getAddressById.rejected, (state, action) => {
         state.addressLoading = false;
         state.success = false;
         state.addressError = action.payload;

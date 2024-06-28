@@ -37,7 +37,7 @@ function Cart() {
   const handleCart = async() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate(`/buy/`);
+      navigate(`/checkout/address`);
     }
     else {
       dispatch(openAuthModal("login"));

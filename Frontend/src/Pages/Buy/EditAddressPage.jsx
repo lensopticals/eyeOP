@@ -1,37 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { createAddress, getAddress } from "../../redux/actions/addressAction";
-import API from "../../utils/API";
+import {
+  getAddressById,
+  updateAddress,
+} from "../../redux/actions/addressAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProductDetails } from "../../redux/actions/productAction";
-import home from "../../assets/Images/home.png";
-import bag from "../../assets/Images/bag.png";
-import location from "../../assets/Images/location.png";
 
-const ApplicationForm = () => {
+const EditAddressPage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const [product, setProduct] = useState({});
   const { id } = useParams();
-  useEffect(() => {
-    const getProduct = async () => {
-      const p = await dispatch(getProductDetails({ id: id }));
-      setProduct(p.payload);
-      console.log(p.payload);
-    };
-    getProduct();
-  }, [dispatch]);
-
-  const [selected, setSelected] = useState("");
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [phone, setPhone] = useState(user.phone);
-  const [country, setCountry] = useState("India");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [place, setPlace] = useState();
+  const address1 = useSelector((state) => state.address);
+  const [name, setName] = useState(address1.address.address.name);
+  const [email, setEmail] = useState(address1.address.address.email);
+  const [phone, setPhone] = useState(address1.address.address.phone);
+  const [country, setCountry] = useState(address1.address.address.country);
+  const [address, setAddress] = useState(address1.address.address.address);
+  const [city, setCity] = useState(address1.address.address.city);
+  const [state, setState] = useState(address1.address.address.state);
+  const [zip, setZip] = useState(address1.address.address.pincode);
   const navigate = useNavigate();
 
   const handleName = (input) => {
@@ -62,7 +50,6 @@ const ApplicationForm = () => {
   // submit
   const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem("token");
       const bodyData = {
         name: name,
         email: email,
@@ -72,13 +59,12 @@ const ApplicationForm = () => {
         country: country,
         pincode: zip,
         phone: phone,
-        place: place,
       };
-      const res = await dispatch(createAddress(bodyData));
+      console.log(phone);
+      const res = await dispatch(updateAddress({id: id, formData:bodyData}));
       if (res.payload.success) {
-        navigate("/payment");
+        navigate(`/checkout/address/${id}`);
       }
-      console.log(res.payload.address);
     } catch (error) {
       console.log(error);
     }
@@ -92,18 +78,16 @@ const ApplicationForm = () => {
           <div className="personal mt-5">
             <h2 className="text-xl max-sm:text-lg">Customer Information</h2>
             <div className="fullName flex gap-5 mt-4 ml-3 max-sm:ml-0">
-              <div className="name">
-                <p>Full Name</p>
-                <input
-                  type="text"
-                  placeholder="full name"
-                  className="border-[1px] border-slate-400 p-1 pl-2 w-[15rem] max-sm:w-[90%]"
-                  value={name}
-                  onChange={(e) => {
-                    handleName(e.target.value);
-                  }}
-                />
-              </div>
+              {/* <p>Full Name</p> */}
+              <input
+                type="text"
+                placeholder="Full name"
+                className="border-[1px] border-slate-400 p-1 pl-2 w-[15rem] max-sm:w-[90%]"
+                value={name}
+                onChange={(e) => {
+                  handleName(e.target.value);
+                }}
+              />
             </div>
 
             <div className="email mt-4 ml-3 max-sm:ml-0">
@@ -111,6 +95,7 @@ const ApplicationForm = () => {
                 <p>Email</p>
                 <input
                   type="email"
+                  placeholder="Email id"
                   className="border-[1px] border-slate-400 p-1 pl-2 w-[31rem] max-sm:w-[90%]"
                   value={email}
                   onChange={(e) => {
@@ -212,97 +197,17 @@ const ApplicationForm = () => {
                 />
               </div>
             </div>
-
-            <div className="location flex mt-4 ml-3 max-sm:ml-0">
-              <div
-                className={`flex home px-3 text-[0.9rem] py-1 m-2 border-2 border-slate-300 rounded-2xl ${
-                  selected == "home" ? "border-blue-400" : ""
-                }  hover:cursor-pointer`}
-                onClick={() => {
-                  setPlace("home");
-                  setSelected("home");
-                }}
-              >
-                <img
-                  src={home}
-                  className="w-[13px] h-[13px] mt-[5px] mr-1"
-                  alt="#"
-                />
-                <p>Home</p>
-              </div>
-              <div
-                className={`flex work px-3 text-[0.9rem] py-1 m-2 border-2 border-slate-300 rounded-2xl ${
-                  selected == "work" ? "border-blue-400" : ""
-                } hover:cursor-pointer`}
-                onClick={() => {
-                  setPlace("work");
-                  setSelected("work");
-                }}
-              >
-                <img
-                  src={bag}
-                  className="w-[13px] h-[13px] mt-[5px] mr-1"
-                  alt="#"
-                />
-                <p>Work</p>
-              </div>
-              <div
-                className={`flex other px-3 text-[0.9rem] py-1 m-2 border-2 border-slate-300 rounded-2xl ${
-                  selected == "other" ? "border-blue-400" : ""
-                } hover:cursor-pointer`}
-                onClick={() => {
-                  setPlace("other");
-                  setSelected("other");
-                }}
-              >
-                <img
-                  src={location}
-                  className="w-[13px] h-[13px] mt-[5px] mr-[1px]"
-                  alt="#"
-                />
-                <p>other</p>
-              </div>
-            </div>
           </div>
-        </div>
-
-        <div className="productDetails mt-20 w-[30vw] md:ml-auto lg:ml-auto sm:ml-[4.6rem] max-sm:ml-5">
-          <h1 className="lg:hidden md:hidden sm:block text-2xl mb-5 max-sm:text-lg">
-            Bill Details:
-          </h1>
-          <div className="card p-5 w-[17rem] m-auto my-3 border-slate-200 border-2">
-            <img
-              src={product.thumbnail}
-              alt="#"
-              className="w-[12rem] h-[12rem] m-auto mb-2"
-            />
-            <div className="flex">
-              <p>Name: </p>
-              <p className="ml-auto">{product?.name}</p>
-            </div>
-            <div className="flex">
-              <p>Discout: </p>
-              <p className="ml-auto">{product.discountPercentage}%</p>
-            </div>
-            <div className="flex">
-              <p>Price:</p>
-              <p className="ml-auto">${product.price}</p>
-            </div>
-          </div>
-          <div className="flex border-slate-150 border-2 w-[17rem] m-auto p-2">
-            <h1 className="text-xl ml-3 max-sm:text-lg">Total price: </h1>
-            <p className="ml-auto text-xl max-sm:text-lg">${product.price}</p>
-          </div>
-          <button
-            className="btn mb-10 mt-10 px-4 py-2 ml-5 bg-blue-700/70 rounded-md text-white max-sm:ml-2 w-[10rem] md:ml-10 lg:ml-[4rem]"
-            onClick={handleSubmit}
-          >
-            Proceed to buy
-          </button>
         </div>
       </div>
+      <button
+        className="btn mb-10 mt-10 px-4 py-2 ml-20 bg-blue-700/70 rounded-md text-white max-sm:ml-5"
+        onClick={handleSubmit}
+      >
+        Save Changes
+      </button>
     </>
   );
 };
 
-export default ApplicationForm;
+export default EditAddressPage;

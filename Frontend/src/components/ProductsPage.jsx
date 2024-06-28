@@ -124,7 +124,7 @@ const ProductsPage = () => {
           </div>
         </div>
       ) : (
-        <div className="sideFilter">
+        <div className="sideFilter mt-10 ml-3">
           <SideFilters width="100vw" clas="sideBar2" />
         </div>
       )}
