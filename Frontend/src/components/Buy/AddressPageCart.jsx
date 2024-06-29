@@ -13,6 +13,7 @@ import plus from "../../assets/Images/plus.png";
 import home from "../../assets/Images/home.png";
 import work from "../../assets/Images/bag.png";
 import other from "../../assets/Images/location.png";
+import { getCart } from "../../redux/actions/cartActions";
 
 const AddressPageCart = () => {
   const navigate = useNavigate();
@@ -28,7 +29,8 @@ const AddressPageCart = () => {
       sum += cart[i].total;
     }
     setTotal(sum);
-  }, [dispatch]);
+    dispatch(getCart());
+  }, []);
 
   const handleDelete = async (id) => {
     const add = await dispatch(deleteAddress({ id: id }));
@@ -139,7 +141,7 @@ const AddressPageCart = () => {
             Bill Details:
           </h1>
           {cart?.map((product) => (
-            <div className="card p-5 w-[17rem] m-auto my-3 border-slate-200 border-2">
+            <div key={product._id} className="card p-5 w-[17rem] m-auto my-3 border-slate-200 border-2">
               <img
                 src={product?.product.thumbnail}
                 alt="#"

@@ -21,12 +21,14 @@ import UserDashboard from "./Pages/User/UserDashboard";
 import ProductDetails from "./Pages/Product/ProductDetails";
 import HomePage from "./Pages/HomePage";
 import CartPage from "./Pages/Cart/CartPage";
-import ApplicationForm from "./Pages/Buy/ApplicationForm";
+import ApplicationForm from "./components/Buy/ApplicationForm";
 import Payment from "./Pages/Buy/Payment";
-import ApplicationFormCart from "./Pages/Buy/ApplicationFormCart";
-import AddressPage from "./Pages/Buy/AddressPage";
-import AddressPageCart from "./Pages/Buy/AddressPageCart";
+import ApplicationFormCart from "./components/Buy/ApplicationFormCart";
+import AddressPage from "./components/Buy/AddressPage";
+import AddressPageCart from "./components/Buy/AddressPageCart";
 import EditAddressPage from "./Pages/Buy/EditAddressPage";
+import Addresses from "./Pages/Buy/Addresses";
+import AddressForm from "./Pages/Buy/AddressForm";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -64,10 +66,10 @@ function App() {
         ></Route>
         <Route path="/shop/:category" element={<ProductByCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/buy/:id" element={<ApplicationForm />} />
-        <Route path="/buy/" element={<ApplicationFormCart />} />
-        <Route path="/checkout/address/:id" element={<AddressPage />} />
-        <Route path="/checkout/address/" element={<AddressPageCart />} />
+        <Route path="/buy/:id" element={<AddressForm />} />
+        <Route path="/buy/" element={<AddressForm />} />
+        <Route path="/checkout/address/:id" element={<Addresses />} />
+        <Route path="/checkout/address/" element={<Addresses />} />
         <Route path="/address/edit/:id" element={<EditAddressPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route

@@ -7,11 +7,13 @@ import { getProductDetails } from "../../redux/actions/productAction";
 import home from "../../assets/Images/home.png";
 import bag from "../../assets/Images/bag.png";
 import location from "../../assets/Images/location.png";
+import { getCart } from "../../redux/actions/cartActions";
 
 const ApplicationFormCart = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { cart } = useSelector((state) => state.cart);
+  let {cart} = useSelector((state) => (state.cart));
+  const[crt, setCrt] = useState([]);
   const [total, setTotal] = useState(0);
   const [selected, setSelected] = useState("");
   const [name, setName] = useState(user.name);
@@ -24,15 +26,24 @@ const ApplicationFormCart = () => {
   const [zip, setZip] = useState("");
   const [place, setPlace] = useState();
   const navigate = useNavigate();
-
+  
+  const gettingCart = async() => {
+    let res = await dispatch(getCart());
+    console.log("7");
+    console.log(res);
+    // setCrt(cart);
+  }
   useEffect(() => {
+    console.log("cart");
     let sum = 0;
     for (let i = 0; i < cart?.length; i++) {
       sum += cart[i].total;
     }
     setTotal(sum);
+    gettingCart();
   }, [dispatch]);
 
+ 
   const handleName = (input) => {
     setName(input);
   };
