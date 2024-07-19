@@ -4,16 +4,12 @@ const orderSchema = new Schema(
   {
     orderItems: [
       {
-        product: {
-          type: Schema.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        },
+        product: {},
         quantity: {
           type: Number,
           required: true,
         },
-        price: {
+        total: {
           type: Number,
           required: true,
         },
@@ -34,14 +30,15 @@ const orderSchema = new Schema(
       default: "Pending",
     },
     paymentId: {
-      type: Schema.Types.ObjectId,
-      ref: "Payment",
-      required: true,
+      // type: Schema.Types.ObjectId,
+      // ref: "Payment",
+      type: String,
+      required: [true, "Payment id is required!"],
     },
     shippingInfo: {
       type: Schema.Types.ObjectId,
       ref: "Address",
-      required: [true, "Shipping Information is Required"]
+      required: [true, "Shipping Information is Required"],
     },
   },
   { timestamps: true }

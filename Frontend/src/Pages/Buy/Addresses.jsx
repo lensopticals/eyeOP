@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   createAddress,
   deleteAddress,
@@ -13,8 +13,11 @@ import plus from "../../assets/Images/plus.png";
 import home from "../../assets/Images/home.png";
 import work from "../../assets/Images/bag.png";
 import other from "../../assets/Images/location.png";
-import { getCart } from "../../redux/actions/cartActions";
+import { clearCart, getCart } from "../../redux/actions/cartActions";
 import { toast } from "react-toastify";
+import useRazorpay from "react-razorpay";
+import { createOrder } from "../../redux/actions/orderActions";
+import { clearNewOrderErrors } from "../../redux/features/orderSlice";
 
 const Addresses = () => {
   const navigate = useNavigate();
@@ -22,10 +25,13 @@ const Addresses = () => {
   const [address, setAddress] = useState([]);
   const [product, setProduct] = useState({});
   const [total, setTotal] = useState(0);
-  const [selected, setSelected] = useState(undefined);
+  const [selected, setSelected] = useState("");
   const { cart } = useSelector((state) => state.cart);
-  const { id } = useParams();
+  const { user } = useSelector((state) => state.user);
+  const { error, loading, success } = useSelector((state) => state.newOrder);
 
+  const { id } = useParams();
+  const [Razorpay] = useRazorpay();
   const gettingData = async () => {
     if (id) {
       getProduct();
@@ -55,7 +61,7 @@ const Addresses = () => {
   };
   const handleEdit = async (aId) => {
     const { payload } = await dispatch(getAddressById({ id: aId }));
-    localStorage.setItem('pId', id);
+    localStorage.setItem("pId", id);
     navigate(`/address/edit/${aId}`);
   };
 
@@ -68,24 +74,77 @@ const Addresses = () => {
   const handleCreate = async () => {
     if (id) {
       navigate(`/buy/${id}`);
-    }
-    else {
+    } else {
       navigate(`/buy`);
     }
   };
 
-  const handleSubmit = () => {
-    if(!selected) {
+  const handleCreateOrder = async (paymentId) => {
+    const orderData = {
+      totalAmount: total,
+      paymentId,
+      shippingInfo: selected,
+      orderItems: cart,
+    };
+    dispatch(createOrder(orderData));
+  };
+
+  const handlePayment = async () => {
+    if (!selected) {
       toast.error("First select/create your order address!");
+      return;
     }
-    else {
-      navigate("/payment");
-    }
+    const options = {
+      key: import.meta.env.VITE_APP_RAZOR_API_KEY,
+      amount: Number(total) * 100,
+      currency: "INR",
+      name: "Eye OP",
+      description: "Test Transaction",
+      image: "http://localhost:5173/src/assets/Images/logo.png",
+
+      handler: (res) => {
+        console.log(res);
+        handleCreateOrder(res.razorpay_payment_id);
+        toast.success("Payment successful");
+      },
+      prefill: {
+        name: user?.name,
+        email: user?.email,
+        contact: user?.phone,
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzpay = new Razorpay(options);
+    rzpay.on("payment.failed", function (response) {
+      toast.error("Payment falied \n Error Code: " + response.error.code);
+    });
+    rzpay.open();
   };
 
   useEffect(() => {
     getAddresses();
   }, []);
+
+  useEffect(() => {
+    if (success && !error) {
+      dispatch(clearCart());
+      navigate("/my/dashboard");
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(clearNewOrderErrors());
+    }
+  }, [error, dispatch, success]);
+
+  if (loading)
+    return (
+      <div className="h-[50vh] flex justify-center items-center text-2xl font-semibold">
+        Loading...
+      </div>
+    );
 
   return (
     <>
@@ -101,6 +160,7 @@ const Addresses = () => {
                 } md:w-[50vw] mx-[3rem]`}
                 key={add._id}
                 onClick={() => {
+                  console.log(add);
                   setSelected(add._id);
                 }}
               >
@@ -133,13 +193,13 @@ const Addresses = () => {
                       onClick={() => {
                         handleDelete(add._id);
                       }}
-                      className="underline"
+                      className="underline cursor-pointer"
                     >
                       Delete
                     </p>
                     <p
                       onClick={() => handleEdit(add._id)}
-                      className="underline"
+                      className="underline cursor-pointer"
                     >
                       Edit
                     </p>
@@ -150,7 +210,7 @@ const Addresses = () => {
           </div>
 
           <div
-            className="new w-[87vw] bg-slate-50 p-5 mx-[2rem] mt-5 rounded-md border-2 border-slate-200 md:w-[50vw] mx-[3rem]"
+            className="new w-[87vw] bg-slate-50 p-5  mt-5 rounded-md border-2 border-slate-200 md:w-[50vw] mx-[3rem]"
             onClick={handleCreate}
           >
             <div className="flex">
@@ -238,7 +298,7 @@ const Addresses = () => {
           )}
           <button
             className="btn mb-10 mt-10 px-4 py-2 ml-5 bg-blue-700/70 rounded-md text-white max-sm:ml-2 w-[10rem] md:ml-10 lg:ml-[4rem]"
-            onClick={handleSubmit}
+            onClick={handlePayment}
           >
             Proceed to buy
           </button>
