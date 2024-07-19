@@ -91,7 +91,7 @@ const Addresses = () => {
     <>
       <div className="block md:flex lg:flex">
         <div className="addressPage">
-          <h1 className="text-2xl max-sm:text-xl mt-7 ml-5">Select Address</h1>
+          <h1 className="text-2xl max-sm:text-xl mt-7 ml-5 md-ml-20">Select Address</h1>
           <div className="saved">
             <p className="ml-[3rem] mt-[2.5rem]">Saved Addresses</p>
             {address.map((add) => (

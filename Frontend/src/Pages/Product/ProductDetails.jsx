@@ -55,8 +55,7 @@ const ProductDetails = () => {
     if (token) {
       if (payload.address.length > 0) {
         navigate(`/checkout/address/${id}/`);
-      }
-      else {
+      } else {
         navigate(`/buy/${id}/`);
       }
     } else {
@@ -171,7 +170,7 @@ const ProductDetails = () => {
                         onClick={handleBuy}
                         className="py-2 hover:bg-green-700 hover:text-white active:bg-green-800 disabled:bg-green-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-36 shadow-sm border-slate-800"
                       >
-                        {cartLoading ? "Buying..." : "Buy now"}
+                        Buy now
                       </button>
                     </div>
 
