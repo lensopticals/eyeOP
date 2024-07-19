@@ -20,6 +20,9 @@ const HomePage = () => {
       <div className="h-[80vh] text-4xl profile-text bg-slate-400">
         Some Intractive products
       </div>
+      <div className="h-[80vh] text-4xl profile-text bg-yellow-400">
+        Features
+      </div>
       <div className="h-[80vh] text-4xl profile-text bg-purple-200">
         Testimonals
       </div>

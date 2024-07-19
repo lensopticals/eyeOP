@@ -1,11 +1,13 @@
-import { Order } from "../models/order.model";
-import Product from "../models/product.model";
+import { Order } from "../models/order.model.js";
+import { Product } from "../models/product.model.js";
 
 // Create a new Order
 
 export const createNewOrder = async (req, res) => {
   try {
-    req.body.user = req.user._id;
+    req.body.user = req.user?._id;
+
+    console.log(req.body);
 
     const order = await Order.create(req.body);
 
@@ -19,9 +21,10 @@ export const createNewOrder = async (req, res) => {
       .status(201)
       .json({ success: true, message: "Order Created SuccessFully" });
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
-      .json({ success: false, message: "Something went wrong" });
+      .json({ success: false, message: "Failed to create order" });
   }
 };
 
@@ -69,12 +72,10 @@ export const getSingleOrder = async (req, res) => {
       .status(200)
       .json({ success: true, order, message: "Order Fetched SuccessFully" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Something went wrong in fetching order",
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong in fetching order",
+    });
   }
 };
 
@@ -99,12 +100,10 @@ export const getAllOrders = async (req, res) => {
       .status(200)
       .json({ success: true, orders, message: "Orders Fetched SuccessFully" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Something went wrong while fetching order",
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while fetching order",
+    });
   }
 };
 
