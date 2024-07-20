@@ -131,7 +131,7 @@ const SignUp = () => {
     }
     if (token) {
       dispatch(closeAuthModal());
-      navigate("/profile");
+      navigate("/my/profile");
     }
   }, [dispatch, error, token, navigate]);
 

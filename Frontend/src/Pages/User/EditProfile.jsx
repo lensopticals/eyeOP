@@ -147,7 +147,7 @@ const EditProfile = () => {
             to="/profile"
             className="px-5 flex justify-center items-center gap-1 py-2 text-sm font-medium text-slate-900 bg-gray-100 border border-transparent hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             type="button"
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate("/my/profile")}
           >
             <IoIosArrowRoundBack className="text-xl " />
             Back
