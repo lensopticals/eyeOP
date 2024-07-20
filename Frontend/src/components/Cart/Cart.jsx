@@ -34,15 +34,14 @@ function Cart() {
     return subtotal;
   };
 
-  const handleCart = async() => {
+  const handleCart = async () => {
     const token = localStorage.getItem("token");
     if (token) {
       navigate(`/checkout/address`);
-    }
-    else {
+    } else {
       dispatch(openAuthModal("login"));
     }
-  }
+  };
 
   return (
     <>
@@ -66,7 +65,7 @@ function Cart() {
                   className="2xl:w-1/2 md:w-2/3 w-full md:pl-10 pl-4 md:pr-4 md:py-12 py-8 bg-white overflow-y-auto overflow-x-hidden max-h-screen"
                   id="scroll"
                 >
-                  <p className="text-5xl font-black leading-10 text-slate-800 pt-3">
+                  <p className="text-5xl font-semibold leading-10 text-slate-800 pt-3">
                     Cart
                   </p>
                   {cart && cart.length > 0 ? (
@@ -84,10 +83,10 @@ function Cart() {
                             {cartItem.product.modelNo}
                           </p>
                           <div className="flex items-center justify-between w-full pt-1">
-                            <p className="text-base font-black leading-none text-gray-800">
+                            <p className="text-base font-semibold leading-none text-gray-800">
                               {cartItem.product.name}
                             </p>
-                            <p className="text-sm font-bold leading-3 text-gray-600 py-1">
+                            <p className="text-sm font-semibold leading-3 text-gray-600 py-1">
                               ₹ {cartItem.product.price}
                             </p>
                             <select
@@ -141,7 +140,7 @@ function Cart() {
                               </p>
                             </div>
 
-                            <p className="text-base font-black text-gray-800">
+                            <p className="text-base font-semibold text-gray-800">
                               ₹ {cartItem.total}
                             </p>
                           </div>
@@ -160,7 +159,7 @@ function Cart() {
                   <div className="2xl:w-1/2 md:w-1/3  w-full bg-white h-full">
                     <div className="flex flex-col md:h-screen px-14 py-4 md:py-20 overflow-y-auto">
                       <div>
-                        <p className="text-4xl font-black leading-9 text-gray-800">
+                        <p className="text-4xl font-semibold leading-9 text-gray-800">
                           Summary
                         </p>
                         <div className="flex items-center justify-between pt-16">
@@ -200,7 +199,7 @@ function Cart() {
                           <p className="text-2xl leading-normal text-gray-800">
                             Total
                           </p>
-                          <p className="text-2xl font-bold leading-normal text-right text-gray-800">
+                          <p className="text-2xl font-semibold leading-normal text-right text-gray-800">
                             ₹{" "}
                             {cart && cart.length > 0 && calculateSubtotal(cart)}
                             <span className="pl-2 text-xs text-gray-500 line-through">

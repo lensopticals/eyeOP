@@ -60,7 +60,7 @@ const ProfilePage = () => {
                     <>
                       <p className="text-red-600 mb-2 flex items-end text-md">
                         Action Needed{" "}
-                        <MdOutlineInfo className="text-red-600 text-xl" />
+                        <MdOutlineInfo className="text-red-600 ml-1 text-xl" />
                       </p>
                       <p
                         onClick={() => dispatch(openAuthModal("phone"))}

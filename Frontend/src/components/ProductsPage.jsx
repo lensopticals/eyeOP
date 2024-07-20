@@ -109,11 +109,11 @@ const ProductsPage = () => {
   }, [keyword, pageParam, price, finalCategory]);
 
   return (
-    <div className="overflow-hidden w-[100vw] mt-2">
+    <div className="overflow-hidden py-16 md:py-8">
       {!filter ? (
         <div className="flex">
           <SideFilters width="22rem" clas="sideBar" />
-          <div className="products w-[100vw] h-[100vh] grid lg:grid-cols-3 gap-5 ml-10 sm:grid-cols-2 justify-items-center">
+          <div className="products w-full h-full grid grid-cols-1 lg:grid-cols-3 gap-10 mx-10 md:grid-cols-2 ">
             {products.map((product) => {
               return (
                 <div key={product._id}>

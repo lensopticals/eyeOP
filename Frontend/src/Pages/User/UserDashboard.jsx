@@ -47,7 +47,7 @@ const UserDashboard = () => {
         </div>
         <div className="absolute right-5 bottom-5">
           <Link
-            to="/profile"
+            to="/my/profile"
             className="text-white hover:bg-slate-700 flex items-center bg-gray-800 text-center px-3 py-2"
           >
             <CiUser className="text-xl mr-1" />

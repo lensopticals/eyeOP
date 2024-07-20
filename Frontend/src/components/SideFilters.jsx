@@ -1,26 +1,14 @@
-import React, { useState } from "react";
-import "../styles/sideFilters.css";
-import axios from "axios";
-import API from "../utils/API";
-import { getProducts } from "../redux/actions/productAction";
+import React from "react";
 import { useDispatch } from "react-redux";
-const SideFilters = ({width, clas}) => {
-  const [products, setProducts] = useState([]);
+import { getProducts } from "../redux/actions/productAction";
+import "../styles/sideFilters.css";
+
+const SideFilters = ({ width, clas }) => {
   const dispatch = useDispatch();
 
-  const handleFilter = async () => {
+  const handleFilter = async (filters) => {
     try {
-      // const response = await API.get(`/all-products?price[gte]=100`);
-      const response = await dispatch(getProducts({ keyword: "", currentPage: 1, price : [0, 1000] }));
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleGender = async (gen) => {
-    try {
-      const response = await dispatch(getProducts({ currentPage: 1, gender: gen }));
+      const response = await dispatch(getProducts(filters));
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -28,262 +16,173 @@ const SideFilters = ({width, clas}) => {
   };
 
   return (
-    <>
-      <div className={`${clas} bg-blue-50/50 py-2`} style={{width: width}}>
-        <div className="gender m-2 flex gap-6">
-          <div className="male border border-black px-2 w-[4rem]">
-            <img
-              src="https://cdn.eyemyeye.com/shared/icons/Men.svg"
-              alt="#"
-              className="m-auto pt-1"
-            />
-            <p className="text-center">Male</p>
-          </div>
-          <div className="female border border-black px-2 w-[4rem]">
-            <img
-              src="https://cdn.eyemyeye.com/shared/icons/Women.svg"
-              alt="#"
-              className="m-auto pt-1"
-            />
-            <p className="text-center">Female</p>
-          </div>
-          <div className="kids border border-black px-2 w-[4rem]">
-            <img
-              src="https://cdn.eyemyeye.com/shared/icons/Kids.svg"
-              alt="#"
-              className="m-auto pt-1"
-            />
-            <p className="text-center">Kids</p>
-          </div>
-        </div>
-
-        <div className="age m-2 mt-4">
-          <h3 className="mb-2">Age Group</h3>
-          <div className="group flex gap-2  ml-2">
-            <input type="checkbox" name="age" id="c1" />
-            <p>below 12 yr old.</p>
-          </div>
-          <div className="group flex gap-2 ml-2">
-            <input type="checkbox" name="age" id="c2" />
-            <p>12 - 20 yr old.</p>
-          </div>
-          <div className="group flex gap-2 ml-2">
-            <input type="checkbox" name="age" id="c3" />
-            <p>above 30 yr old.</p>
-          </div>
-        </div>
-
-        <div className="price m-2 mt-4">
-          <h3 className="mb-2">Price</h3>
-          <div className="group flex gap-2  ml-2">
-            <input type="radio" name="price" id="c1" />
-            <p>below 100</p>
-          </div>
-          <div className="group flex gap-2 ml-2">
-            <input type="radio" name="price" id="c1" />
-            <p>below 500</p>
-          </div>
-          <div className="group flex gap-2 ml-2">
-            <input type="radio" name="price" id="c1" />
-            <p>below 1000</p>
-          </div>
-          <div className="group flex gap-2 ml-2">
-            <input type="radio" name="price" id="c1" />
-            <p>above 1000</p>
-          </div>
-        </div>
-
-        <div className="framType m-2 mt-7">
-          <h3>Frame Type</h3>
-          <div className="types flex gap-3 mt-2 ml-3">
-            <div className="t1 border border-gray border-gray-500 p-2">
+    <div
+      className={`${clas} bg-white p-4 rounded shadow-sm shadow-slate-200 max-h-screen overflow-y-auto`}
+      style={{ width: width }}
+    >
+      <div className="gender mb-6">
+        <h3 className="text-xl font-semibold mb-4">Gender</h3>
+        <div className="flex justify-between">
+          {["Men", "Women", "Kids"].map((gender) => (
+            <div
+              key={gender}
+              className="gender-option text-center cursor-pointer p-2 rounded transition-all duration-300 hover:bg-blue-50"
+              onClick={() => handleFilter({ gender })}
+            >
               <img
-                src="https://cdn.eyemyeye.com/shared/icons/FullFrame.svg"
-                alt="#"
+                src={`https://cdn.eyemyeye.com/shared/icons/${gender}.svg`}
+                alt={gender}
+                className="m-auto w-12 h-12"
               />
-              <p className="text-xs mt-2">Full Frame</p>
+              <p className="mt-2">{gender}</p>
             </div>
-            <div className="t2 border border-gray border-gray-500 p-2">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/HalfFrame.svg"
-                alt="#"
-              />
-              <p className="text-xs mt-2">Half Frame</p>
-            </div>
-            <div className="t3 border border-gray border-gray-500 p-2">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Rimless.svg"
-                alt="#"
-              />
-              <p className="text-xs mt-2">Rim less</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="frameType m-2 mt-7">
-          <h3>Frame Shape</h3>
-          <div className="types grid grid-cols-3 gap-2 mt-2 ml-3 pr-5">
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Aviator.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Aviotar</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Butterfly.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Butterfly</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Cateye.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Cateye</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Clubmaster.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Clubmaster</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Hexagon.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Hexagon</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Oval.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Oval</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Rectangle.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Rectangle</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Rectangle.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Round</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Square.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Square</p>
-            </div>
-            <div className="box">
-              <img
-                src="https://cdn.eyemyeye.com/shared/icons/Wayfarer.svg"
-                alt="#"
-                className="boxImage"
-              />
-              <p className="text">Wayfarer</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="colors mt-7">
-          <h1>FRAME COLORS</h1>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <span className="circle"></span>
-            <p>Black</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <span className="circle bg-gray-500"></span>
-            <p>Gray</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <span className="circle bg-blue-400"></span>
-            <p>Blue</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <span className="circle bg-white"></span>
-            <p>White</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <span className="circle bg-yellow-400"></span>
-            <p>Yellow</p>
-          </div>
-        </div>
-
-        <div className="material mt-7">
-          <h1>MATERIAL</h1>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Acetate</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Metal</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Nylon</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Plastic</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Stainless Steel</p>
-          </div>
-        </div>
-
-        <div className="collections mt-7">
-          <h1>COLLECTIONS</h1>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Bamboo Eyegalsses</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Color Blind Glasses</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Color Changing Frames</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Computer Glasses</p>
-          </div>
-          <div>
-            <input type="checkbox" name="color" id="color" />
-            <p>Economy Eyeglasses</p>
-          </div>
+          ))}
         </div>
       </div>
-    </>
+
+      <div className="age mb-6">
+        <h3 className="text-xl font-semibold mb-4">Age Group</h3>
+        {["Below 12 years", "12 - 20 years", "Above 30 years"].map(
+          (age, index) => (
+            <div key={index} className="flex items-center gap-2 mb-2">
+              <input
+                type="checkbox"
+                name="age"
+                id={`age${index}`}
+                className="form-checkbox"
+              />
+              <label htmlFor={`age${index}`}>{age}</label>
+            </div>
+          )
+        )}
+      </div>
+
+      <div className="price mb-6">
+        <h3 className="text-xl font-semibold mb-4">Price</h3>
+        {["Below $100", "Below $500", "Below $1000", "Above $1000"].map(
+          (price, index) => (
+            <div key={index} className="flex items-center gap-2 mb-2">
+              <input
+                type="radio"
+                name="price"
+                id={`price${index}`}
+                className="form-radio"
+              />
+              <label htmlFor={`price${index}`}>{price}</label>
+            </div>
+          )
+        )}
+      </div>
+
+      <div className="frameType mb-6">
+        <h3 className="text-xl font-semibold mb-4">Frame Type</h3>
+        <div className="flex gap-4">
+          {["FullFrame", "HalfFrame", "Rimless"].map((type) => (
+            <div
+              key={type}
+              className="text-center cursor-pointer p-2 rounded transition-all duration-300 hover:bg-blue-50"
+              onClick={() => handleFilter({ frameType: type })}
+            >
+              <img
+                src={`https://cdn.eyemyeye.com/shared/icons/${type}.svg`}
+                alt={type}
+                className="m-auto w-12 h-12"
+              />
+              <p className="mt-2 text-sm">
+                {type.replace(/([a-z])([A-Z])/g, "$1 $2")}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="frameShape mb-6">
+        <h3 className="text-xl font-semibold mb-4">Frame Shape</h3>
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            "Aviator",
+            "Butterfly",
+            "Cateye",
+            "Clubmaster",
+            "Hexagon",
+            "Oval",
+            "Rectangle",
+            "Round",
+            "Square",
+            "Wayfarer",
+          ].map((shape) => (
+            <div
+              key={shape}
+              className="text-center cursor-pointer p-2 rounded transition-all duration-300 hover:bg-blue-50"
+              onClick={() => handleFilter({ frameShape: shape })}
+            >
+              <img
+                src={`https://cdn.eyemyeye.com/shared/icons/${shape}.svg`}
+                alt={shape}
+                className="m-auto w-10 h-10"
+              />
+              <p className="mt-2 text-sm">{shape}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="colors mb-6">
+        <h3 className="text-xl font-semibold mb-4">Frame Colors</h3>
+        {["Black", "Gray", "Blue", "White", "Yellow"].map((color, index) => (
+          <div key={index} className="flex items-center gap-2 mb-2">
+            <input
+              type="checkbox"
+              name="color"
+              id={`color${index}`}
+              className="form-checkbox"
+            />
+            <span
+              className={`circle w-4 h-4 rounded-full bg-${color.toLowerCase()}-500`}
+            ></span>
+            <label htmlFor={`color${index}`}>{color}</label>
+          </div>
+        ))}
+      </div>
+
+      <div className="material mb-6">
+        <h3 className="text-xl font-semibold mb-4">Material</h3>
+        {["Acetate", "Metal", "Nylon", "Plastic", "Stainless Steel"].map(
+          (material, index) => (
+            <div key={index} className="flex items-center gap-2 mb-2">
+              <input
+                type="checkbox"
+                name="material"
+                id={`material${index}`}
+                className="form-checkbox"
+              />
+              <label htmlFor={`material${index}`}>{material}</label>
+            </div>
+          )
+        )}
+      </div>
+
+      <div className="collections">
+        <h3 className="text-xl font-semibold mb-4">Collections</h3>
+        {[
+          "Bamboo Eyeglasses",
+          "Color Blind Glasses",
+          "Color Changing Frames",
+          "Computer Glasses",
+          "Economy Eyeglasses",
+        ].map((collection, index) => (
+          <div key={index} className="flex items-center gap-2 mb-2">
+            <input
+              type="checkbox"
+              name="collection"
+              id={`collection${index}`}
+              className="form-checkbox"
+            />
+            <label htmlFor={`collection${index}`}>{collection}</label>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

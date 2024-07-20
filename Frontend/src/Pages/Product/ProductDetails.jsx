@@ -17,6 +17,31 @@ import { toast } from "react-toastify";
 import { clearCartErrors } from "../../redux/features/cartSlice";
 import { openAuthModal } from "../../redux/features/modalSlice";
 import { getAddress } from "../../redux/actions/addressAction";
+
+const RatingStar = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={20}
+      height={20}
+      viewBox="0 0 44 44"
+      fill="none"
+    >
+      <g clipPath="url(#clip0_13624_2608)">
+        <path
+          d="M21.1033 2.9166C21.4701 2.17335 22.5299 2.17335 22.8967 2.9166L28.233 13.729C28.3786 14.0241 28.6602 14.2287 28.9859 14.276L40.9181 16.0099C41.7383 16.1291 42.0658 17.137 41.4723 17.7156L32.8381 26.1318C32.6024 26.3616 32.4949 26.6926 32.5505 27.017L34.5888 38.9009C34.7289 39.7178 33.8714 40.3408 33.1378 39.9551L22.4653 34.3443C22.174 34.1911 21.826 34.1911 21.5347 34.3443L10.8622 39.9551C10.1286 40.3408 9.27114 39.7178 9.41125 38.9009L11.4495 27.017C11.5051 26.6926 11.3976 26.3616 11.1619 26.1318L2.52771 17.7156C1.93419 17.137 2.2617 16.1291 3.08192 16.0099L15.0141 14.276C15.3398 14.2287 15.6214 14.0241 15.767 13.729L21.1033 2.9166Z"
+          fill="#FBBF24"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_13624_2608">
+          <rect width={44} height={44} fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
 const ProductDetails = () => {
   const [collapse, setCollapse] = useState(true);
   const [isOpen, setisOpen] = useState(false);
@@ -76,9 +101,9 @@ const ProductDetails = () => {
                 images={product?.images}
                 setisOpen={setisOpen}
               />
-              <div className="p-4 md:px-20 md:py-10 bg-gray-100 ">
-                <div className="flex flex-col lg:flex-row gap-6 ">
-                  <div className="w-full lg:w-1/2 h-full max-h-screen  bg-white border border-[#f0ebeb] rounded-lg relative ">
+              <div className="p-4 md:px-20 md:py-10 bg-white ">
+                <div className="flex flex-col border-b border-gray-300 lg:flex-row gap-6 ">
+                  <div className="w-full lg:w-1/2 h-full max-h-screen  bg-white md:border rounded-lg relative ">
                     {product && Array.isArray(product?.images) && (
                       <ImageSlider
                         setisOpen={setisOpen}
@@ -97,49 +122,34 @@ const ProductDetails = () => {
                   </div>
                   <div className="w-full lg:w-1/2 h-full rounded-lg bg-white flex flex-col gap-5 px-4 py-6">
                     <div className="head">
-                      <h1 className="text-3xl text-blue-700 font-semibold">
-                        Product Name
+                      <h1 className="text-2xl text-slate-800 font-semibold">
+                        {product?.name}
                       </h1>
-                      <p className="text-slate-700 mt-1">Brand</p>
-                    </div>
-                    <p className="text-md font-sans text-gray-500">
-                      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                      Repellendus, sapiente earum eos a odit nulla non repellat!
-                      Magni maiores quasi, quibusdam enim nesciunt fugit
-                      necessitatibus eaque alias natus consequuntur quidem
-                      praesentium voluptas dolore eligendi!
-                      {product?.description}
-                    </p>
-
-                    <p className="text-2xl font-normal">₹ {product.price}</p>
-
-                    <div className="quantity">
-                      <h6 className="text-gray-600">Quantity</h6>
-                      <select
-                        onChange={(e) => setQuantity(e.target.value)}
-                        className="flex items-center px-5 py-4 text-sm font-medium outline-none focus:bg-gray-200 placeholder:text-gray-500 bg-gray-50 text-gray-900 rounded-lg"
-                      >
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                      </select>
+                      <p className="text-slate-700 mt-1">{product?.brand}</p>
                     </div>
 
+                    <p className="text-2xl font-semibold">₹ {product.price}</p>
+                    <div className="flex gap-2">
+                      <div className="flex">
+                        {Array.from({
+                          length: Math.round(product?.rating),
+                        }).map((_, index) => (
+                          <RatingStar key={index} />
+                        ))}
+                      </div>
+                      <h3 className="font-semibold text-green-700">
+                        {" "}
+                        {product?.rating ?? 0} Rating
+                      </h3>
+                    </div>
                     <div className="colors">
                       <h6 className="text-gray-600">Colour</h6>
                       <div className="flex !-ml-2 mt-2 ">
                         {/* Rounded Coloured Rounded Boxes */}
-                        <div className="w-10 h-10 cursor-pointer rounded-full bg-blue-500"></div>
-                        <div className="w-10 h-10 cursor-pointer rounded-full bg-red-500"></div>
-                        <div className="w-10 h-10 cursor-pointer rounded-full bg-green-500"></div>
-                        <div className="w-10 h-10 cursor-pointer rounded-full bg-yellow-500"></div>
+                        <div className="w-8 h-8 cursor-pointer rounded-full bg-blue-500"></div>
+                        <div className="w-8 h-8 cursor-pointer rounded-full bg-red-500"></div>
+                        <div className="w-8 h-8 cursor-pointer rounded-full bg-green-500"></div>
+                        <div className="w-8 h-8 cursor-pointer rounded-full bg-yellow-500"></div>
                       </div>
                     </div>
 
@@ -158,7 +168,7 @@ const ProductDetails = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="buy flex gap-2">
+                    <div className="buy flex gap-2 font-semibold">
                       <button
                         onClick={handleCart}
                         className="py-2 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-36 shadow-sm border-slate-800"
@@ -168,160 +178,10 @@ const ProductDetails = () => {
 
                       <button
                         onClick={handleBuy}
-                        className="py-2 hover:bg-green-700 hover:text-white active:bg-green-800 disabled:bg-green-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-36 shadow-sm border-slate-800"
+                        className="py-2 bg-slate-700 text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-36 shadow-sm border-slate-800 hover:bg-slate-600 "
                       >
                         Buy now
                       </button>
-                    </div>
-
-                    <div className="more">
-                      <div
-                        className="flex p-4 justify-between items-center border-b cursor-pointer hover:bg-slate-50"
-                        onClick={() => setCollapse(!collapse)}
-                      >
-                        <h1>Specifications</h1>
-                        <p>+</p>
-                      </div>
-                      <div
-                        className={`overflow-y-hidden ${
-                          collapse ? "h-[0]" : "h-[100%]"
-                        } transition-all duration-400 ease-in-out`}
-                      >
-                        <div className={`overflow-x-auto  `}>
-                          <table className="table-auto w-full">
-                            <tbody>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Name
-                                </td>
-                                <td className="px-4 py-2">{product.name}</td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Brand
-                                </td>
-                                <td className="px-4 py-2">{product.brand}</td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Model Number
-                                </td>
-                                <td className="px-4 py-2">{product.modelNo}</td>
-                              </tr>
-
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Category
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.category}
-                                </td>
-                              </tr>
-
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Stock Unit ID
-                                </td>
-                                <td className="px-4 py-2">{product.skuId}</td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Product Type
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.productType}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Gender
-                                </td>
-                                <td className="px-4 py-2">{product.gender}</td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Collection
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.collection}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Frame Material
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.frame?.material}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Frame Color
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.frame?.color}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Frame Shape
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.frame?.shape}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Frame Style
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.frame?.style}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Size
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.frame?.size}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Frame Width
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.frame?.measurement}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Age Group
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.ageGroup} years
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Weight
-                                </td>
-                                <td className="px-4 py-2">
-                                  {product.weight}gm
-                                </td>
-                              </tr>
-
-                              <tr>
-                                <td className="font-semibold px-4 py-2">
-                                  Seller
-                                </td>
-                                <td className="px-4 py-2">{product.seller}</td>
-                              </tr>
-                              {/* Add other fields similarly */}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
                     </div>
 
                     <div className="flex gap-5 p-4">
@@ -335,7 +195,132 @@ const ProductDetails = () => {
                 </div>
 
                 {/* ReView Sections */}
-
+                <div className="more">
+                  <div
+                    className="flex p-4 justify-between items-center border-b border-gray-300  cursor-pointer hover:bg-slate-50"
+                    onClick={() => setCollapse(!collapse)}
+                  >
+                    <h1>Specifications</h1>
+                    <p>+</p>
+                  </div>
+                  <div
+                    className={`overflow-y-hidden ${
+                      collapse ? "h-[0]" : "h-[100%]"
+                    } transition-all duration-400 ease-in-out`}
+                  >
+                    <div className="text-md font-sans text-black p-4">
+                      <h3 className="py-2 font-semibold">Description</h3>
+                      <p> {product?.description}</p>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full bg-white border border-gray-300">
+                        <tbody>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">Name</td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.name}
+                            </td>
+                            <td className="font-semibold px-4 py-2">Brand</td>
+                            <td className="px-4 py-2">{product.brand}</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">
+                              Model Number
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.modelNo}
+                            </td>
+                            <td className="font-semibold px-4 py-2">
+                              Category
+                            </td>
+                            <td className="px-4 py-2">{product.category}</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">
+                              Stock Unit ID
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.skuId}
+                            </td>
+                            <td className="font-semibold px-4 py-2">
+                              Product Type
+                            </td>
+                            <td className="px-4 py-2">{product.productType}</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">Gender</td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.gender}
+                            </td>
+                            <td className="font-semibold px-4 py-2">
+                              Collection
+                            </td>
+                            <td className="px-4 py-2">{product.collection}</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">
+                              Frame Material
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.frame?.material}
+                            </td>
+                            <td className="font-semibold px-4 py-2">
+                              Frame Color
+                            </td>
+                            <td className="px-4 py-2">
+                              {product.frame?.color}
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">
+                              Frame Shape
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.frame?.shape}
+                            </td>
+                            <td className="font-semibold px-4 py-2">
+                              Frame Style
+                            </td>
+                            <td className="px-4 py-2">
+                              {product.frame?.style}
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">Size</td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.frame?.size}
+                            </td>
+                            <td className="font-semibold px-4 py-2">
+                              Frame Width
+                            </td>
+                            <td className="px-4 py-2">
+                              {product.frame?.measurement}
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">
+                              Age Group
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.ageGroup} years
+                            </td>
+                            <td className="font-semibold px-4 py-2">Weight</td>
+                            <td className="px-4 py-2">{product.weight}gm</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300">
+                            <td className="font-semibold px-4 py-2">Seller</td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.seller}
+                            </td>
+                            <td className="font-semibold px-4 py-2"></td>
+                            <td className="px-4 py-2"></td>
+                          </tr>
+                          {/* Add other fields similarly */}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
                 <div>
                   <ReviewSummary />
                 </div>
