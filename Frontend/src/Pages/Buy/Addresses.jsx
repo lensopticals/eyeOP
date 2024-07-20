@@ -157,9 +157,9 @@ const Addresses = () => {
             <p className="ml-8 md:ml-[3rem] mt-[2.5rem]">Saved Addresses</p>
             {address.map((add) => (
               <div
-                className={`addressCard mx-5 p-3 bg-blue-100/50 sm:p-5 sm:mx-[2rem] mt-5 rounded-md border-2 border-slate-200 ${
+                className={`addressCard p-3 bg-blue-100/50 sm:p-5 sm:mx-[1rem] mt-5 rounded-md border-2 border-slate-200 ${
                   selected === add._id ? "bg-blue-100/50" : "bg-white"
-                } md:w-[50vw] mx-[3rem]`}
+                } md:w-[50vw] mx-[1rem]`}
                 key={add._id}
                 onClick={() => {
                   setSelected(add._id);
@@ -213,7 +213,7 @@ const Addresses = () => {
           </div>
 
           <div
-            className="new mx-8 bg-slate-50 p-5 mt-5 rounded-md border-2 border-slate-200 md:w-[50vw]"
+            className="new mx-5 bg-slate-50 p-5 mt-5 rounded-md border-2 border-slate-200 md:w-[50vw]"
             onClick={handleCreate}
           >
             <div className="flex">
@@ -223,34 +223,36 @@ const Addresses = () => {
           </div>
         </div>
 
-        <div className="productDetails mt-20 max-sm:ml-5 ml-auto">
-          <h1 className="lg:hidden md:hidden sm:block text-2xl mb-5 max-sm:text-lg font-semibold">
+        <div className="productDetails mt-20 max-sm:ml-1 sm:ml-auto">
+          <h1 className="lg:hidden md:hidden sm:block text-2xl mb-5 max-sm:text-lg font-semibold ml-5">
             Bill Details:
           </h1>
           {id && (
-            <div className="productDetails mt-3 md:ml-auto sm:ml-[4.6rem] ml-1">
-              <div className="card p-5 m-auto my-3 border-slate-200 border-2">
+            <div >
+              <div className="card p-3 m-5 sm:m-3 my-3 border-slate-200 border-2 sm:flex">
                 <img
                   src={product.thumbnail}
                   alt="#"
-                  className="w-[12rem] h-[12rem] m-auto mb-2"
+                  className="w-[10rem] m-auto mb-2 object-cover h-[7rem]"
                 />
-                <div className="flex">
-                  <p>Name: </p>
-                  <p className="ml-auto">{product?.name}</p>
-                </div>
-                <div className="flex">
-                  <p>Discout: </p>
-                  <p className="ml-auto">{product.discountPercentage}%</p>
-                </div>
-                <div className="flex">
-                  <p>Price:</p>
-                  <p className="ml-auto">${product.price}</p>
+                <div className="p-3 m-2">
+                  <div className="flex sm:gap-3 gap-2">
+                    <p className="italic">Name: </p>
+                    <p className="ml-auto font-semibold">{product?.name}</p>
+                  </div>
+                  <div className="flex sm:gap-3 gap-2">
+                    <p className="italic">Discout: </p>
+                    <p className="ml-auto font-semibold">{product.discountPercentage.toFixed(2)}%</p>
+                  </div>
+                  <div className="flex sm:gap-3 gap-2">
+                    <p className="italic">Price:</p>
+                    <p className="ml-auto font-semibold">${product.price.toFixed(2)}</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex border-slate-150 border-2 m-auto p-2">
+              <div className="flex border-slate-150 border-2 p-2 m-3">
                 <h1 className="text-xl ml-3 max-sm:text-lg">Total price: </h1>
-                <p className="ml-auto text-xl max-sm:text-lg">
+                <p className="ml-auto text-xl max-sm:text-lg font-semibold pr-3">
                   ${product.price?.toFixed(2)}
                 </p>
               </div>
@@ -260,7 +262,7 @@ const Addresses = () => {
             cart?.map((product) => (
               <div
                 key={product._id}
-                className="card p-3 sm:mr-3 m-auto sm:m-3 my-3 border-slate-200 border-2 sm:flex"
+                className="card p-3 m-5 sm:m-3 my-3 border-slate-200 border-2 sm:flex"
               >
                 <img
                   src={product?.product.thumbnail}
@@ -270,7 +272,9 @@ const Addresses = () => {
                 <div className="p-3 m-2">
                   <div className="flex sm:gap-3 gap-2">
                     <p className="italic">Name: </p>
-                    <p className="ml-auto font-semibold">{product?.product.name}</p>
+                    <p className="ml-auto font-semibold">
+                      {product?.product.name}
+                    </p>
                   </div>
                   <div className="flex sm:gap-3 gap-2">
                     <p className="italic">Qty: </p>
@@ -284,7 +288,9 @@ const Addresses = () => {
                   </div>
                   <div className="flex sm:gap-3 gap-2">
                     <p className="italic">Price:</p>
-                    <p className="ml-auto font-semibold">${product?.total?.toFixed(2)}</p>
+                    <p className="ml-auto font-semibold">
+                      ${product?.total?.toFixed(2)}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -294,7 +300,9 @@ const Addresses = () => {
             <>
               <div className="flex border-slate-150 border-2 p-2 m-3">
                 <h1 className="text-xl ml-3 max-sm:text-lg">Total price: </h1>
-                <p className="ml-auto text-xl max-sm:text-lg font-semibold pr-3">${total?.toFixed(2)}</p>
+                <p className="ml-auto text-xl max-sm:text-lg font-semibold pr-3">
+                  ${total?.toFixed(2)}
+                </p>
               </div>
             </>
           )}
