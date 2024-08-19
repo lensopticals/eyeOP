@@ -26,4 +26,5 @@ export const store = configureStore({
     delOrder: deleteOrderReducer.reducer,
     orderDetails: orderDetailsReducer.reducer,
   },
+  devTools: process.env.NODE_ENV !== "production",
 });
