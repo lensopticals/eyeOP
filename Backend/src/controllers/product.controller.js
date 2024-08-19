@@ -6,7 +6,7 @@ import { ApiFeatures } from "../utils/apiFeatures.js";
 
 const fetchallproducts = async (req, res) => {
   try {
-    const resultPerpage = 8;
+    const resultPerpage = req.query.limit;
     const productCount = await Product.countDocuments();
     const apiFeature = new ApiFeatures(
       Product.find().sort({ createdAt: -1 }),
@@ -23,7 +23,7 @@ const fetchallproducts = async (req, res) => {
         .json({ success: false, message: "No Product Found" });
     }
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       product,
       productCount,

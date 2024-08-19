@@ -5,7 +5,7 @@ import atcImage from "../assets/Images/add-to-cart.png";
 import { Link, useNavigate } from "react-router-dom";
 // import { getProduct } from "../redux/actions/productActions";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, className }) => {
   const navigate = useNavigate();
   const [whiteList, setWhiteList] = useState(heart);
   const whiteClick = () => {
@@ -17,8 +17,10 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="relative border overflow-hidden border-slate-200 hover:scale-[1.02] transition-all ease-in-out duration-200 hover:shadow-md mt-3 bg-gray-00  h-fit  rounded-[0.4rem] ">
-      <div className="absolute z-50 px-3 flex justify-between items-end top-3 left-0 w-full py-1">
+    <div
+      className={`relative border overflow-hidden border-slate-200 hover:scale-[1.02] transition-all ease-in-out duration-200 hover:shadow-md mt-3 bg-gray-00  h-fit  rounded-[0.4rem] ${className}`}
+    >
+      <div className="absolute z-0 px-3 flex justify-between items-end top-3 left-0 w-full py-1">
         <h3 className="w-fit text-xs bg-emerald-50 font-semibold text-emerald-500 rounded flex justify-center items-center py-1 px-3">
           New Arrival
         </h3>
@@ -48,8 +50,9 @@ const ProductCard = ({ product }) => {
             Size: Medium
           </p>
           <div className="flex mt-1">
-            <h4 className="price font-bold text-slate-700 lg:text-[1rem] md:text-sm text-xs">
-              ${product.price}
+            <h4 className="price font-semibold text-emerald-500 lg:text-[1rem] md:text-sm text-xs">
+              <span className="mr-[2px]">₹</span>
+              {product.price}
             </h4>
           </div>
         </div>

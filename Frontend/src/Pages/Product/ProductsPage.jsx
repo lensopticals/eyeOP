@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import Products from "../assets/api.json";
-import ProductCard from "./ProductCard";
-import SideFilters from "./SideFilters";
+import ProductCard from "../../components/ProductCard";
+import SideFilters from "../../components/SideFilters";
 import { toast } from "react-toastify";
-import "../styles/productsPage.css";
-import sortImg from "../assets/Images/sort.png";
-import filterImg from "../assets/Images/filter.png";
+import "../../styles/productsPage.css";
+import sortImg from "../../assets/Images/sort.png";
+import filterImg from "../../assets/Images/filter.png";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../redux/actions/productAction";
-import { clearErrors } from "../redux/features/productSlice";
+import { getProducts } from "../../redux/actions/productAction";
+import { clearErrors } from "../../redux/features/productSlice";
 const ProductsPage = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState(false);
@@ -113,7 +113,7 @@ const ProductsPage = () => {
       {!filter ? (
         <div className="flex">
           <SideFilters width="22rem" clas="sideBar" />
-          <div className="products w-full h-full grid grid-cols-1 lg:grid-cols-3 gap-10 mx-10 md:grid-cols-2 ">
+          <div className="products w-full h-full grid grid-cols-1 lg:grid-cols-3 gap-10 mx-5 md:mx-10 md:grid-cols-2 ">
             {products.map((product) => {
               return (
                 <div key={product._id}>

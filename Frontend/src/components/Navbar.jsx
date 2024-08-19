@@ -159,14 +159,14 @@ const Navbar = () => {
           className={`fixed top-0 ${
             open ? "right-0" : "  right-[-100%]"
           } md:static  w-full h-screen md:h-full 
-          md:bg-transparent backdrop-blur-sm md:gap-0 flex flex-col md:flex-row transition-all duration-400 ease-in-out items-end md:justify-evenly md:items-center overflow-y-auto`}
+          md:bg-transparent backdrop-blur-sm md:gap-0 flex flex-col md:flex-row transition-all duration-300 ease-in-out items-end md:justify-evenly md:items-center overflow-y-auto`}
         >
           <nav
             id="sidebar"
             className="flex w-[16rem] gap-5 pt-4 md:w-full h-full bg-white md:bg-transparent border-l-2 border-gray-100 md:border-0 px-5 md:p-2 md:gap-9 py-2 flex-col md:flex-row relative"
           >
             <p
-              className="text-2xl text-gray-500 border border-gray-800 rounded absolute md:hidden right-4 top-4"
+              className="text-2xl text-gray-900 rounded absolute md:hidden right-4 top-4"
               onClick={() => setOpen(false)}
             >
               <LiaTimesSolid />
@@ -190,7 +190,7 @@ const Navbar = () => {
                     }}
                     className="text-center active:bg-slate-800 cursor-pointer w-fit px-3 py-2 bg-slate-700 text-white font-medium"
                   >
-                    Login/Signup
+                    Login / Signup
                   </p>
                 </div>
               )}

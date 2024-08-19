@@ -77,10 +77,18 @@ const productSchema = new Schema(
         enum: ["Acetate", "Metal", "TR90", "Other"],
         required: [true, "Frame material is required"],
       },
-      color: {
-        type: String,
-        required: [true, "Frame color is required"],
-      },
+      color: [
+        {
+          name: {
+            type: String,
+            required: [true, "Frame color name is required"],
+          },
+          colorCode: {
+            type: String,
+            required: [true, "Frame color code is required"],
+          },
+        },
+      ],
       shape: {
         type: String,
         required: [true, "Frame shape is required"],
@@ -97,6 +105,22 @@ const productSchema = new Schema(
       measurement: {
         type: String,
         required: [true, "Frame width is required"],
+      },
+      dimensions: {
+        bridgeWidth: {
+          type: String,
+          required: [true, "Bridge width is required"],
+        },
+        templeLength: {
+          type: String,
+          required: [true, "Temple width is required"],
+        },
+        lensWidth: {
+          type: String,
+        },
+        lensHeight: {
+          type: String,
+        },
       },
     },
 

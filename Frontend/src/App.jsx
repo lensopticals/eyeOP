@@ -1,7 +1,7 @@
 import Layout from "./Layout";
 import ProfilePage from "./Pages/User/ProfilePage";
 import ProductCard from "./components/ProductCard";
-import ProductsPage from "./components/ProductsPage";
+import ProductsPage from "./Pages/Product/ProductsPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -19,7 +19,7 @@ import ProductByCategory from "./Pages/Product/ProductByCategory";
 import Navbar from "./components/Navbar";
 import UserDashboard from "./Pages/User/UserDashboard";
 import ProductDetails from "./Pages/Product/ProductDetails";
-import HomePage from "./Pages/HomePage";
+import HomePage from "./Pages/Home/HomePage";
 import CartPage from "./Pages/Cart/CartPage";
 import ApplicationForm from "./components/Buy/ApplicationForm";
 import Payment from "./Pages/Buy/Payment";
@@ -29,6 +29,8 @@ import AddressPageCart from "./components/Buy/AddressPageCart";
 import EditAddressPage from "./Pages/Buy/EditAddressPage";
 import Addresses from "./Pages/Buy/Addresses";
 import AddressForm from "./Pages/Buy/AddressForm";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {

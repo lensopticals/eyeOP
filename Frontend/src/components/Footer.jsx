@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 const Footer = () => {
   return (
-    <div className="bg-gray-100 mt-[3rem] py-10 flex flex-wrap items-start justify-between px-4 md:px-36">
+    <div className="bg-gray-100 py-10 flex flex-wrap items-start justify-between px-4 md:px-36">
       {/* Shop */}
       <div>
         <h1 className="text-md font-bold">Shop</h1>

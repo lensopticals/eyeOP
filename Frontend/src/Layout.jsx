@@ -19,7 +19,9 @@ const Layout = () => {
       {isOpen && type === "phone" && <UpdatePhone />}
       {isOpen && type === "email" && <UpdateEmail />}
 
-      <Outlet />
+      <main className="overflow-x-hidden">
+        <Outlet />
+      </main>
       <Footer />
     </>
   );

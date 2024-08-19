@@ -2,29 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar-track{
-    background: transparent;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-::-webkit-scrollbar{
-    width: 5px;
-    height: 3px;
+::-webkit-scrollbar {
+  width: 5px;
+  height: 3px;
 }
 
-::-webkit-scrollbar-thumb{
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 1rem;
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 1rem;
 }
 
-::-webkit-scrollbar-thumb:hover{
-    background-color: rgba(0, 0, 0, 0.4);
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
-.profile-text{
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke-width: 1px;
-        -webkit-text-stroke-color: black;
-
+.profile-text {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
 }
 
+/* Swiper */
 
+/* Add your styles in a CSS file */
+
+.swiper {
+  width: 340px;
+  height: auto;
+  padding: 1rem 5px;
+}
+
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  font-weight: bold;
+}
+
+.mySwiper .swiper-button-next,
+.mySwiper .swiper-button-prev {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mySwiper .swiper-pagination {
+  bottom: -1rem;
+}
+.swiper-pagination-bullet {
+  background-color: white;
+}
+.swiper-pagination-bullet-active {
+  background-color: orange;
+}
+
+.mySwiper:hover .swiper-button-next,
+.mySwiper:hover .swiper-button-prev {
+  opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .mySwiper .swiper-button-next,
+  .mySwiper .swiper-button-prev {
+    display: none;
+  }
+  .swiper {
+    width: 280px;
+  }
+}
