@@ -5,27 +5,27 @@ const products = [
   {
     id: 1,
     image:
-      "https://res.cloudinary.com/dtbbuevez/image/upload/v1724004124/banner1_fga2kh.webp",
+      "https://res.cloudinary.com/dtbbuevez/image/upload/v1724084731/banner1_yfw0om.webp",
     title: "",
   },
   {
     id: 5,
     image:
-      "https://res.cloudinary.com/dtbbuevez/image/upload/v1724004125/banner5_t5xvi2.webp",
+      "https://res.cloudinary.com/dtbbuevez/image/upload/v1724084732/banner5_xjrrv2.webp",
 
     title: "Product 2",
   },
   {
     id: 4,
     image:
-      "https://res.cloudinary.com/dtbbuevez/image/upload/v1724004123/banner2_en10qf.webp",
+      "https://res.cloudinary.com/dtbbuevez/image/upload/v1724084732/banner3_stfkn6.webp",
 
     title: "Product 2",
   },
   {
     id: 6,
     image:
-      "https://res.cloudinary.com/dtbbuevez/image/upload/v1724004123/banner3_vl6waf.webp",
+      "https://res.cloudinary.com/dtbbuevez/image/upload/v1724084732/banner2_uidyud.webp",
 
     title: "Product 2",
   },

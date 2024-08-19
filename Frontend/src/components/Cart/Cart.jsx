@@ -9,20 +9,28 @@ import { toast } from "react-toastify";
 import { clearCartErrors } from "../../redux/features/cartSlice";
 import { useNavigate } from "react-router-dom";
 
-function Cart() {
+function Cart({ className = "" }) {
   const [show, setShow] = useState(false);
   const { cart, cartLoading, cartError } = useSelector((state) => state.cart);
+  const { success, loading } = useSelector((state) => state.cartRemove);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const [subtotal, setSubtotal] = useState(0);
-
+  const tax = 10;
+  const shipping = 50;
   useEffect(() => {
     dispatch(getCart());
   }, []);
 
   useEffect(() => {
+    dispatch(getCart());
+  }, [dispatch, success]);
+
+  useEffect(() => {
     if (cartError) {
-      toast.error(cartError);
+      // toast.error(cartError);
+      console.log(cartError);
+
       dispatch(clearCartErrors());
     }
   }, [cartError]);
@@ -30,6 +38,21 @@ function Cart() {
   const calculateSubtotal = (items) => {
     const subtotal = items.reduce((accumulator, item) => {
       return accumulator + item.total;
+    }, 0);
+    return subtotal;
+  };
+
+  const calculateDiscount = (items) => {
+    const subtotal = items.reduce((accumulator, item) => {
+      return (
+        accumulator +
+        item.product?.price +
+        (item.product?.price *
+          item.product?.discountPercentage *
+          item.quantity) /
+          100 -
+        item.product?.price
+      );
     }, 0);
     return subtotal;
   };
@@ -58,7 +81,7 @@ function Cart() {
               id="checkout"
             >
               <div
-                className="flex md:flex-row flex-col justify-center"
+                className={`flex md:flex-row flex-col justify-center ${className}`}
                 id="cart"
               >
                 <div
@@ -87,7 +110,7 @@ function Cart() {
                               {cartItem.product.name}
                             </p>
                             <p className="text-sm font-semibold leading-3 text-gray-600 py-1">
-                              ₹ {cartItem.product.price}
+                              ₹ {cartItem.product.price?.toFixed(2)}
                             </p>
                             <select
                               onChange={(e) =>
@@ -116,24 +139,24 @@ function Cart() {
                           </div>
 
                           <p className="text-sm leading-3 text-gray-600 py-1">
-                            {cartItem.product.frame.color}
+                            {cartItem.product.frame.color[0]?.name}
                           </p>
-                          <p className="w-96 text-sm leading-3 py-1 text-gray-600">
+                          {/* <p className="w-96 text-sm leading-3 py-1 text-gray-600">
                             {cartItem.product?.description}
-                          </p>
-                          <div className="flex items-center justify-between pt-5 pr-6">
+                          </p> */}
+                          <div className="flex items-center justify-between pt-0 pr-6">
                             <div className="flex items-center gap-4">
                               {/* <p className="text-sm leading-3 underline text-gray-800 cursor-pointer">
                                 Add to favorites
                               </p> */}
                               <p
-                                onClick={() =>
+                                onClick={() => {
                                   dispatch(
                                     removeFromCart({
                                       productId: cartItem.product._id,
                                     })
-                                  )
-                                }
+                                  );
+                                }}
                                 className="text-md leading-3 underline text-red-500  cursor-pointer"
                               >
                                 Remove
@@ -141,7 +164,17 @@ function Cart() {
                             </div>
 
                             <p className="text-base font-semibold text-gray-800">
-                              ₹ {cartItem.total}
+                              ₹ {cartItem.total?.toFixed(2)}
+                              <span className="text-xs ml-2  text-emerald-400 line-through">
+                                ₹{" "}
+                                {(
+                                  cartItem.quantity * cartItem.product.price +
+                                  (cartItem.product.price *
+                                    cartItem.product.discountPercentage *
+                                    cartItem.quantity) /
+                                    100
+                                )?.toFixed(2)}
+                              </span>
                             </p>
                           </div>
                         </div>
@@ -168,7 +201,12 @@ function Cart() {
                           </p>
                           <p className="text-base leading-none text-gray-800">
                             ₹{" "}
-                            {cart && cart.length > 0 && calculateSubtotal(cart)}
+                            {cart &&
+                              cart.length > 0 &&
+                              (
+                                calculateSubtotal(cart) +
+                                calculateDiscount(cart)
+                              ).toFixed(2)}
                           </p>
                         </div>
                         <div className="flex items-center justify-between pt-5">
@@ -178,8 +216,19 @@ function Cart() {
                           <p className="text-base leading-none text-gray-800">
                             ₹ 0{" "}
                             <span className="text-xs text-gray-500 line-through">
-                              ₹ 50
+                              ₹ {shipping}
                             </span>
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between pt-5">
+                          <p className="text-base leading-none text-gray-800">
+                            Total Discount
+                          </p>
+                          <p className="text-base leading-none text-emerald-600">
+                            - ₹
+                            {cart &&
+                              cart.length > 0 &&
+                              calculateDiscount(cart).toFixed(2)}
                           </p>
                         </div>
                         <div className="flex items-center justify-between pt-5">
@@ -189,7 +238,7 @@ function Cart() {
                           <p className="text-base leading-none text-gray-800">
                             ₹ 0{" "}
                             <span className="text-xs  text-gray-500 line-through">
-                              ₹ 10
+                              ₹ {tax}
                             </span>
                           </p>
                         </div>
@@ -201,12 +250,19 @@ function Cart() {
                           </p>
                           <p className="text-2xl font-semibold leading-normal text-right text-gray-800">
                             ₹{" "}
-                            {cart && cart.length > 0 && calculateSubtotal(cart)}
-                            <span className="pl-2 text-xs text-gray-500 line-through">
+                            {cart &&
+                              cart.length > 0 &&
+                              calculateSubtotal(cart).toFixed(2)}
+                            <span className="pl-2 text-xs text-emerald-500 line-through">
                               ₹{" "}
                               {cart &&
                                 cart.length > 0 &&
-                                calculateSubtotal(cart) + 60}
+                                (
+                                  calculateSubtotal(cart) +
+                                  calculateDiscount(cart) +
+                                  tax +
+                                  shipping
+                                )?.toFixed(2)}
                             </span>
                           </p>
                         </div>

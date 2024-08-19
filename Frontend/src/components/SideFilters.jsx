@@ -17,7 +17,7 @@ const SideFilters = ({ width, clas }) => {
 
   return (
     <div
-      className={`${clas} bg-white p-4 rounded shadow-sm shadow-slate-200 max-h-screen overflow-y-auto`}
+      className={`${clas} sticky left-0 bg-white p-4 rounded shadow-sm shadow-slate-200 max-h-full overflow-y-auto`}
       style={{ width: width }}
     >
       <div className="gender mb-6">

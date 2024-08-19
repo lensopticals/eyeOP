@@ -28,7 +28,6 @@ const createAddress = async (req, res) => {
   }
 };
 
-
 // Get all Addresses of the logged in user
 const getAddress = async (req, res) => {
   try {

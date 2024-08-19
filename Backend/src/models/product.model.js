@@ -144,7 +144,9 @@ const productSchema = new Schema(
       type: String,
       required: [true, "Seller of product is required!"],
     },
-
+    specialOffer: {
+      type: String,
+    },
     tag: {
       type: String,
     },

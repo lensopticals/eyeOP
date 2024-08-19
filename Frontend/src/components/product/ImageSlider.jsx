@@ -36,7 +36,7 @@ const ImageSlider = ({ setisOpen, images }) => {
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className="object-contain lg:px-20 w-full h-[60vh] lg:h-screen aspect-square lg:aspect-video"
+                className="object-contain !mix-blend-screen lg:px-14 w-full h-[60vh] lg:h-[37rem] aspect-square lg:aspect-video"
               />
             </li>
           ))}

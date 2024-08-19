@@ -14,7 +14,9 @@ const AddressForm = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { user } = useSelector((state) => state.user);
-  const { addressLoading, addressError } = useSelector((state) => state.address);
+  const { addressLoading, addressError } = useSelector(
+    (state) => state.address
+  );
   let { cart } = useSelector((state) => state.cart);
   const [crt, setCrt] = useState([]);
   const [total, setTotal] = useState(0);

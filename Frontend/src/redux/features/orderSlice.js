@@ -132,6 +132,11 @@ export const newOrderReducer = createSlice({
     clearNewOrderErrors: (state) => {
       state.error = null;
     },
+    resetNewOrder: (state) => {
+      state.success = false;
+      state.loading = false;
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -155,5 +160,5 @@ export const { resetDeleteOrder, clearDeleteOrderError } =
   deleteOrderReducer.actions;
 
 export const { clearOrderDetailsErrors } = orderDetailsReducer.actions;
-export const { clearNewOrderErrors } = newOrderReducer.actions;
+export const { clearNewOrderErrors, resetNewOrder } = newOrderReducer.actions;
 export const { clearErrors } = orderReducer.actions;

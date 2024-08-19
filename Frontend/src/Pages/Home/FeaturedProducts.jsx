@@ -15,7 +15,7 @@ export const FeaturedProducts = () => {
   const [activeType, setActiveType] = useState("sunglasses");
 
   useEffect(() => {
-    dispatch(getProducts({ limit: 10 }));
+    dispatch(getProducts({ limit: 8 }));
   }, []);
 
   const handleTypeChange = (type) => {

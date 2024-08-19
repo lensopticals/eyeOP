@@ -17,7 +17,7 @@ const LatestProducts = () => {
 
     dispatch(
       getProducts({
-        limit: 4,
+        limit: 8,
       })
     );
   }, []);

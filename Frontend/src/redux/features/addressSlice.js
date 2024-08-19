@@ -14,14 +14,17 @@ export const addressReducer = createSlice({
     success: false,
     address: null,
     addressError: null,
+    createSuccess: false,
   },
   reducers: {
     clearAddressErrors(state) {
       state.addressError = null;
     },
     removeAddressReset(state) {
+      state.addressError = null;
       state.addressLoading = false;
       state.success = false;
+      state.createSuccess = false;
     },
   },
   extraReducers: (builder) => {
@@ -60,7 +63,8 @@ export const addressReducer = createSlice({
       })
       .addCase(createAddress.fulfilled, (state, action) => {
         state.addressLoading = false;
-        state.success = true;
+        state.createSuccess = true;
+        state.address = action.payload;
       })
       .addCase(createAddress.rejected, (state, action) => {
         state.addressLoading = false;
@@ -84,36 +88,35 @@ export const addressReducer = createSlice({
   },
 });
 
-
-
 export const addressDeleteReducer = createSlice({
-    name: "deleteAddress",
-    initialState: {
-        loading: false,
-        success: false,
-        addressError: null,
+  name: "deleteAddress",
+  initialState: {
+    loading: false,
+    success: false,
+    addressError: null,
+  },
+  reducers: {
+    clearAddressErrors(state) {
+      state.addressError = null;
     },
-    reducers: {
-        clearAddressErrors(state) {
-            state.addressError = null;
-        },
-    },
-    extraReducers: (builder) => {
-        builder
-        .addCase(deleteAddress.pending, (state) => {
-            state.loading = true;
-            state.success = false;
-        })
-        .addCase(deleteAddress.fulfilled, (state) => {
-            state.loading = false;
-            state.success = true;
-        })
-        .addCase(deleteAddress.rejected, (state, action) => {
-          state.loading = false;
-          state.success = false;
-          state.addressError = action.payload;
-        });
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(deleteAddress.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+      })
+      .addCase(deleteAddress.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(deleteAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.addressError = action.payload;
+      });
+  },
 });
 
-export const { clearAddressErrors, removeAddressReset } = addressReducer.actions;
+export const { clearAddressErrors, removeAddressReset } =
+  addressReducer.actions;

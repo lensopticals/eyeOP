@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../utils/API";
 import { toast } from "react-toastify";
+import { redirect } from "react-router-dom";
 
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
@@ -19,6 +20,7 @@ export const addToCart = createAsyncThunk(
         return rejectWithValue(data?.message || "Error in Adding Item to Cart");
       }
       toast.success("Item Added To Cart SuccessFully");
+      window.location.replace("/cart");
       return;
     } catch (error) {
       return rejectWithValue(error?.response?.data.message || error.message);

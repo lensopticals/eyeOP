@@ -43,8 +43,8 @@ const addressSchema = new Schema(
     place: {
       type: String,
       enum: ["home", "work", "other"],
-      default: "home"
-    }
+      default: "home",
+    },
   },
   { timestamps: true }
 );

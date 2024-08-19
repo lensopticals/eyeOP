@@ -8,10 +8,12 @@ import { useSelector } from "react-redux";
 import UpdatePassword from "./components/modals/auth/UpdatePassword";
 import UpdatePhone from "./components/modals/auth/UpdatePhone";
 import UpdateEmail from "./components/modals/auth/UpdateEmail";
+import ScrollToTop from "./components/ScrollToTop";
 const Layout = () => {
   const { isOpen, type } = useSelector((state) => state.authModal);
   return (
     <>
+      <ScrollToTop />
       <Navbar />
       {isOpen && type === "login" && <Login />}
       {isOpen && type === "signup" && <SignUp />}

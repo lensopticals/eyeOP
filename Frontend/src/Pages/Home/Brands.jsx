@@ -59,6 +59,7 @@ const Brands = () => {
     dots: false,
     infinite: true,
     speed: 1000,
+    grabCursor: true,
     slidesToShow: 4,
     slidesToScroll: 1,
     initialSlide: 0,

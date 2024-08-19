@@ -5,6 +5,7 @@ import {
   FaTwitter,
   FaWhatsapp,
   FaInbox,
+  FaChevronDown,
 } from "react-icons/fa";
 import ReviewSummary from "../../components/product/Reviews/ReviewSummary";
 import ImageModal from "../../components/modals/Product/ImageModal";
@@ -53,10 +54,15 @@ const ProductDetails = () => {
 
   const { id } = useParams();
   const dispatch = useDispatch();
-  // const { product } = useSelector((state) => state.productDetail);
-  // console.log(product);
   const { product, loading } = useSelector((state) => state.productDetail);
-  const { cartLoading, cartError } = useSelector((state) => state.cart);
+  const offers = [
+    "Pay via PhonePe/Paytm & get Instant 100% Cashback* *T&C apply",
+    "Get 50% off on your first purchase",
+    "Free delivery on orders above ₹599",
+  ];
+  const { cartLoading, cartError, success } = useSelector(
+    (state) => state.cart
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -102,26 +108,41 @@ const ProductDetails = () => {
                 images={product?.images}
                 setisOpen={setisOpen}
               />
-              <div className="p-4 md:px-[4.5rem] md:py-10 bg-white ">
-                <div className="flex flex-col border-b border-gray-300 lg:flex-row gap-6 ">
-                  <div className="w-full lg:w-1/2 h-full max-h-[80vh] lg:max-h-screen  bg-white md:border rounded-lg relative ">
-                    {product && Array.isArray(product?.images) && (
-                      <ImageSlider
-                        setisOpen={setisOpen}
-                        images={product?.images}
-                      />
-                    )}
-                    {product && product?.stock > 0 ? (
-                      <p className="absolute top-0 right-0 p-3 bg-emerald-100 text-emerald-600">
-                        In Stock
-                      </p>
-                    ) : (
-                      <p className="absolute top-0 right-0 p-3 bg-red-50 text-red-600">
-                        Out of Stock
-                      </p>
-                    )}
+              <div className="p-2 sm:p-4 md:px-[4.5rem] md:py-10 bg-white ">
+                <div className="grid grid-cols-1 border-b border-gray-300 lg:grid-cols-2 gap-6 ">
+                  <div className="w-full h-full max-h-[80vh] lg:max-h-screen  bg-white rounded-lg relative ">
+                    <div className="relative md:border ">
+                      {product && Array.isArray(product?.images) && (
+                        <ImageSlider
+                          setisOpen={setisOpen}
+                          images={product?.images}
+                        />
+                      )}
+                      {product && product?.stock > 0 ? (
+                        <p className="absolute top-0 right-0 p-3 bg-emerald-100 text-emerald-600">
+                          In Stock
+                        </p>
+                      ) : (
+                        <p className="absolute top-0 right-0 p-3 bg-red-50 text-red-600">
+                          Out of Stock
+                        </p>
+                      )}
+                    </div>
+                    <div
+                      className="mt-7 flex p-4 justify-between items-center border-b border-gray-300  cursor-pointer bg-slate-50 hover:bg-slate-100"
+                      onClick={() => setCollapse(!collapse)}
+                    >
+                      <h1>Specifications</h1>
+                      <button
+                        className={`mt-2 focus:outline-none ${
+                          !collapse && "rotate-180"
+                        } transition-all duration-150 ease-in-out`}
+                      >
+                        <FaChevronDown className="text-emerald-600" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="w-full lg:w-1/2 h-full rounded-lg bg-white flex flex-col gap-5 px-4 pt-3 pb-6">
+                  <div className="w-full h-full rounded-lg bg-white flex flex-col gap-3 px-2 sm:px-4 pt-0 pb-6">
                     <div className="head">
                       <h1 className="text-2xl text-slate-800 font-semibold">
                         {product?.name}
@@ -140,6 +161,16 @@ const ProductDetails = () => {
                         ).toFixed(2)}
                       </span>
                     </p>
+                    <div className="flex gap-5 items-center justify-between">
+                      <h5 className="flex items-center relative button">
+                        <span className="text-green-600 font-medium text-xs bg-green-100 rounded-full px-4 py-1">
+                          <span className="text-sm">
+                            {product.discountPercentage}
+                          </span>
+                          % OFF
+                        </span>
+                      </h5>
+                    </div>
                     <div className="flex gap-2">
                       <div className="flex">
                         {Array.from({
@@ -150,7 +181,7 @@ const ProductDetails = () => {
                       </div>
                       <h3 className="font-semibold text-green-700">
                         {" "}
-                        {product?.rating ?? 0} Rating
+                        {product?.rating ?? "No"} Rating
                       </h3>
                     </div>
                     <div className="flex flex-col gap-4 sm:flex-row justify-between sm:items-end">
@@ -158,10 +189,12 @@ const ProductDetails = () => {
                         <h6 className="text-gray-600 font-semibold">Color</h6>
                         <div className="flex !-ml-2 mt-2 ">
                           {/* Rounded Coloured Rounded Boxes */}
-                          <div className="w-8 h-8 cursor-pointer rounded-full bg-blue-500"></div>
-                          <div className="w-8 h-8 cursor-pointer rounded-full bg-red-500"></div>
-                          <div className="w-8 h-8 cursor-pointer rounded-full bg-green-500"></div>
-                          <div className="w-8 h-8 cursor-pointer rounded-full bg-yellow-500"></div>
+                          {product?.frame?.color?.map((color, i) => (
+                            <div
+                              className={`w-8 border p-0.5 border-slate-800 h-8 cursor-pointer rounded-full `}
+                              style={{ backgroundColor: color.colorCode }}
+                            />
+                          ))}
                         </div>
                       </div>
 
@@ -184,64 +217,76 @@ const ProductDetails = () => {
                     {/* Offers */}
 
                     <div>
-                      <OfferBox />
+                      <OfferBox offers={offers} />
                     </div>
                     {/* Frame Dimensions */}
-                    <div className="flex justify-between bg-gray-700 rounded-lg border border-gray-100 shadow-xl px-5 py-4 pb-7 my-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5 justify-between bg-gray-700 rounded-lg border border-gray-100 shadow-xl px-0 sm:px-5 py-4 pb-7 my-2">
                       <div className="flex flex-col gap-0 items-center justify-center">
                         <img
                           src="/images/dimensions/eye.svg"
-                          className="w-20 h-16"
+                          className="sm:w-20 sm:h-16 w-16 h-10"
                           alt=""
                         />
-                        <div className="flex flex-col gap-0 justify-center items-center text-sm text-white">
-                          <h5>54 mm</h5>
+                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm text-white">
+                          <h5 className="text-xs md:text-sm font-normal">
+                            {product?.frame?.dimensions?.lensWidth}
+                          </h5>
                           <h5>Lens Width</h5>
                         </div>
                       </div>
                       <div className="flex flex-col gap-0 items-center justify-center">
                         <img
                           src="/images/dimensions/bridge.svg"
-                          className="w-20 h-16"
+                          className="sm:w-20 sm:h-16 w-16 h-10"
                           alt=""
                         />
-                        <div className="flex flex-col gap-0 justify-center items-center text-sm text-white">
-                          <h5>17 mm</h5>
+                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm text-white">
+                          <h5 className="text-xs md:text-sm font-normal">
+                            {product?.frame?.dimensions?.bridgeWidth}
+                          </h5>
                           <h5>Bridge Width</h5>
                         </div>
                       </div>{" "}
                       <div className="flex flex-col gap-0 items-center justify-center">
                         <img
                           src="/images/dimensions/temple.svg"
-                          className="w-20 h-16"
+                          className="sm:w-20 sm:h-16 w-16 h-10"
                           alt=""
                         />
-                        <div className="flex flex-col gap-0 justify-center items-center text-sm text-white">
-                          <h5>147 mm</h5>
+                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm text-white">
+                          <h5 className="text-xs md:text-sm font-normal">
+                            {product?.frame?.dimensions?.templeLength}
+                          </h5>
                           <h5>Temple Length</h5>
                         </div>
                       </div>{" "}
                       <div className="flex flex-col gap-0 items-center justify-center">
                         <img
                           src="/images/dimensions/lens.svg"
-                          className="w-20 h-16"
+                          className="sm:w-20 sm:h-16 w-16 h-10"
                           alt=""
                         />
-                        <div className="flex flex-col gap-0 justify-center items-center text-sm text-white">
-                          <h5>45 mm</h5>
+                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm text-white">
+                          <h5 className="text-xs md:text-sm font-normal">
+                            {product?.frame?.dimensions?.lensHeight}
+                          </h5>
                           <h5>Lens Height</h5>
                         </div>
                       </div>{" "}
                     </div>
                     <div className="flex flex-col md:flex-row gap-5 font-semibold">
                       <button
+                        disabled={cartLoading}
                         onClick={handleCart}
                         className="py-3 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-lg shadow-sm border-slate-800"
                       >
-                        Buy Frame Only at ₹{product?.price}
+                        {cartLoading
+                          ? "Loading..."
+                          : `  Buy Frame Only at ₹${product?.price}`}
                       </button>
 
                       <button
+                        disabled
                         onClick={handleBuy}
                         className="py-3 bg-slate-700 text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-lg shadow-sm border-slate-800 hover:bg-slate-600 "
                       >
@@ -261,13 +306,6 @@ const ProductDetails = () => {
 
                 {/* ReView Sections */}
                 <div className="more">
-                  <div
-                    className="flex p-4 justify-between items-center border-b border-gray-300  cursor-pointer hover:bg-slate-50"
-                    onClick={() => setCollapse(!collapse)}
-                  >
-                    <h1>Specifications</h1>
-                    <p>+</p>
-                  </div>
                   <div
                     className={`overflow-y-hidden ${
                       collapse ? "h-[0]" : "h-[100%]"

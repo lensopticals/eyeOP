@@ -51,6 +51,7 @@ export const cartReducer = createSlice({
       .addCase(getCart.rejected, (state, action) => {
         state.cartLoading = false;
         state.success = false;
+        state.cart = null;
         state.cartError = action.payload;
       })
       .addCase(updateCart.pending, (state) => {

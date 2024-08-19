@@ -22,7 +22,7 @@ const ProductCard = ({ product, className }) => {
     >
       <div className="absolute z-0 px-3 flex justify-between items-end top-3 left-0 w-full py-1">
         <h3 className="w-fit text-xs bg-emerald-50 font-semibold text-emerald-500 rounded flex justify-center items-center py-1 px-3">
-          New Arrival
+          {product?.tag}
         </h3>
         <img
           src={whiteList}
@@ -32,11 +32,11 @@ const ProductCard = ({ product, className }) => {
         />
       </div>
       <Link to={`/product/${product._id}`}>
-        <div className="p-3 pt-7 pb-0 bg-white">
+        <div className="p-3 pt-7 pb-0 bg-white flex items-center justify-center">
           <img
             src={product.thumbnail}
             alt={product?.title}
-            className="max-h-48 h-40 w-full max-w-60 object-cover rounded-xl"
+            className="max-h-48 h-40 w-full md:max-w-64 object-contain rounded-xl"
           />
           {/* Tag */}
         </div>
@@ -47,18 +47,24 @@ const ProductCard = ({ product, className }) => {
             </h3>
           </div>
           <p className="size font-normal mt-1 text-sm md:text-xs sm:text-[10px]">
-            Size: Medium
+            Size: {product?.frame.size}
           </p>
-          <div className="flex mt-1">
+          <div className="flex gap-5 items-center justify-between mt-1">
             <h4 className="price font-semibold text-emerald-500 lg:text-[1rem] md:text-sm text-xs">
               <span className="mr-[2px]">₹</span>
               {product.price}
             </h4>
+            <h5 className="flex items-center relative space-x-2 button">
+              <span className="text-green-600 font-medium text-xs bg-green-100 rounded-full px-2 py-1">
+                <span className="text-sm">{product.discountPercentage}</span>%
+                OFF
+              </span>
+            </h5>
           </div>
         </div>
-        <div className="relative overflow-hidden text-sm px-5 py-1 text-yellow-600 bg-gradient-to-r from-yellow-200/75 via-yellow-200/25 to-yellow-50">
+        <div className="relative  overflow-hidden text-sm px-5 py-1 text-yellow-600 bg-gradient-to-r from-yellow-200/75 via-yellow-200/25 to-yellow-50">
           <div className="relative z-10 font-semibold">
-            Get FREE BLU Screen Lenses
+            {product?.specialOffer}
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-200 via-yellow-200/25 to-yellow-50">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-200 to-transparent animate-shine"></div>
