@@ -15,7 +15,7 @@ import work from "../../assets/Images/bag.png";
 import other from "../../assets/Images/location.png";
 import { clearCart, getCart } from "../../redux/actions/cartActions";
 import { toast } from "react-toastify";
-import useRazorpay from "react-razorpay";
+import useRazorpay from "react-razorpay-integration";
 import { createOrder } from "../../redux/actions/orderActions";
 import {
   clearNewOrderErrors,
