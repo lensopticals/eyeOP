@@ -38,7 +38,6 @@ export const getUser = createAsyncThunk(
       const token = localStorage.getItem("token");
       const config = {
         headers: { "Content-type": "application/json" },
-        Authentication: `Bearer ${token}`
       };
       const { data } = await API.get("/user/details", config);
       if (data && data?.success) {
@@ -53,7 +52,6 @@ export const getUser = createAsyncThunk(
     }
   }
 );
-
 
 // User login with phone number
 

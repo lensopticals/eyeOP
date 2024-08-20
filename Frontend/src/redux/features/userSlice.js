@@ -9,7 +9,7 @@ import {
   userLoginPhone,
   userSignup,
   verifyPhone,
-  getUser
+  getUser,
 } from "../actions/userActions";
 
 export const userReducer = createSlice({
@@ -17,6 +17,7 @@ export const userReducer = createSlice({
   initialState: {
     user: {},
     loading: false,
+    token: localStorage.getItem("token") || null,
     error: null,
     isAuthenticated: false,
     message: "",

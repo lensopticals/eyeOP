@@ -12,7 +12,6 @@ const GoogleAuth = () => {
       const auth = getAuth(app);
 
       const result = await signInWithPopup(auth, provider);
-      console.log(result);
       dispatch(
         googleAuth({
           name: result.user.displayName,

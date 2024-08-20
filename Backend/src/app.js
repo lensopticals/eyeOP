@@ -15,6 +15,9 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174,http://192.168.43.44:5173",
+      "https://lensop.netlify.app",
+      "https://eyeop.netlify.app",
+      "https://eye-op.netlify.app",
     ],
     credentials: true,
   })
