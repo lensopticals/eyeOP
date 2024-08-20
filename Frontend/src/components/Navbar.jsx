@@ -54,7 +54,7 @@ const MainHeader = ({ setOpen }) => {
               aria-haspopup="true"
             >
               <img
-                className="rounded-full border border-gray-500 w-10 h-10"
+                className="rounded-full border border-gray-500 w-10 h-10 object-cover"
                 src={user ? user.avatar : profileImg}
                 alt=""
               />

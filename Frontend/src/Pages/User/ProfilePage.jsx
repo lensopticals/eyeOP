@@ -26,7 +26,7 @@ const ProfilePage = () => {
               <div className="absolute top-1/2 transform left-4 -translate-y-1/2">
                 <img
                   src={user?.avatar}
-                  className="w-28 border-2 border-gray-300 h-28 rounded-full mx-auto"
+                  className="w-28 border-2 object-cover border-gray-300 h-28 rounded-full mx-auto"
                 />
               </div>
               <div className="absolute right-5 bottom-5">

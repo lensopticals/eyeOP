@@ -69,7 +69,7 @@ const EditProfile = () => {
       dispatch(clearProfileErrors());
     } else if (isUpdated && !error) {
       dispatch(loadUser());
-      navigate("/profile");
+      navigate("/my/profile");
     }
     dispatch(updateUserReset());
   }, [dispatch, error, isUpdated]);
