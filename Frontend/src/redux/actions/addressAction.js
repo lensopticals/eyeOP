@@ -13,7 +13,7 @@ export const getAddress = createAsyncThunk(
       };
 
       const { data } = await API.get("address/get-address", config);
-      return data;
+      return data.address;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }
@@ -76,7 +76,7 @@ export const updateAddress = createAsyncThunk(
 
 export const deleteAddress = createAsyncThunk(
   "address/delete",
-  async ({ id }, { rejectWithValue }) => {
+  async ({ id }, { rejectWithValue, dispatch }) => {
     try {
       const config = {
         headers: {
@@ -85,8 +85,9 @@ export const deleteAddress = createAsyncThunk(
       };
 
       const { data } = await API.delete(`address/delete-address/${id}`, config);
-      toast.success("Address removed successfully!");
-      return data;
+
+      dispatch(getAddress());
+      return;
     } catch (error) {
       return rejectWithValue(error?.response?.data?.message ?? error?.message);
     }

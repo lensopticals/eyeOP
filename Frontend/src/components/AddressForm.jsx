@@ -61,6 +61,7 @@ export default function AddressForm({ handlePayment, setSelected }) {
       setSelected(address?._id);
       handlePayment(address?._id);
       dispatch(removeAddressReset());
+      dispatch(getAddress());
     }
   }, [dispatch, createSuccess, addressError]);
 

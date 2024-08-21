@@ -16,6 +16,7 @@ import other from "../../assets/Images/location.png";
 import { clearCart, getCart } from "../../redux/actions/cartActions";
 import { toast } from "react-toastify";
 import useRazorpay from "react-razorpay-integration";
+import { CiCirclePlus } from "react-icons/ci";
 import { createOrder } from "../../redux/actions/orderActions";
 import {
   clearNewOrderErrors,
@@ -32,14 +33,19 @@ import CheckoutSkeleton from "../../components/Skeletons/CheckoutSkeleton";
 const Addresses = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [address, setAddress] = useState([]);
+  // const [address, setAddress] = useState([]);
   const [total, setTotal] = useState(0);
-  const [selected, setSelected] = useState("");
   const [isAddressOpen, setIsAddressOpen] = useState(false);
   const { cart, cartError, cartLoading } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
   const { error, loading, success } = useSelector((state) => state.newOrder);
+  const {
+    success: addressSuccess,
+    address,
+    addressError,
+  } = useSelector((state) => state.address);
   const { id } = useParams();
+  const [selected, setSelected] = useState(address?.[0]?._id);
   const [Razorpay] = useRazorpay();
 
   const tax = 10;
@@ -54,6 +60,10 @@ const Addresses = () => {
       dispatch(clearCartErrors());
     }
   }, [cartError]);
+
+  const toggleCreateForm = () => {
+    setIsAddressOpen(!isAddressOpen);
+  };
 
   const calculateSubtotal = (items) => {
     const subtotal = items.reduce((accumulator, item) => {
@@ -77,20 +87,9 @@ const Addresses = () => {
     }, 0);
     return subtotal;
   };
-  const [openAccordion, setOpenAccordion] = useState("savedAddresses");
-
-  const handleToggleAccordion = (section) => {
-    if (section == "savedAddresses") dispatch(getAddress());
-    if (section !== "savedAddresses" && section !== openAccordion) {
-      setSelected(null);
-    }
-    setOpenAccordion(openAccordion === section ? "" : section);
-  };
 
   const handleDelete = async (id) => {
-    const add = await dispatch(deleteAddress({ id: id }));
-    console.log("Deleted: " + add);
-    getAddresses();
+    dispatch(deleteAddress({ id: id }));
   };
   const handleEdit = async (aId) => {
     const { payload } = await dispatch(getAddressById({ id: aId }));
@@ -98,19 +97,15 @@ const Addresses = () => {
     navigate(`/address/edit/${aId}`);
   };
 
-  const getAddresses = async () => {
-    const { payload } = await dispatch(getAddress());
-    if (payload.success) {
-      setAddress(payload.address);
-      setSelected(payload.address[0]._id);
-    }
-  };
+  useEffect(() => {
+    dispatch(getAddress());
+  }, [dispatch]);
 
   const handleCreateOrder = async (paymentId, address = "") => {
     const orderData = {
       totalAmount: total,
       paymentId,
-      shippingInfo: selected || address,
+      shippingInfo: selected ? selected : address,
       orderItems: cart,
     };
     dispatch(createOrder(orderData));
@@ -124,7 +119,7 @@ const Addresses = () => {
     if (address) {
       setSelected(address);
     }
-    handleToggleAccordion("savedAddresses");
+    setIsAddressOpen(false);
     const options = {
       key: import.meta.env.VITE_APP_RAZOR_API_KEY,
       amount: Math.ceil(total) * 100,
@@ -155,10 +150,6 @@ const Addresses = () => {
   };
 
   useEffect(() => {
-    getAddresses();
-  }, []);
-
-  useEffect(() => {
     if (success && !error) {
       dispatch(clearCart());
       dispatch(resetNewOrder());
@@ -176,6 +167,12 @@ const Addresses = () => {
     }
   }, [cart]);
 
+  useEffect(() => {
+    if (address && address.length > 0) {
+      setSelected(address[0]?._id);
+    }
+  }, [addressSuccess, dispatch]);
+
   // if (cartLoading)
   //   return (
   //     <>
@@ -192,107 +189,117 @@ const Addresses = () => {
           {/* Address section */}
 
           <div className="w-full lg:w-3/5 lg:pr-10">
-            <h1 className="text-2xl max-sm:text-xl mt-10 mb-5 font-semibold">
-              Select Address
+            <h1 className="text-2xl w-fit max-sm:text-xl mt-10 mb-5 font-semibold">
+              Shipping Details
             </h1>
 
             <div className="w-full">
-              <div
-                className="flex w-full items-center justify-between cursor-pointer p-4 bg-slate-50 border-b-2 border-emerald-200"
-                onClick={() => handleToggleAccordion("savedAddresses")}
-              >
-                <p className="w-full">Saved Addresses</p>
+              {!isAddressOpen && (
+                <>
+                  <div className="flex w-full items-center justify-between cursor-pointer py-4 border-b-2 border-emerald-200">
+                    <p className="w-fit text-slate-800 text-xl font-semibold">
+                      Saved Addresses
+                    </p>
 
-                <button
-                  className={`mt-2 focus:outline-none ${
-                    openAccordion === "savedAddresses" && "rotate-180"
-                  } transition-all duration-150 ease-in-out`}
-                >
-                  <FaChevronDown className="text-emerald-600" />
-                </button>
-              </div>
-
-              {openAccordion === "savedAddresses" && (
-                <div className="saved-content transition-all duration-300 ease-in-out">
-                  {address.map((add) => (
-                    <div
-                      className={`addressCard p-3 bg-blue-100/50 mt-5 rounded-md border-2 border-slate-200 ${
-                        selected === add._id ? "bg-blue-100/50" : "bg-white"
-                      }`}
-                      key={add._id}
-                      onClick={() => {
-                        setSelected(add._id);
-                      }}
+                    <button
+                      className="border w-fit border-slate-800 px-3 md:px-5 py-1.5 md:py-3 hover:bg-slate-700 text-slate-700 font-semibold hover:text-white flex gap-2 items-center text-xs md:text-base"
+                      onClick={() => toggleCreateForm()}
                     >
-                      <div className="flex gap-2 items-center">
-                        {add?.place == "work" ? (
-                          <HiBuildingOffice className="text-2xl text-blue-500" />
-                        ) : (
-                          <FaHome className="text-2xl text-blue-500" />
-                        )}
+                      Add new Address
+                      <CiCirclePlus className="font-bold text-xl" />
+                    </button>
+                  </div>
 
-                        <h3 className="text-xl max-sm:text-lg">{add.place}</h3>
-                        {selected === add._id ? (
-                          <div className="circle bg-transparent ml-auto w-6 h-6">
-                            <CheckBox isChecked={true} />
+                  <div className="saved-content transition-all duration-300 ease-in-out">
+                    {address &&
+                      address?.length > 0 &&
+                      address.map((add) => (
+                        <div
+                          className={`addressCard p-3 bg-blue-100/50 mt-5 rounded-md border-2 border-slate-200 ${
+                            selected === add._id ? "bg-blue-100/50" : "bg-white"
+                          }`}
+                          key={add._id}
+                          onClick={() => {
+                            setSelected(add._id);
+                          }}
+                        >
+                          <div className="flex gap-2 items-center">
+                            {add?.place == "work" ? (
+                              <HiBuildingOffice className="text-2xl text-slate-800" />
+                            ) : (
+                              <FaHome className="text-2xl text-slate-800" />
+                            )}
+
+                            <h3 className="text-xl max-sm:text-lg">
+                              {add.place.charAt(0).toUpperCase() +
+                                add.place.slice(1).toLowerCase()}
+                            </h3>
+                            {selected === add._id ? (
+                              <div className="circle bg-transparent ml-auto w-6 h-6">
+                                <CheckBox isChecked={true} />
+                              </div>
+                            ) : (
+                              <div className="circle bg-transparent ml-auto w-6 h-6">
+                                <CheckBox />
+                              </div>
+                            )}
                           </div>
-                        ) : (
-                          <div className="circle bg-transparent ml-auto w-6 h-6">
-                            <CheckBox />
+                          <div className="flex font-semibold pt-1 pr-3 text-sm md:text-[0.9rem] md:py-2 md:px-4">
+                            <p className="text-slate-700 font-normal">
+                              {add.address}, {add.city}, {add.state},{" "}
+                              {add.pincode}, {add.country}, {add.phone}
+                            </p>
+                            <div className="flex gap-2 ml-auto">
+                              <p
+                                onClick={() => handleDelete(add._id)}
+                                className="underline cursor-pointer px-2 hover:text-red-600"
+                              >
+                                Delete
+                              </p>
+                              <p
+                                onClick={() => handleEdit(add._id)}
+                                className="underline cursor-pointer"
+                              >
+                                Edit
+                              </p>
+                            </div>
                           </div>
-                        )}
-                      </div>
-                      <div className="flex font-semibold pt-1 pr-3 text-sm md:text-[0.9rem] md:py-2 md:px-4">
-                        <p className="text-slate-700 font-normal">
-                          {add.address}, {add.city}, {add.state}, {add.pincode},{" "}
-                          {add.country}, {add.phone}
-                        </p>
-                        <div className="flex gap-2 ml-auto">
-                          <p
-                            onClick={() => handleDelete(add._id)}
-                            className="underline cursor-pointer px-2 hover:text-red-600"
-                          >
-                            Delete
-                          </p>
-                          <p
-                            onClick={() => handleEdit(add._id)}
-                            className="underline cursor-pointer"
-                          >
-                            Edit
-                          </p>
                         </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                      ))}
+                  </div>
+                  <button
+                    className="border w-full mt-5 text-center border-slate-800 px-3 md:px-5 py-1.5 md:py-3 hover:bg-slate-700 text-slate-700 font-semibold hover:text-white flex gap-2 items-center text-sm md:text-lg justify-center"
+                    onClick={() => toggleCreateForm()}
+                  >
+                    Add new Address
+                    <CiCirclePlus className="font-bold text-xl md:text-3xl" />
+                  </button>
+                </>
               )}
             </div>
-            <p className="text-center font-semibold text-lg my-5 text-emerald-700">
-              or
-            </p>
-            <div
-              className="w-full flex items-center justify-between cursor-pointer p-4 bg-slate-50 border-t-2 border-emerald-200"
-              onClick={() => handleToggleAccordion("newAddress")}
-            >
-              <p className="">Add new Address</p>
 
-              <button
-                className={`mt-2 focus:outline-none ${
-                  openAccordion === "newAddress" && "rotate-180"
-                } transition-all duration-150 ease-in-out`}
-              >
-                <FaChevronDown className="text-emerald-600" />
-              </button>
-            </div>
-
-            {openAccordion === "newAddress" && (
-              <div className="mt-5 transition-all duration-300 ease-in-out">
-                <h4 className="text-xl mb-5">Add Address</h4>
-                <AddressForm
-                  setSelected={setSelected}
-                  handlePayment={handlePayment}
-                />
-              </div>
+            {isAddressOpen ? (
+              <>
+                <div className="w-full mt-5 flex items-center justify-between pt-5 border-t-2 border-emerald-200">
+                  <h4 className="text-xl w-fit text-slate-800 font-semibold">
+                    Add Address
+                  </h4>
+                  <button
+                    className="border border-slate-800 px-3 md:px-5 py-1.5 md:py-3 hover:bg-slate-700 text-slate-700 font-semibold hover:text-white flex gap-2 items-center text-xs md:text-base"
+                    onClick={() => toggleCreateForm()}
+                  >
+                    View Saved Address
+                  </button>
+                </div>
+                <div className="mt-5 transition-all duration-300 ease-in-out">
+                  <AddressForm
+                    setSelected={setSelected}
+                    handlePayment={handlePayment}
+                  />
+                </div>
+              </>
+            ) : (
+              <></>
             )}
           </div>
 
@@ -452,20 +459,20 @@ const Addresses = () => {
       )}
       <style>
         {` /* width */
-                #scroll::-webkit-scrollbar {
-                    width: 1px;
-                }
+                  #scroll::-webkit-scrollbar {
+                      width: 1px;
+                  }
 
-                /* Track */
-                #scroll::-webkit-scrollbar-track {
-                    background: #f1f1f1;
-                }
+                  /* Track */
+                  #scroll::-webkit-scrollbar-track {
+                      background: #f1f1f1;
+                  }
 
-                /* Handle */
-                #scroll::-webkit-scrollbar-thumb {
-                    background: rgb(133, 132, 132);
-                }
-`}
+                  /* Handle */
+                  #scroll::-webkit-scrollbar-thumb {
+                      background: rgb(133, 132, 132);
+                  }
+  `}
       </style>
     </>
   );
