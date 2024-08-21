@@ -59,8 +59,6 @@ export default function AddressForm({ handlePayment, setSelected }) {
     if (createSuccess && !addressError) {
       //   toast.success("Address added successfully");
       setSelected(address?._id);
-      console.log(address?._id);
-
       handlePayment(address?._id);
       dispatch(removeAddressReset());
     }

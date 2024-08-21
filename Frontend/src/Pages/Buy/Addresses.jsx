@@ -106,11 +106,11 @@ const Addresses = () => {
     }
   };
 
-  const handleCreateOrder = async (paymentId) => {
+  const handleCreateOrder = async (paymentId, address = "") => {
     const orderData = {
       totalAmount: total,
       paymentId,
-      shippingInfo: selected,
+      shippingInfo: selected || address,
       orderItems: cart,
     };
     dispatch(createOrder(orderData));
@@ -135,8 +135,7 @@ const Addresses = () => {
       image: "http://localhost:5173/src/assets/Images/logo.png",
 
       handler: (res) => {
-        console.log(res);
-        handleCreateOrder(res.razorpay_payment_id);
+        handleCreateOrder(res.razorpay_payment_id, address);
         toast.success("Payment successful");
       },
       prefill: {
