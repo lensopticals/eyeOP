@@ -19,6 +19,7 @@ import { clearCartErrors } from "../../redux/features/cartSlice";
 import { openAuthModal } from "../../redux/features/modalSlice";
 import { getAddress } from "../../redux/actions/addressAction";
 import OfferBox from "../../components/OfferBox";
+import ProductDetailsSkeleton from "../../components/Skeletons/ProductDetailsSkeleton";
 
 const RatingStar = () => {
   return (
@@ -98,7 +99,7 @@ const ProductDetails = () => {
   return (
     <>
       {loading ? (
-        <h1 className="text-center text-2xl text-gray-600">Loading..</h1>
+        <ProductDetailsSkeleton />
       ) : (
         <>
           {product ? (

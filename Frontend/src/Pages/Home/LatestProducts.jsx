@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../redux/actions/productAction";
 import SmallUnderline from "../../components/SmallUnderline";
 import ProductCard from "../../components/ProductCard";
+import { ProductCardSkeleton } from "../../components/Skeletons/ProductCardSkeleton";
 
 const LatestProducts = () => {
   const dispatch = useDispatch();
-  const { loading, error, products, productsCount, resultPerPage } =
-    useSelector((state) => state.product);
+  const { loading, products } = useSelector((state) => state.product);
 
   useEffect(() => {
     //   if (error) {
@@ -28,15 +28,17 @@ const LatestProducts = () => {
         <SmallUnderline />
       </h1>
       <div className="products w-full h-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10">
-        {products &&
-          products.length > 0 &&
-          products.map((product) => {
-            return (
-              <div key={product._id}>
-                <ProductCard product={product} />
-              </div>
-            );
-          })}
+        {loading
+          ? Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton />)
+          : products &&
+            products.length > 0 &&
+            products.map((product) => {
+              return (
+                <div key={product._id}>
+                  <ProductCard product={product} />
+                </div>
+              );
+            })}
       </div>
     </div>
   );
