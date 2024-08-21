@@ -121,14 +121,13 @@ const Addresses = () => {
       toast.error("First select/create your order address!");
       return;
     }
-
     if (address) {
       setSelected(address);
     }
     handleToggleAccordion("savedAddresses");
     const options = {
       key: import.meta.env.VITE_APP_RAZOR_API_KEY,
-      amount: Number(total) * 100,
+      amount: Math.ceil(total) * 100,
       currency: "INR",
       name: "Eye OP",
       description: "Test Transaction",
@@ -423,10 +422,7 @@ const Addresses = () => {
                         Total
                       </p>
                       <p className="text-2xl font-semibold leading-normal text-right text-emerald-500">
-                        ₹{" "}
-                        {cart &&
-                          cart.length > 0 &&
-                          calculateSubtotal(cart).toFixed(2)}
+                        ₹ {cart && cart.length > 0 && total.toFixed(2)}
                         <span className="pl-2 text-sm text-gray-500 line-through">
                           ₹{" "}
                           {cart &&

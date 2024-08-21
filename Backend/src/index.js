@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cloudinary from "cloudinary";
 dotenv.config();
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8000;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
