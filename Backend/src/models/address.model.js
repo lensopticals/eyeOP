@@ -49,4 +49,4 @@ const addressSchema = new Schema(
   { timestamps: true }
 );
 
-export const Address1 = mongoose.model("Address1", addressSchema);
+export const Address1 = mongoose.model("Address", addressSchema);
