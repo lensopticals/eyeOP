@@ -18,14 +18,45 @@ export const getProductDetails = createAsyncThunk(
 export const getProducts = createAsyncThunk(
   "products/getProducts",
   async (
-    { keyword = "", currentPage = 1, price = [0, 50000], category, limit = 36 },
+    {
+      keyword = "",
+      currentPage = 1,
+      price = [0, 50000],
+      category,
+      material,
+      shape,
+      gender,
+      frameType,
+      limit = 36,
+    },
     { rejectWithValue }
   ) => {
     try {
       let url = `/all-products?keyword=${keyword}&limit=${limit}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}`;
 
+      // Adding category to the URL if it exists
       if (category) {
-        url = `/products?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}`;
+        url += `&category=${category}`;
+      }
+
+      // Adding material filter to the URL if it exists
+      if (material) {
+        url += `&material=${material}`;
+      }
+
+      // Adding shape filter to the URL if it exists
+      if (shape) {
+        url += `&shape=${shape}`;
+      }
+
+      // Adding gender filter to the URL if it exists
+      if (gender) {
+        url += `&gender=${gender}`;
+      }
+
+      // Adding frameType filter to the URL if it exists
+      if (frameType) {
+        url += `&frameType=${frameType}`;
       }
 
       const { data } = await API.get(url);

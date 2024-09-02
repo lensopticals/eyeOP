@@ -8,6 +8,7 @@ import {
 import { toast } from "react-toastify";
 import { clearCartErrors } from "../../redux/features/cartSlice";
 import { useNavigate } from "react-router-dom";
+import CartSkeleton from "../Skeletons/CartSkeleton";
 
 function Cart({ className = "" }) {
   const [show, setShow] = useState(false);
@@ -69,7 +70,7 @@ function Cart({ className = "" }) {
   return (
     <>
       {cartLoading ? (
-        <h1 className="text-center py-20 text-3xl text-gray-500">Loading...</h1>
+        <CartSkeleton />
       ) : (
         <div>
           <div

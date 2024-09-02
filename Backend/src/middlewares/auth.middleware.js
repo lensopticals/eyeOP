@@ -5,13 +5,17 @@ import { refreshAccessToken } from "../controllers/user.controller.js";
 export const verifyJWT = async (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
-    
-    const token = authHeader?.split(" ")[1] || req.cookies?.accessToken;
+
+    const token = authHeader?.split(" ")[1];
+    // || req.cookies?.accessToken;
     if (!token) {
       await refreshAccessToken(req, res);
       return;
     }
-    const decodedToken = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decodedToken = await jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET
+    );
 
     const user = await User.findById(decodedToken?._id).select(
       "-password -refreshToken"

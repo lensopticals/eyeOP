@@ -7,8 +7,6 @@ export const createNewOrder = async (req, res) => {
   try {
     req.body.user = req.user?._id;
 
-    console.log(req.body);
-
     const order = await Order.create(req.body);
 
     if (!order) {

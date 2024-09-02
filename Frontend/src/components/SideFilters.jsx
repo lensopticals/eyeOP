@@ -1,18 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { getProducts } from "../redux/actions/productAction";
 import "../styles/sideFilters.css";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 
 const SideFilters = ({ width, clas }) => {
   const dispatch = useDispatch();
 
-  const handleFilter = async (filters) => {
-    try {
-      const response = await dispatch(getProducts(filters));
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
+  // State to manage selected filters
+  const [filters, setFilters] = useState({
+    gender: "",
+    frameType: "",
+    shape: "",
+    material: [],
+    price: [0, 50000],
+    colors: [],
+    collections: [],
+  });
+
+  // Handle the filter application
+  const handleFilter = (newFilter) => {
+    const updatedFilters = { ...filters, ...newFilter };
+    setFilters(updatedFilters);
+    dispatch(getProducts(updatedFilters));
+  };
+
+  // Handle checkbox changes
+  const handleCheckboxChange = (filterType, value) => {
+    const currentFilterValues = filters[filterType];
+    const updatedFilterValues = currentFilterValues.includes(value)
+      ? currentFilterValues.filter((item) => item !== value)
+      : [...currentFilterValues, value];
+    handleFilter({ [filterType]: updatedFilterValues });
+  };
+
+  // Reset all filters
+  const resetFilters = () => {
+    const initialFilters = {
+      gender: "",
+      frameType: "",
+      shape: "",
+      material: [],
+      price: [0, 50000],
+      colors: [],
+      collections: [],
+    };
+    setFilters(initialFilters);
+    dispatch(getProducts(initialFilters));
   };
 
   return (
@@ -20,13 +55,16 @@ const SideFilters = ({ width, clas }) => {
       className={`${clas} sticky left-0 bg-white p-4 rounded shadow-sm shadow-slate-200 max-h-full overflow-y-auto`}
       style={{ width: width }}
     >
+      {/* Gender Filter */}
       <div className="gender mb-6">
         <h3 className="text-xl font-semibold mb-4">Gender</h3>
         <div className="flex justify-between">
           {["Men", "Women", "Kids"].map((gender) => (
             <div
               key={gender}
-              className="gender-option text-center cursor-pointer p-2 rounded transition-all duration-300 hover:bg-blue-50"
+              className={`gender-option text-center cursor-pointer p-2 rounded transition-all duration-300 ${
+                filters.gender === gender ? "bg-blue-50" : ""
+              } hover:bg-blue-50`}
               onClick={() => handleFilter({ gender })}
             >
               <img
@@ -40,47 +78,36 @@ const SideFilters = ({ width, clas }) => {
         </div>
       </div>
 
-      <div className="age mb-6">
-        <h3 className="text-xl font-semibold mb-4">Age Group</h3>
-        {["Below 12 years", "12 - 20 years", "Above 30 years"].map(
-          (age, index) => (
-            <div key={index} className="flex items-center gap-2 mb-2">
-              <input
-                type="checkbox"
-                name="age"
-                id={`age${index}`}
-                className="form-checkbox"
-              />
-              <label htmlFor={`age${index}`}>{age}</label>
-            </div>
-          )
-        )}
-      </div>
-
+      {/* Price Filter */}
       <div className="price mb-6">
         <h3 className="text-xl font-semibold mb-4">Price</h3>
-        {["Below $100", "Below $500", "Below $1000", "Above $1000"].map(
-          (price, index) => (
-            <div key={index} className="flex items-center gap-2 mb-2">
-              <input
-                type="radio"
-                name="price"
-                id={`price${index}`}
-                className="form-radio"
-              />
-              <label htmlFor={`price${index}`}>{price}</label>
-            </div>
-          )
-        )}
+        <Slider
+          range
+          min={0}
+          max={50000}
+          step={1000}
+          value={filters.price}
+          onChange={(price) => handleFilter({ price })}
+          allowCross={false}
+          trackStyle={[{ backgroundColor: "#007bff" }]}
+          handleStyle={[{ borderColor: "#007bff" }, { borderColor: "#007bff" }]}
+        />
+        <div className="flex justify-between mt-2">
+          <span>₹{filters.price[0]}</span>
+          <span>₹{filters.price[1]}</span>
+        </div>
       </div>
 
+      {/* Frame Type Filter */}
       <div className="frameType mb-6">
         <h3 className="text-xl font-semibold mb-4">Frame Type</h3>
         <div className="flex gap-4">
           {["FullFrame", "HalfFrame", "Rimless"].map((type) => (
             <div
               key={type}
-              className="text-center cursor-pointer p-2 rounded transition-all duration-300 hover:bg-blue-50"
+              className={`text-center cursor-pointer p-2 rounded transition-all duration-300 ${
+                filters.frameType === type ? "bg-blue-50" : ""
+              } hover:bg-blue-50`}
               onClick={() => handleFilter({ frameType: type })}
             >
               <img
@@ -96,7 +123,8 @@ const SideFilters = ({ width, clas }) => {
         </div>
       </div>
 
-      <div className="frameShape mb-6">
+      {/* Frame Shape Filter */}
+      <div className="shape mb-6">
         <h3 className="text-xl font-semibold mb-4">Frame Shape</h3>
         <div className="grid grid-cols-3 gap-4">
           {[
@@ -113,8 +141,10 @@ const SideFilters = ({ width, clas }) => {
           ].map((shape) => (
             <div
               key={shape}
-              className="text-center cursor-pointer p-2 rounded transition-all duration-300 hover:bg-blue-50"
-              onClick={() => handleFilter({ frameShape: shape })}
+              className={`text-center cursor-pointer p-2 rounded transition-all duration-300 ${
+                filters.shape === shape ? "bg-blue-50" : ""
+              } hover:bg-blue-50`}
+              onClick={() => handleFilter({ shape })}
             >
               <img
                 src={`https://cdn.eyemyeye.com/shared/icons/${shape}.svg`}
@@ -127,6 +157,7 @@ const SideFilters = ({ width, clas }) => {
         </div>
       </div>
 
+      {/* Frame Colors Filter */}
       <div className="colors mb-6">
         <h3 className="text-xl font-semibold mb-4">Frame Colors</h3>
         {["Black", "Gray", "Blue", "White", "Yellow"].map((color, index) => (
@@ -136,6 +167,8 @@ const SideFilters = ({ width, clas }) => {
               name="color"
               id={`color${index}`}
               className="form-checkbox"
+              onChange={() => handleCheckboxChange("colors", color)}
+              checked={filters.colors.includes(color)}
             />
             <span
               className={`circle w-4 h-4 rounded-full bg-${color.toLowerCase()}-500`}
@@ -145,6 +178,7 @@ const SideFilters = ({ width, clas }) => {
         ))}
       </div>
 
+      {/* Material Filter */}
       <div className="material mb-6">
         <h3 className="text-xl font-semibold mb-4">Material</h3>
         {["Acetate", "Metal", "Nylon", "Plastic", "Stainless Steel"].map(
@@ -155,6 +189,8 @@ const SideFilters = ({ width, clas }) => {
                 name="material"
                 id={`material${index}`}
                 className="form-checkbox"
+                onChange={() => handleCheckboxChange("material", material)}
+                checked={filters.material.includes(material)}
               />
               <label htmlFor={`material${index}`}>{material}</label>
             </div>
@@ -162,7 +198,8 @@ const SideFilters = ({ width, clas }) => {
         )}
       </div>
 
-      <div className="collections">
+      {/* Collections Filter */}
+      <div className="collections mb-6">
         <h3 className="text-xl font-semibold mb-4">Collections</h3>
         {[
           "Bamboo Eyeglasses",
@@ -177,10 +214,22 @@ const SideFilters = ({ width, clas }) => {
               name="collection"
               id={`collection${index}`}
               className="form-checkbox"
+              onChange={() => handleCheckboxChange("collections", collection)}
+              checked={filters.collections.includes(collection)}
             />
             <label htmlFor={`collection${index}`}>{collection}</label>
           </div>
         ))}
+      </div>
+
+      {/* Reset Button */}
+      <div className="reset-button mt-6">
+        <button
+          onClick={resetFilters}
+          className="bg-red-500 text-white px-4 py-2 rounded transition-all duration-300 hover:bg-red-600"
+        >
+          Reset Filters
+        </button>
       </div>
     </div>
   );

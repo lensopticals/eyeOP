@@ -106,6 +106,10 @@ const productSchema = new Schema(
         type: String,
         required: [true, "Frame width is required"],
       },
+      type: {
+        type: String,
+        required: [true, "Frame type is required"],
+      },
       dimensions: {
         bridgeWidth: {
           type: String,

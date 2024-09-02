@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 import "swiper/css/pagination";
 import { EffectCards, Pagination, Autoplay } from "swiper/modules";
+import { ProductCardSkeleton } from "../../components/Skeletons/ProductCardSkeleton";
 
 export const FeaturedProducts = () => {
   const dispatch = useDispatch();

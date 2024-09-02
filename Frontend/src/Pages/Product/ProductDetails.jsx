@@ -19,6 +19,8 @@ import { clearCartErrors } from "../../redux/features/cartSlice";
 import { openAuthModal } from "../../redux/features/modalSlice";
 import { getAddress } from "../../redux/actions/addressAction";
 import OfferBox from "../../components/OfferBox";
+import ProductDetailsSkeleton from "../../components/Skeletons/ProductDetailsSkeleton";
+import StepperModal from "../../components/StepperModal";
 
 const RatingStar = () => {
   return (
@@ -45,11 +47,12 @@ const RatingStar = () => {
 };
 
 const ProductDetails = () => {
-  const [collapse, setCollapse] = useState(true);
+  const [collapse, setCollapse] = useState(false);
   const [isOpen, setisOpen] = useState(false);
   const handleImageModel = () => {
     setisOpen(!isOpen);
   };
+  const [isStepperOpen, setisStepperOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   const { id } = useParams();
@@ -97,8 +100,9 @@ const ProductDetails = () => {
 
   return (
     <>
+      <StepperModal isOpen={isStepperOpen} setIsOpen={setisStepperOpen} />
       {loading ? (
-        <h1 className="text-center text-2xl text-gray-600">Loading..</h1>
+        <ProductDetailsSkeleton />
       ) : (
         <>
           {product ? (
@@ -286,8 +290,9 @@ const ProductDetails = () => {
                       </button>
 
                       <button
-                        disabled
-                        onClick={handleBuy}
+                        // disabled
+                        // onClick={handleBuy}
+                        onClick={() => setisStepperOpen(true)}
                         className="py-3 bg-slate-700 text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-lg shadow-sm border-slate-800 hover:bg-slate-600 "
                       >
                         Select Lens & Buy now
