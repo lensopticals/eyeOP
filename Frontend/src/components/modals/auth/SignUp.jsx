@@ -20,7 +20,6 @@ const SignUp = () => {
   const { loading, user, token, error } = useSelector((state) => state.user);
   // Logical States
   const [showOtp, setShowOtp] = useState(false);
-  const [showEmailLogin, setShowEmailLogin] = useState(false);
   const [showPhoneLogin, setShowPhoneLogin] = useState(true);
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const dispatch = useDispatch();
@@ -33,7 +32,6 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
-  const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
 
   const [otpTime, setOtpTime] = useState(0);

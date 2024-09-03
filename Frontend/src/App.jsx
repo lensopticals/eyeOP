@@ -67,7 +67,7 @@ function App() {
           }
         ></Route>
         <Route path="/shop/:category" element={<ProductByCategory />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/product/:slug/:id" element={<ProductDetails />} />
         <Route
           path="/buy/:id"
           element={

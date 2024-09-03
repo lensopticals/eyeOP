@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { LiaTimesSolid, LiaMailBulkSolid } from "react-icons/lia";
-import { CiMail, CiPhone } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import {
   closeAuthModal,
@@ -13,7 +12,6 @@ import { auth } from "../../../utils/firebase.config";
 import { toast } from "react-toastify";
 import { userLogin, userLoginPhone } from "../../../redux/actions/userActions";
 import { clearErrors } from "../../../redux/features/userSlice";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
 import Animation from "../../../assets/animations/hi.json";
 import Lottie from "lottie-react";

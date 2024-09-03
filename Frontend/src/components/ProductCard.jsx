@@ -15,6 +15,7 @@ const ProductCard = ({ product, className }) => {
       setWhiteList(heart);
     }
   };
+  const slug = product?.name.toLowerCase().trim().replace(/\s+/g, "-");
 
   return (
     <div
@@ -31,7 +32,7 @@ const ProductCard = ({ product, className }) => {
           onClick={whiteClick}
         />
       </div>
-      <Link to={`/product/${product._id}`} className="h-full">
+      <Link to={`/product/${slug}/${product._id}`} className="h-full">
         <div className="p-3 pt-10 md:pt-7 pb-0 bg-white flex items-center justify-center">
           <img
             src={product.thumbnail}
