@@ -10,27 +10,29 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { LiaTimesSolid } from "react-icons/lia";
 import { CiSearch } from "react-icons/ci";
 import Logo from "../assets/Images/logo.png";
+import DummySearch from "./DummySearch";
 
 const MainHeader = ({ setOpen }) => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const [dropdown, setDropdown] = useState(false);
   return (
-    <div className="flex w-full bg-white justify-between items-center md:px-12 px-4 h-14">
+    <div className="flex w-full bg-white justify-between items-center md:px-12 px-4 h-16">
       {/* Logo */}
       <Link to="/" className="w-full">
         <img src={Logo} className="w-1/2 md:w-1/3" alt="" />
       </Link>
 
       {/* Search Bar */}
-      <div className="w-full  hidden sm:flex bg-gray-100 rounded items-center justify-between border border-gray-300  ">
+      {/* <div className="w-full  hidden sm:flex bg-gray-100 rounded items-center justify-between border border-gray-300  ">
         <CiSearch className="text-xl mx-2 text-slate-600" />
         <input
           type="text"
           placeholder="What are you looking for?"
           className="bg-gray-100 w-full outline-none focus:bg-gray-50 p-2 text-sm"
         />
-      </div>
+      </div> */}
+      <DummySearch />
       {/* Menu */}
       <div className="flex  justify-end w-full gap-3 md:gap-5 items-center">
         <div className="sm:hidden text-2xl font-bold">
@@ -135,8 +137,8 @@ const MainHeader = ({ setOpen }) => {
 const Navbar = () => {
   const customClass = ({ isActive }) =>
     `text-[1.1rem]  duration-200 ${
-      isActive ? "text-black border-b-2 border-slate-600" : "text-gray-500"
-    } border-b inline-block border-gray-100 hover:bg-gray-100 backdrop-blur-sm whitespace-nowrap hover:text-black  lg:p-0`;
+      isActive ? "font-semibold text-emerald-600" : "text-gray-500"
+    } border-b inline-block border-gray-100 hover:bg-gray-100 backdrop-blur-sm whitespace-nowrap hover:text-emerald-600  lg:p-0`;
 
   document.onclick = (e) => {
     if (e.target.id !== "sidebar" && e.target.id !== "bars") {
@@ -238,7 +240,7 @@ const Navbar = () => {
               Sunglasses
             </NavLink>
             <NavLink
-              to="/shop/kids"
+              to="/shop/products?gender=Kids"
               onClick={() => setOpen(false)}
               className={customClass}
             >
@@ -251,13 +253,7 @@ const Navbar = () => {
             >
               Contact Lenses
             </NavLink>
-            <NavLink
-              to="/shop/new-arrivals"
-              onClick={() => setOpen(false)}
-              className={customClass}
-            >
-              New Arrivals
-            </NavLink>
+
             <NavLink
               to="/stores"
               onClick={() => setOpen(false)}

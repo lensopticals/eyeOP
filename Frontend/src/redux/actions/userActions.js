@@ -184,7 +184,7 @@ export const loadUser = createAsyncThunk(
       const { data } = await API.get("/user/current-user");
       return data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message);
+      return rejectWithValue("");
     }
   }
 );

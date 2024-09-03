@@ -135,6 +135,21 @@ const SignUp = () => {
     }
   }, [dispatch, error, token, navigate]);
 
+  // Disable Enter key : [TODO: Will fix this later]
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <>
       <div className="bg-[#ffffff00] z-50 w-screen fixed inset-0 backdrop-blur-md flex justify-center items-center">
@@ -205,7 +220,7 @@ const SignUp = () => {
                   <div className="flex items-center justify-center">
                     <button
                       onClick={otpHandler}
-                      className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-purple-600 focus:ring-4 focus:ring-purple-100 bg-purple-500"
+                      className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-slate-800 focus:ring-4 focus:ring-slate-100 bg-slate-700"
                     >
                       Get OTP
                     </button>
@@ -216,14 +231,14 @@ const SignUp = () => {
                   <>
                     <button
                       onClick={phoneSignUPHandler}
-                      className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-purple-600 focus:ring-4 focus:ring-purple-100 bg-purple-500"
+                      className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-slate-800 focus:ring-4 focus:ring-slate-100 bg-slate-700"
                     >
                       Verify
                     </button>
                     <p className="text-sm text-gray-700 flex flex-wrap self-center text-center">
                       Not received OTP ?{" "}
                       {otpTime >= 1 ? (
-                        <span className="text-sm px-2 text-purple-600 font-semibold text-center">
+                        <span className="text-sm px-2 text-slate-600 font-semibold text-center">
                           wait {"  "}
                           {otpTime} sec
                         </span>
@@ -265,7 +280,7 @@ const SignUp = () => {
                   <div className="flex items-center my-4 justify-center">
                     <button
                       onClick={signUpHandler}
-                      className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-purple-600 focus:ring-4 focus:ring-purple-100 bg-purple-500"
+                      className="px-10 py-3 text-md font-bold leading-none text-white transition duration-300 rounded-md hover:bg-slate-800 focus:ring-4 focus:ring-slate-100 bg-slate-700"
                     >
                       Sign Up
                     </button>
@@ -278,7 +293,7 @@ const SignUp = () => {
               className=" text-sm leading-relaxed text-center mt-2 text-gray-600"
             >
               Already a member?{" "}
-              <span className="cursor-pointer text-purple-500 font-bold">
+              <span className="cursor-pointer text-base text-emerald-700 font-bold">
                 Login
               </span>
             </p>

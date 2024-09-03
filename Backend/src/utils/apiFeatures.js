@@ -41,14 +41,17 @@ class ApiFeatures {
     // Initialize a new filter object
     let filter = {};
 
-    // Handle specific filters
     if (queryCopy.material) {
       filter["frame.material"] = queryCopy.material;
       delete queryCopy["material"];
     }
+    if (queryCopy.productType) {
+      filter["productType"] = queryCopy.productType.toLowerCase();
+      delete queryCopy["productType"];
+    }
     if (queryCopy.shape) {
       filter["frame.shape"] = { $in: [queryCopy.shape] };
-      delete queryCopy["shape"]; // Remove the original 'shape' key
+      delete queryCopy["shape"];
     }
 
     // Handle gender filter to include "Unisex" for Men and Women, but not Kids
@@ -58,12 +61,12 @@ class ApiFeatures {
       } else {
         filter.gender = { $in: [queryCopy.gender, "Unisex"] };
       }
-      delete queryCopy["gender"]; // Remove the original 'gender' key
+      delete queryCopy["gender"];
     }
 
     if (queryCopy.frameType) {
       filter["frame.type"] = queryCopy.frameType;
-      delete queryCopy["frameType"]; // Remove the original 'frameType' key
+      delete queryCopy["frameType"];
     }
 
     // Handle price and rating filters with comparison operators
@@ -75,7 +78,7 @@ class ApiFeatures {
       if (queryCopy.price.lte) {
         filter["price"]["$lte"] = Number(queryCopy.price.lte);
       }
-      delete queryCopy["price"]; // Remove the original 'price' key
+      delete queryCopy["price"];
     }
 
     // Apply the filter to the query

@@ -49,7 +49,6 @@ const productReducer = createSlice({
       state.loading = false;
       state.success = false;
       state.error = action.payload;
-      console.log(action.payload);
     });
     builder.addCase(getAdminProducts.pending, (state) => {
       state.loading = true;

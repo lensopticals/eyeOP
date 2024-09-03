@@ -23,6 +23,7 @@ export const getProducts = createAsyncThunk(
       currentPage = 1,
       price = [0, 50000],
       category,
+      productType,
       material,
       shape,
       gender,
@@ -37,6 +38,9 @@ export const getProducts = createAsyncThunk(
       // Adding category to the URL if it exists
       if (category) {
         url += `&category=${category}`;
+      }
+      if (productType) {
+        url += `&productType=${productType}`;
       }
 
       // Adding material filter to the URL if it exists

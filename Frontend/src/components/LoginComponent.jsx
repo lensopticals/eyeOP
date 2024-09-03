@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { openAuthModal } from "../redux/features/modalSlice";
 
 const LoginComponent = () => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(openAuthModal("login"));
+  }, []);
   return (
     <div className="flex w-screen h-[82vh] border-2 justify-center items-center">
       <div className="w-[1/3] p-7 gap-10 h-[20rem] flex flex-col justify-center items-center border border-gray-100 rounded">

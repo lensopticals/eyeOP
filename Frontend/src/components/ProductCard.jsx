@@ -20,8 +20,8 @@ const ProductCard = ({ product, className }) => {
     <div
       className={`relative border overflow-hidden border-slate-200 hover:scale-[1.02] transition-all ease-in-out duration-200 hover:shadow-md mt-3 bg-gray-00  h-fit  rounded-[0.4rem] ${className}`}
     >
-      <div className="absolute z-0 px-3 flex justify-between items-end top-3 left-0 w-full py-1">
-        <h3 className="w-fit text-xs bg-emerald-50 font-semibold text-emerald-500 rounded flex justify-center items-center py-1 px-3">
+      <div className="absolute z-0 px-3 flex justify-between items-center md:items-end top-3 left-0 w-full py-1">
+        <h3 className="w-fit text-[0.7rem] md:text-xs bg-emerald-50 font-semibold text-emerald-500 rounded flex justify-center items-center py-1 px-3">
           {product?.tag}
         </h3>
         <img
@@ -31,18 +31,18 @@ const ProductCard = ({ product, className }) => {
           onClick={whiteClick}
         />
       </div>
-      <Link to={`/product/${product._id}`}>
-        <div className="p-3 pt-7 pb-0 bg-white flex items-center justify-center">
+      <Link to={`/product/${product._id}`} className="h-full">
+        <div className="p-3 pt-10 md:pt-7 pb-0 bg-white flex items-center justify-center">
           <img
             src={product.thumbnail}
             alt={product?.title}
-            className="max-h-48 h-40 w-full md:max-w-64 object-contain rounded-xl"
+            className="max-h-48 h-[5rem] md:h-40 w-full md:max-w-64 object-contain rounded-xl"
           />
           {/* Tag */}
         </div>
-        <div className="specs px-3 py-4">
+        <div className="specs px-3 py-3 md:py-4">
           <div className="flex">
-            <h3 className="font-semibold text-lg md:text-base sm:text-sm">
+            <h3 className="font-semibold text-sm md:text-base sm:text-sm">
               {product.name}
             </h3>
           </div>
@@ -56,13 +56,15 @@ const ProductCard = ({ product, className }) => {
             </h4>
             <h5 className="flex items-center relative space-x-2 button">
               <span className="text-green-600 font-medium text-xs bg-green-100 rounded-full px-2 py-1">
-                <span className="text-sm">{product.discountPercentage}</span>%
-                OFF
+                <span className="text-xs md:text-sm">
+                  {product.discountPercentage}
+                </span>
+                % OFF
               </span>
             </h5>
           </div>
         </div>
-        <div className="relative  overflow-hidden text-sm px-5 py-1 text-yellow-600 bg-gradient-to-r from-yellow-200/75 via-yellow-200/25 to-yellow-50">
+        <div className="relative  overflow-hidden text-[0.6rem] leading-normal sm:text-xs md:text-sm px-2 md:px-5 py-1 text-yellow-600 bg-gradient-to-r from-yellow-200/75 via-yellow-200/25 to-yellow-50">
           <div className="relative z-10 font-semibold">
             {product?.specialOffer}
           </div>
