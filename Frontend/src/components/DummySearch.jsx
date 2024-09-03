@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getProducts } from "../redux/actions/productAction";
 
 const DummySearch = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const keyword = searchParams.get("keyword") || "";
   const dispatch = useDispatch();
   const handleSearch = (e) => {
     e.preventDefault();
@@ -14,7 +16,11 @@ const DummySearch = () => {
     navigate(`/shop/products?keyword=${encodeURIComponent(searchValue)}`);
     dispatch(getProducts({ keyword: searchValue }));
   };
-
+  useEffect(() => {
+    if (!keyword) {
+      setSearchValue("");
+    }
+  }, [keyword]);
   return (
     <>
       <div className="w-full md:hidden cursor-pointer h-[2.6rem] hidden sm:flex bg-gray-100 rounded items-center justify-start border border-gray-300">
