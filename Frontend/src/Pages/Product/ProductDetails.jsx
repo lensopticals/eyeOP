@@ -104,7 +104,7 @@ const ProductDetails = () => {
                 setisOpen={setisOpen}
               />
               <div className="p-2 sm:p-4 md:px-[4.5rem] md:py-10 bg-white ">
-                <div className="grid grid-cols-1 border-b border-gray-300 lg:grid-cols-2 gap-6 ">
+                <div className="grid grid-cols-1 border-b border-gray-300 lg:grid-cols-2 gap-1 md:gap-6 ">
                   <div className="w-full h-full max-h-[80vh] lg:max-h-screen  bg-white rounded-lg relative ">
                     <div className="relative md:border ">
                       {product && Array.isArray(product?.images) && (
@@ -269,15 +269,15 @@ const ProductDetails = () => {
                         </div>
                       </div>{" "}
                     </div>
-                    <div className="flex flex-col md:flex-row gap-5 font-semibold">
+                    <div className="fixed md:static w-full bg-white px-2 py-2 pt-4 md:pt-0 md:py-0 border border-emerald-100 md:border-none md:shadow-none md:bg-transparent rounded-md shadow-md left-0 bottom-0 z-10 flex flex-row gap-5 font-semibold">
                       <button
                         disabled={cartLoading}
                         onClick={handleCart}
-                        className="py-3 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-lg shadow-sm border-slate-800"
+                        className="py-3 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-base font-semibold md:text-lg shadow-sm border-slate-800"
                       >
                         {cartLoading
                           ? "Loading..."
-                          : `  Buy Frame Only at ₹${product?.price}`}
+                          : `  Buy Frame at ₹${product?.price}`}
                       </button>
 
                       <button
@@ -290,9 +290,10 @@ const ProductDetails = () => {
                             dispatch(openAuthModal("login"));
                           }
                         }}
-                        className="py-3 bg-slate-700 text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-lg shadow-sm border-slate-800 hover:bg-slate-600 "
+                        className="py-3 bg-slate-700 text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full font-semibold text-base md:text-lg shadow-sm border-slate-800 hover:bg-slate-600 "
                       >
-                        Select Lens & Buy now
+                        Select Lenses{" "}
+                        <span className="hidden md:inline">& Buy now</span>
                       </button>
                     </div>
 

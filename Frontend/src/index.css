@@ -26,6 +26,12 @@
   -webkit-text-stroke-color: black;
 }
 
+/* Slider Dots */
+
+.glide__bullet--active {
+  @apply bg-emerald-500;
+}
+
 /* Swiper */
 
 /* Add your styles in a CSS file */

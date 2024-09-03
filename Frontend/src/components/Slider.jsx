@@ -27,7 +27,7 @@ export default function Slider({ thumbNail, images }) {
   return (
     <>
       {/*<!-- Component: Slider with controls inside --> */}
-      <div className="relative w-[60vw] glide-01">
+      <div className="relative w-[10rem] md:w-[60vw] glide-01">
         {/*    <!-- Slides --> */}
         <div className="overflow-hidden" data-glide-el="track">
           <ul className="whitespace-no-wrap flex-no-wrap [backface-visibility: hidden] [transform-style: preserve-3d] [touch-action: pan-Y] [will-change: transform] relative flex w-full overflow-hidden p-0">

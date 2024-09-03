@@ -13,6 +13,8 @@ import { userSignup } from "../../../redux/actions/userActions";
 import { useNavigate } from "react-router-dom";
 import { clearErrors } from "../../../redux/features/userSlice";
 import { toast } from "react-toastify";
+import Lottie from "lottie-react";
+import Animation from "../../../assets/animations/hi.json";
 
 const SignUp = () => {
   const { loading, user, token, error } = useSelector((state) => state.user);
@@ -155,9 +157,12 @@ const SignUp = () => {
       <div className="bg-[#ffffff00] z-50 w-screen fixed inset-0 backdrop-blur-md flex justify-center items-center">
         <div className="w-screen md:w-[30vw] h-auto flex flex-col items-center justify-center rounded-lg pt-1">
           <form className="flex relative flex-col w-full p-6 bg-white rounded-lg overflow-y-auto h-full ">
-            <h3 className="mb-3 text-3xl font-semibold text-center text-gray-900">
-              Get Started 👋
-            </h3>
+            <div className="flex justify-center items-center mb-3 text-3xl font-semibold text-center text-gray-900">
+              <h1>Get Started</h1>
+              <div className="w-14 mb-0">
+                <Lottie animationData={Animation} loop={true} />
+              </div>
+            </div>
             <p
               className="absolute right-4 top-4 cursor-pointer"
               onClick={() => dispatch(closeAuthModal())}

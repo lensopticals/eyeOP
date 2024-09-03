@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import SmallUnderline from "../../components/SmallUnderline";
-import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../../redux/actions/productAction";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProductCard from "../../components/ProductCard";
 import "swiper/css";
@@ -9,19 +7,38 @@ import "swiper/css/effect-cards";
 import "swiper/css/pagination";
 import { EffectCards, Pagination, Autoplay } from "swiper/modules";
 import { ProductCardSkeleton } from "../../components/Skeletons/ProductCardSkeleton";
+import API from "../../utils/API";
 
 export const FeaturedProducts = () => {
-  const dispatch = useDispatch();
-  const { loading, error, products } = useSelector((state) => state.product);
   const [activeType, setActiveType] = useState("sunglasses");
+  const [products, setProducts] = useState([]);
+
+  const getFeaturedProducts = async ({
+    keyword = "",
+    price = [0, 50000],
+    productType,
+    limit = 6,
+  }) => {
+    try {
+      let url = `/all-products?keyword=${keyword}&limit=${limit}&page=1&price[gte]=${price[0]}&price[lte]=${price[1]}`;
+
+      if (productType) {
+        url += `&productType=${productType}`;
+      }
+
+      const { data } = await API.get(url);
+      setProducts(data.product);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    dispatch(getProducts({ limit: 8 }));
-  }, []);
+    getFeaturedProducts({ productType: activeType });
+  }, [activeType]);
 
   const handleTypeChange = (type) => {
     setActiveType(type);
-    // Potentially dispatch different actions based on type
   };
 
   return (
