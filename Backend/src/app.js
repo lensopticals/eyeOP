@@ -18,6 +18,7 @@ app.use(
       "https://lensop.netlify.app",
       "https://eyeop.netlify.app",
       "https://eye-op.netlify.app",
+      "https://eyeop.onrender.com",
     ],
     credentials: true,
   })
