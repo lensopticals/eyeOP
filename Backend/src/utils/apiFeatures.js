@@ -4,6 +4,7 @@ class ApiFeatures {
     this.querystr = querystr;
   }
 
+  // Search functionality
   search() {
     const keyword = this.querystr.keyword
       ? {
@@ -13,42 +14,84 @@ class ApiFeatures {
             { category: { $regex: this.querystr.keyword, $options: "i" } },
             { tag: { $regex: this.querystr.keyword, $options: "i" } },
             { brand: { $regex: this.querystr.keyword, $options: "i" } },
+            {
+              "frame.color.name": {
+                $regex: this.querystr.keyword,
+                $options: "i",
+              },
+            },
+            { "frame.style": { $regex: this.querystr.keyword, $options: "i" } },
+            { "frame.shape": { $regex: this.querystr.keyword, $options: "i" } },
           ],
         }
       : {};
 
-    // console.log(keyword);
     this.query = this.query.find({ ...keyword });
     return this;
   }
 
+  // Filter functionality
   filter() {
     const queryCopy = { ...this.querystr };
 
+    // Fields to remove for filtering
     const removeFields = ["keyword", "page", "limit"];
+    removeFields.forEach((key) => delete queryCopy[key]);
 
-    removeFields.forEach((key) => {
-      delete queryCopy[key];
-    });
+    // Initialize a new filter object
+    let filter = {};
 
-    // Filter for price, rating, and gender
-    if (queryCopy.gender) {
-      queryCopy.gender = queryCopy.gender;
+    if (queryCopy.material) {
+      filter["frame.material"] = queryCopy.material;
+      delete queryCopy["material"];
+    }
+    if (queryCopy.productType) {
+      filter["productType"] = queryCopy.productType.toLowerCase();
+      delete queryCopy["productType"];
+    }
+    if (queryCopy.shape) {
+      filter["frame.shape"] = { $in: [queryCopy.shape] };
+      delete queryCopy["shape"];
     }
 
-    let querystr = JSON.stringify(queryCopy);
-    querystr = querystr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
-    this.query = this.query.find(JSON.parse(querystr));
+    // Handle gender filter to include "Unisex" for Men and Women, but not Kids
+    if (queryCopy.gender) {
+      if (queryCopy.gender === "Kids") {
+        filter.gender = "Kids";
+      } else {
+        filter.gender = { $in: [queryCopy.gender, "Unisex"] };
+      }
+      delete queryCopy["gender"];
+    }
+
+    if (queryCopy.frameType) {
+      filter["frame.type"] = queryCopy.frameType;
+      delete queryCopy["frameType"];
+    }
+
+    // Handle price and rating filters with comparison operators
+    if (queryCopy.price) {
+      filter["price"] = {};
+      if (queryCopy.price.gte) {
+        filter["price"]["$gte"] = Number(queryCopy.price.gte);
+      }
+      if (queryCopy.price.lte) {
+        filter["price"]["$lte"] = Number(queryCopy.price.lte);
+      }
+      delete queryCopy["price"];
+    }
+
+    // Apply the filter to the query
+    this.query = this.query.find(filter);
     return this;
   }
 
-  //   Pagination
-
-  pagination(resultPerpage) {
+  // Pagination functionality
+  pagination(resultPerPage) {
     const currentPage = Number(this.querystr.page) || 1;
-    const skip = resultPerpage * (currentPage - 1);
+    const skip = resultPerPage * (currentPage - 1);
 
-    this.query = this.query.limit(resultPerpage).skip(skip);
+    this.query = this.query.limit(resultPerPage).skip(skip);
     return this;
   }
 }

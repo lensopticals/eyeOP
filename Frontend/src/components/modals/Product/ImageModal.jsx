@@ -23,7 +23,7 @@ const ImageModal = ({ isOpen, setisOpen, images }) => {
                   <img
                     src={image}
                     alt="image"
-                    className="w-full object-cover  aspect-square lg:aspect-video  border"
+                    className="w-full object-cover border"
                   />
                 </div>
               );

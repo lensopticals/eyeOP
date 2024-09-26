@@ -36,7 +36,7 @@ const ImageSlider = ({ setisOpen, images }) => {
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className="object-contain !mix-blend-screen lg:px-14 w-full h-[60vh] lg:h-[37rem] aspect-square lg:aspect-video"
+                className="object-contain !mix-blend-screen lg:px-14 w-full h-[45vh] md:h-[60vh] lg:h-[37rem] aspect-square lg:aspect-video"
               />
             </li>
           ))}
@@ -95,9 +95,7 @@ const ImageSlider = ({ setisOpen, images }) => {
         {images.map((_, index) => (
           <button
             key={index}
-            className={`glide__bullet bg-gray-800 w-7 h-1 rounded inline-block mx-1 focus:outline-none ${
-              index === 0 ? "bg-white" : ""
-            }`}
+            className={`glide__bullet border bg-gray-200 w-7 h-1 rounded inline-block mx-1 focus:outline-none `}
             data-glide-dir={`=${index}`}
           ></button>
         ))}

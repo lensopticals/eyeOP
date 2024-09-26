@@ -20,6 +20,9 @@ import { openAuthModal } from "../../redux/features/modalSlice";
 import { getAddress } from "../../redux/actions/addressAction";
 import OfferBox from "../../components/OfferBox";
 import ProductDetailsSkeleton from "../../components/Skeletons/ProductDetailsSkeleton";
+import StepperModal from "../../components/StepperModal";
+import Login from "../../components/modals/auth/Login";
+import { loadUser } from "../../redux/actions/userActions";
 
 const RatingStar = () => {
   return (
@@ -46,16 +49,18 @@ const RatingStar = () => {
 };
 
 const ProductDetails = () => {
-  const [collapse, setCollapse] = useState(true);
+  const [collapse, setCollapse] = useState(false);
   const [isOpen, setisOpen] = useState(false);
   const handleImageModel = () => {
     setisOpen(!isOpen);
   };
+  const [isStepperOpen, setisStepperOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   const { id } = useParams();
   const dispatch = useDispatch();
   const { product, loading } = useSelector((state) => state.productDetail);
+  const { isAuthenticated } = useSelector((state) => state.user);
   const offers = [
     "Pay via PhonePe/Paytm & get Instant 100% Cashback* *T&C apply",
     "Get 50% off on your first purchase",
@@ -78,26 +83,15 @@ const ProductDetails = () => {
   }, [dispatch, cartError]);
 
   const handleCart = () => {
-    dispatch(addToCart({ productId: id, quantity }));
-  };
-
-  const handleBuy = async () => {
-    const token = localStorage.getItem("token");
-    const { payload } = await dispatch(getAddress());
-    // console.log(payload.address);
-    if (token) {
-      if (payload.address.length > 0) {
-        navigate(`/checkout/address/${id}/`);
-      } else {
-        navigate(`/buy/${id}/`);
-      }
-    } else {
-      dispatch(openAuthModal("login"));
+    if (!isAuthenticated) {
+      return dispatch(openAuthModal("login"));
     }
+    dispatch(addToCart({ productId: id, quantity }));
   };
 
   return (
     <>
+      <StepperModal isOpen={isStepperOpen} setIsOpen={setisStepperOpen} />
       {loading ? (
         <ProductDetailsSkeleton />
       ) : (
@@ -110,7 +104,7 @@ const ProductDetails = () => {
                 setisOpen={setisOpen}
               />
               <div className="p-2 sm:p-4 md:px-[4.5rem] md:py-10 bg-white ">
-                <div className="grid grid-cols-1 border-b border-gray-300 lg:grid-cols-2 gap-6 ">
+                <div className="grid grid-cols-1 border-b border-gray-300 lg:grid-cols-2 gap-1 md:gap-6 ">
                   <div className="w-full h-full max-h-[80vh] lg:max-h-screen  bg-white rounded-lg relative ">
                     <div className="relative md:border ">
                       {product && Array.isArray(product?.images) && (
@@ -130,7 +124,7 @@ const ProductDetails = () => {
                       )}
                     </div>
                     <div
-                      className="mt-7 flex p-4 justify-between items-center border-b border-gray-300  cursor-pointer bg-slate-50 hover:bg-slate-100"
+                      className="hidden lg:flex mt-7 p-4 justify-between items-center border-b border-gray-300  cursor-pointer bg-slate-50 hover:bg-slate-100"
                       onClick={() => setCollapse(!collapse)}
                     >
                       <h1>Specifications</h1>
@@ -275,23 +269,31 @@ const ProductDetails = () => {
                         </div>
                       </div>{" "}
                     </div>
-                    <div className="flex flex-col md:flex-row gap-5 font-semibold">
+                    <div className="fixed md:static w-full bg-white px-2 py-2 pt-4 md:pt-0 md:py-0 border border-emerald-100 md:border-none md:shadow-none md:bg-transparent rounded-md shadow-md left-0 bottom-0 z-10 flex flex-row gap-5 font-semibold">
                       <button
                         disabled={cartLoading}
                         onClick={handleCart}
-                        className="py-3 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-lg shadow-sm border-slate-800"
+                        className="py-3 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-base font-semibold md:text-lg shadow-sm border-slate-800"
                       >
                         {cartLoading
                           ? "Loading..."
-                          : `  Buy Frame Only at ₹${product?.price}`}
+                          : `  Buy Frame at ₹${product?.price}`}
                       </button>
 
                       <button
-                        disabled
-                        onClick={handleBuy}
-                        className="py-3 bg-slate-700 text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-lg shadow-sm border-slate-800 hover:bg-slate-600 "
+                        // disabled
+                        // onClick={handleBuy}
+                        onClick={() => {
+                          if (isAuthenticated) {
+                            setisStepperOpen(true);
+                          } else {
+                            dispatch(openAuthModal("login"));
+                          }
+                        }}
+                        className="py-3 bg-slate-700 text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full font-semibold text-base md:text-lg shadow-sm border-slate-800 hover:bg-slate-600 "
                       >
-                        Select Lens & Buy now
+                        Select Lenses{" "}
+                        <span className="hidden md:inline">& Buy now</span>
                       </button>
                     </div>
 
@@ -300,13 +302,146 @@ const ProductDetails = () => {
                       <FaInstagram className="text-4xl text-pink-700" />
                       <FaTwitter className="text-4xl text-sky-600" />
                       <FaWhatsapp className="text-4xl text-green-700" />
-                      <FaInbox className="text-4xl text-yellow-700" />
                     </div>
+                  </div>
+                  <div
+                    className="flex lg:hidden p-4 justify-between items-center border-b border-gray-300  cursor-pointer bg-slate-50 hover:bg-slate-100"
+                    onClick={() => setCollapse(!collapse)}
+                  >
+                    <h1>Specifications</h1>
+                    <button
+                      className={`mt-2 focus:outline-none ${
+                        !collapse && "rotate-180"
+                      } transition-all duration-150 ease-in-out`}
+                    >
+                      <FaChevronDown className="text-emerald-600" />
+                    </button>
                   </div>
                 </div>
 
                 {/* ReView Sections */}
                 <div className="more">
+                  {/* <div
+                    className={`overflow-y-hidden ${
+                      collapse ? "h-[0]" : "h-[100%]"
+                    } transition-all duration-400 ease-in-out`}
+                  >
+                    <div className="text-md font-sans text-black p-4">
+                      <h3 className="py-2 font-semibold">Description</h3>
+                      <p>{product?.description}</p>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full bg-white border border-gray-300">
+                        <tbody>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">Name</td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.name}
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell">
+                              Brand
+                            </td>
+                            <td className="px-4 py-2">{product.brand}</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">
+                              Model Number
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.modelNo}
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell">
+                              Category
+                            </td>
+                            <td className="px-4 py-2">{product.category}</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">
+                              Stock Unit ID
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.skuId}
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell">
+                              Product Type
+                            </td>
+                            <td className="px-4 py-2">{product.productType}</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">Gender</td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.gender}
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell">
+                              Collection
+                            </td>
+                            <td className="px-4 py-2">{product.collection}</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">
+                              Frame Material
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.frame?.material}
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell">
+                              Frame Color
+                            </td>
+                            <td className="px-4 py-2">
+                              {product.frame?.color?.name}
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">
+                              Frame Shape
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.frame?.shape}
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell">
+                              Frame Style
+                            </td>
+                            <td className="px-4 py-2">
+                              {product.frame?.style}
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">Size</td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.frame?.size}
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell">
+                              Frame Width
+                            </td>
+                            <td className="px-4 py-2">
+                              {product.frame?.measurement}
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">
+                              Age Group
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.ageGroup} years
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell">
+                              Weight
+                            </td>
+                            <td className="px-4 py-2">{product.weight}gm</td>
+                          </tr>
+                          <tr className="hover:bg-gray-100 border-b border-gray-300  table-row">
+                            <td className="font-semibold px-4 py-2">Seller</td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              {product.seller}
+                            </td>
+                            <td className="font-semibold px-4 py-2 table-cell"></td>
+                            <td className="px-4 py-2"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div> */}
+
                   <div
                     className={`overflow-y-hidden ${
                       collapse ? "h-[0]" : "h-[100%]"
@@ -419,7 +554,6 @@ const ProductDetails = () => {
                             <td className="font-semibold px-4 py-2"></td>
                             <td className="px-4 py-2"></td>
                           </tr>
-                          {/* Add other fields similarly */}
                         </tbody>
                       </table>
                     </div>

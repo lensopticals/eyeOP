@@ -69,9 +69,23 @@ function App() {
           }
         ></Route>
         <Route path="/shop/:category" element={<ProductByCategory />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/buy/:id" element={<AddressForm />} />
-        <Route path="/buy/" element={<AddressForm />} />
+        <Route path="/product/:slug/:id" element={<ProductDetails />} />
+        <Route
+          path="/buy/:id"
+          element={
+            <ProtectedRoutes>
+              <AddressForm />
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/buy/"
+          element={
+            <ProtectedRoutes>
+              <AddressForm />
+            </ProtectedRoutes>
+          }
+        />
         <Route path="/checkout/address/:id" element={<Addresses />} />
         <Route path="/checkout/address/" element={<Addresses />} />
         <Route path="/address/edit/:id" element={<EditAddressPage />} />
@@ -81,9 +95,9 @@ function App() {
         <Route
           path="cart"
           element={
-            // <ProtectedRoutes>
-            <CartPage />
-            // </ProtectedRoutes>
+            <ProtectedRoutes>
+              <CartPage />
+            </ProtectedRoutes>
           }
         ></Route>
       </Route>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import SmallUnderline from "../../components/SmallUnderline";
 
 const data = [
@@ -15,12 +16,12 @@ const data = [
   {
     id: 3,
     imageUrl: "/images/frames/Hexa.webp",
-    title: "Hexa",
+    title: "Hexagon",
   },
   {
     id: 4,
     imageUrl: "/images/frames/Round.webp",
-    title: "Oval",
+    title: "Round",
   },
   {
     id: 5,
@@ -35,6 +36,13 @@ const data = [
 ];
 
 const TrendingFrames = () => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
+  // Function to handle the navigation
+  const handleNavigate = (shape) => {
+    navigate(`/shop/products?page=1&shape=${shape}`);
+  };
+
   return (
     <div className="py-10 md:py-16">
       <h1 className="relative text-center text-slate-700 font-semibold text-3xl md:text-5xl">
@@ -46,6 +54,7 @@ const TrendingFrames = () => {
           <div
             key={index}
             className="w-full cursor-pointer hover:shadow-lg shadow-slate-700 h-full flex flex-col items-center justify-center p-2 rounded-lg border transition-shadow duration-300 ease-in-out"
+            onClick={() => handleNavigate(item.title)} // Navigate on click
           >
             <img src={item.imageUrl} alt={item.title} className="w-32 h-32" />
             <p className="text-sm font-semibold text-gray-800 mt-2">

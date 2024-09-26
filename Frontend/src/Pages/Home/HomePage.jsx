@@ -26,7 +26,10 @@ const HomePage = () => {
       <div className="h-full">
         <Brands />
       </div>
-      <div className="h-full">
+      <div
+        className="h-full w-full
+      "
+      >
         <LatestProducts />
       </div>
       <div className="h-full">

@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-// import Products from "../assets/api.json";
 import ProductCard from "../../components/ProductCard";
 import SideFilters from "../../components/SideFilters";
 import { toast } from "react-toastify";
 import "../../styles/productsPage.css";
 import sortImg from "../../assets/Images/sort.png";
 import filterImg from "../../assets/Images/filter.png";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../redux/actions/productAction";
 import { clearErrors } from "../../redux/features/productSlice";
 import { ProductCardSkeleton } from "../../components/Skeletons/ProductCardSkeleton";
+import SmallUnderline from "../../components/SmallUnderline";
 const ProductsPage = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState(false);
   const [sort, setSort] = useState(false);
-
   const handlefilters = () => {
     if (filter) {
       setFilter(false);
@@ -37,16 +35,11 @@ const ProductsPage = () => {
   const { loading, error, products, productsCount, resultPerPage } =
     useSelector((state) => state.product);
 
-  const { keyword } = useParams();
-
-  // Pagination
-
   const [searchParams, setSearchParams] = useSearchParams(1);
 
   // Read query parameters
   const pageParam = Number(searchParams.get("page"));
-  const finalCategory = searchParams.get("category")?.toString();
-
+  const keyword = searchParams.get("query") || "";
   // You can read other query parameters similarly
 
   const handlePageChange = (page) => {
@@ -61,60 +54,38 @@ const ProductsPage = () => {
     }
   }, [searchParams]);
 
-  // Filters
-  // Price
-
-  const [price, setPrice] = useState([0, 15000000]);
-  const priceHandler = (e, newPrice) => {
-    setPrice(e);
-  };
-
-  // Sort By
-
-  // Category
-
-  const [category, setCategory] = useState();
-  const deleteCategoryParam = () => {
-    searchParams.set("page", "1");
-    searchParams.delete("category");
-    setSearchParams(searchParams);
-  };
-
-  useEffect(() => {
-    if (!category) {
-      return;
-    }
-    searchParams.set("category", category);
-    setSearchParams(searchParams);
-  }, [category]);
-
-  useEffect(() => {
-    searchParams.set("page", "1");
-    setSearchParams(searchParams);
-  }, [category, price]);
-
   useEffect(() => {
     if (error) {
       message.error(error);
       dispatch(clearErrors());
     }
 
-    dispatch(
-      getProducts({
-        keyword,
-        currentPage: pageParam,
-        price,
-        category: finalCategory,
-      })
-    );
-  }, [keyword, pageParam, price, finalCategory]);
+    // dispatch(getProducts({ keyword }));
+  }, [keyword]);
 
   return (
-    <div className="overflow-hidden py-16 md:py-8">
+    <div className="overflow-hidden py-12 md:py-8">
+      <div className="flex md:hidden justify-end px-6">
+        <button
+          onClick={() => {
+            navigate("/shop/products");
+            window.location.reload();
+          }}
+          className="text-emerald-600 border border-emerald-600 bg-white-50 max-h-7 py-0 rounded px-2"
+        >
+          View All
+        </button>
+      </div>
+      <div className="flex md:hidden justify-center">
+        <h1 className="relative text-center mt-1 mb-4 text-2xl uppercase tracking-wider font-semibold text-slate-800">
+          All Products
+          <SmallUnderline className={"w-8 sm:w-10 -bottom-2"} />
+        </h1>
+      </div>
       {!filter ? (
         <div className="flex">
-          <SideFilters width="22rem" clas="sideBar" />
-          <div className="products w-full h-full grid grid-cols-1 lg:grid-cols-3 gap-10 mx-5 md:mx-10 md:grid-cols-2 ">
+          <SideFilters width="25rem" clas="sideBar" />
+          <div className="products w-full h-full grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10 mx-5 md:mx-10 sm:grid-cols-2 ">
             {loading
               ? Array.from({ length: 9 }).map((_, i) => <ProductCardSkeleton />)
               : products.map((product) => {
@@ -127,26 +98,31 @@ const ProductsPage = () => {
           </div>
         </div>
       ) : (
-        <div className="sideFilter mt-10 ml-3">
-          <SideFilters width="100vw" clas="sideBar2" />
+        <div className="sideFilter mt-0">
+          <SideFilters
+            width="100vw"
+            setSort={setSort}
+            setFilter={setFilter}
+            clas="sideBar2 z-50"
+          />
         </div>
       )}
 
       {/* Bottom filter option */}
-      <div className="bottom-bar flex fixed top-14 w-[100vw]">
+      <div className="bottom-bar text-sm flex gap-0 fixed top-16 z-20 w-[100vw]">
         <div
-          className="sort flex bg-purple-400 w-[50vw] p-2 justify-center gap-2"
+          className="sort flex items-center bg-purple-400 w-[50vw] py-1.5 justify-center gap-2"
           onClick={handleSort}
         >
-          <img src={sortImg} alt="#" className="w-[20px]" />
+          <img src={sortImg} alt="#" className="w-[10px]" />
           <p className="text-white">Sort by</p>
         </div>
         <span className="line w-[2px]"></span>
         <div
-          className="filter flex bg-pink-300 w-[50vw] p-2 justify-center gap-2"
+          className="filter flex items-center py-1.5 bg-pink-300 w-[50vw] justify-center gap-2"
           onClick={handlefilters}
         >
-          <img src={filterImg} alt="#" className="w-[20px]" />
+          <img src={filterImg} alt="#" className="w-[10px]" />
           <p className="text-white">filters</p>
         </div>
       </div>

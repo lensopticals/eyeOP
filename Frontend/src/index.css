@@ -26,6 +26,12 @@
   -webkit-text-stroke-color: black;
 }
 
+/* Slider Dots */
+
+.glide__bullet--active {
+  @apply bg-emerald-500;
+}
+
 /* Swiper */
 
 /* Add your styles in a CSS file */
@@ -51,7 +57,7 @@
 }
 
 .mySwiper .swiper-pagination {
-  bottom: -1rem;
+  bottom: -1.2rem;
 }
 .swiper-pagination-bullet {
   background-color: white;
@@ -65,16 +71,27 @@
   opacity: 1;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 450px) {
+  .mySwiper .swiper-button-next,
+  .mySwiper .swiper-button-prev {
+    display: none;
+  }
+  .swiper {
+    width: 230px;
+    padding: 0 0;
+  }
+}
+
+@media screen and (min-width: 450px) and (max-width: 768px) {
   .mySwiper .swiper-button-next,
   .mySwiper .swiper-button-prev {
     display: none;
   }
   .swiper {
     width: 280px;
+    padding: 0 0;
   }
 }
-
 .button {
   position: relative;
   overflow: hidden;
