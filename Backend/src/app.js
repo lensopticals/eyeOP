@@ -50,4 +50,10 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/address", addressRoutes);
 app.use("/api/v1", orderRoutes);
 
+app.get("/", (req, res) => {
+  return res
+    .status(200)
+    .json({ success: true, message: "Server is running Healthy" });
+});
+
 export default app;
