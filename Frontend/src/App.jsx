@@ -31,6 +31,8 @@ import Addresses from "./Pages/Buy/Addresses";
 import AddressForm from "./Pages/Buy/AddressForm";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import OrderPage from "./Pages/Orders/OrderPage";
+import OrderDetail from "./Pages/Orders/OrderDetail";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -87,6 +89,9 @@ function App() {
         <Route path="/checkout/address/:id" element={<Addresses />} />
         <Route path="/checkout/address/" element={<Addresses />} />
         <Route path="/address/edit/:id" element={<EditAddressPage />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/orders" element={<OrderPage />} />
+        <Route path="/orders/:id" element={<OrderDetail />} />
         <Route
           path="cart"
           element={
