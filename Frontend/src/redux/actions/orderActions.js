@@ -28,8 +28,7 @@ export const getOrders = createAsyncThunk(
   "order/getOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await API.get(`/order/me`);
-
+      const { data } = await API.get(`/get-orders`);
       if (data && data?.success === false) {
         return rejectWithValue(data?.message);
       }

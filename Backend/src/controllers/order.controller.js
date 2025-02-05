@@ -26,25 +26,24 @@ export const createNewOrder = async (req, res) => {
   }
 };
 
+
 // Get orders of the user
 
 export const getUserOrders = async (req, res) => {
   try {
-    const orders = await Order.findById(req.user._id).populate({
-      path: "orderItems.product",
-      model: "Product",
-    });
-
+    const orders = await Order.find({user: req.user._id});
+    
     if (!orders || orders.length === 0) {
       return res
         .status(404)
         .json({ success: false, message: "No Orders Found" });
     }
-
+    console.log("orders: ", orders);
     return res
       .status(200)
       .json({ success: true, orders, message: "Orders Fetched SuccessFully" });
   } catch (error) {
+    console.log("orders error: ", error);
     return res
       .status(500)
       .json({ success: false, message: "Something went wrong" });
@@ -55,10 +54,7 @@ export const getUserOrders = async (req, res) => {
 
 export const getSingleOrder = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate({
-      path: "orderItems.product",
-      model: "Product",
-    });
+    const order = await Order.findById(req.params.id);;
 
     if (!order) {
       return res
