@@ -43,7 +43,9 @@ export const getOrderDetails = createAsyncThunk(
   "order/getOrderDetails",
   async (orderId, { rejectWithValue }) => {
     try {
-      const { data } = await API.post(`/order/${orderId}`);
+      const { data } = await API.get(`/order/${orderId}`);
+      console.log("order detail: ");
+      console.log(data);
 
       if (data && data?.success) {
         return data?.order;

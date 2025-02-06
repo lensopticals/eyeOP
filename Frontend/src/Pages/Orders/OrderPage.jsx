@@ -52,7 +52,7 @@ const OrderPage = () => {
   // const [order, setOrders] = useState();
   useEffect(() => {
     dispatch(getOrders());
-    console.log(orders);
+    // console.log("orders: "+orders);
   }, []);
   const navigate = useNavigate();
   const handleClick = async (orderId) => {

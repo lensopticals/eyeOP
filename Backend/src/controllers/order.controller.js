@@ -54,7 +54,7 @@ export const getUserOrders = async (req, res) => {
 
 export const getSingleOrder = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);;
+    const order = await Order.findById(req.params.id).populate("shippingInfo");
 
     if (!order) {
       return res
