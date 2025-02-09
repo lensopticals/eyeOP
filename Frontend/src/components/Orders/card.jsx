@@ -1,7 +1,7 @@
 import React from "react";
 
 const Card = ({ data }) => {
-  console.log(data);
+  // console.log(data);
   return (
     <>
       <div className="md:flex justify-evenly mt-5 py-5 border-t border-gray-200 bg-gray-50">

@@ -50,7 +50,7 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1", productRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/address", addressRoutes);
-app.use("/api/v1", orderRoutes);
+app.use("/api/v1/", orderRoutes);
 
 app.get("/", (req, res) => {
   return res

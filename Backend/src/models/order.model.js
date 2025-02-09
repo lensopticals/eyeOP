@@ -1,7 +1,11 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Mongoose, Schema } from "mongoose";
 
 const orderSchema = new Schema(
   {
+    orderId: {
+      type: String,
+      unique: true,
+    },
     orderItems: [
       {
         product: {},
@@ -20,9 +24,23 @@ const orderSchema = new Schema(
       ref: "User",
       required: true,
     },
+
+    shippingCharge: {
+      type: Number,
+      default: 0
+    },
+    deliveryCharge: {
+      type: Number,
+      default: 0
+    },
     totalAmount: {
       type: Number,
       required: true,
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["Pay on delivery", "online"],
+      default: "Pay on delivery"
     },
     status: {
       type: String,
@@ -30,8 +48,6 @@ const orderSchema = new Schema(
       default: "Pending",
     },
     paymentId: {
-      // type: Schema.Types.ObjectId,
-      // ref: "Payment",
       type: String,
       required: [true, "Payment id is required!"],
     },
@@ -43,5 +59,13 @@ const orderSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// Pre-save hook to generate a unique orderId if it doesn't exist
+orderSchema.pre("save", function (next) {
+  if (!this.orderId) {
+    this.orderId = `ORD${Date.now()}`;
+  }
+  next();
+});
 
 export const Order = mongoose.model("Order", orderSchema);

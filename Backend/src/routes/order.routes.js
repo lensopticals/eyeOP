@@ -14,7 +14,7 @@ const router = Router();
 // secured routes
 router.route("/create-order").post(verifyJWT, createNewOrder);
 router.route("/get-orders").get(verifyJWT, getUserOrders);
-router.route("/order/:id").get(verifyJWT, getSingleOrder);
+router.route("/order/:id").get(getSingleOrder);
 
 // Admin ===>
 router
