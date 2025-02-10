@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrderDetails } from "../../redux/actions/orderActions";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const order_ = {
   orderId: "ORD001",
@@ -46,6 +46,8 @@ const OrderDetail = () => {
   useEffect(() => {
     dispatch(getOrderDetails(id));
   }, []);
+  // const slug = order?.product?.name.toLowerCase().trim().replace(/\s+/g, "-");
+
   return (
     <>
       {order ? (
@@ -137,9 +139,9 @@ const OrderDetail = () => {
                       {ord.product.frame.color[0].name}
                     </p>
                   </div>
-                  <p className="text-sm font-normal text-blue-900/80">
+                  <Link to={`/product/${ord?.product?.name.toLowerCase().trim().replace(/\s+/g, "-")}/${ord?.product?._id}`} className="text-sm font-normal text-blue-900/80 cursor-pointer" >
                     {ord.product.name}
-                  </p>
+                  </Link>
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-semibold">
                       <span className="font-normal">Quantity: </span>

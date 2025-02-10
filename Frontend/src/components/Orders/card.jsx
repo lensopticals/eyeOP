@@ -1,39 +1,70 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Card = ({ data }) => {
-  // console.log(data);
+const Card = ({ data, id, ord, products }) => {
+  const navigate = useNavigate();
+  const handleClick = async (orderId) => {
+    navigate(`/orders/${orderId}`);
+  };
+  useEffect(() => {
+    console.log(data);
+  });
   return (
-    <>
-      <div className="md:flex justify-evenly mt-5 py-5 border-t border-gray-200 bg-gray-50">
-        <div className="w-1/6 h-fit md:h-28 border">
-          <img
-            src={data.thumbnail || "#"}
-            alt
-            className="w-full h-full object-center object-contain"
-          />
+    <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 ease-in-out">
+      <div className="md:flex items-center p-4">
+        <div className="w-full md:w-1/4 lg:w-1/5 mb-4 md:mb-0">
+          <div className="aspect-w-1 aspect-h-1 rounded-md overflow-hidden">
+            <img
+              src={data.thumbnail || "/placeholder.svg"}
+              alt={data.name}
+              className="w-full h-full object-center object-cover"
+            />
+          </div>
         </div>
-        <div className="md:pl-3 md:w-3/4">
-          <p className="text-xs leading-3 text-gray-800 md:pt-0 pt-4">
-            {data.orderId}
-          </p>
-          <div className="flex items-center justify-between w-full md:w-full pt-1 mt-2">
-            <p className="text-base font-semibold leading-none text-gray-800">
-              {data.name}
-            </p>
-            <p className="text-sm font-semibold leading-3 text-gray-600 py-1 px-5">
-              ₹ {data.price?.toFixed(2)}
-            </p>
-            <p className="text-sm font-semibold leading-3 py-1 text-green-600">
-              <span className="w-3 h-3 rounded-full bg-green-600 inline-block mr-2"></span>
+        <div className="md:pl-6 md:w-3/4 lg:w-4/5">
+          <div className="flex flex-wrap items-center justify-between mb-2">
+            <p className="text-xs text-gray-500 font-medium">Order ID: {ord}</p>
+            <span className="text-sm font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">
               Delivered
+            </span>
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">{data.name}</h3>
+          <div className="flex items-center justify-between mb-2">
+            {products > 1 ? (
+              <p className="text-sm font-semibold text-gray-700 underline">
+                +{products - 1} Products
+              </p>
+            ) : (
+              <p></p>
+            )}
+            <p className="text-lg font-semibold text-blue-700">
+              ₹{data.price?.toFixed(2)}
             </p>
           </div>
-          <p className="text-sm font-semibold leading-3 text-gray-600 py-1 mt-1">
-            {data.material}
-          </p>
+          <div className="mt-4 flex justify-between items-center">
+            <button
+              className="text-blue-800/90 underline hover:text-blue-800 text-sm font-semibold px-3 py-1 transition-colors duration-300 ease-in-out"
+              onClick={() => {
+                handleClick(id);
+              }}
+            >
+              View Details
+            </button>
+            <div className="flex items-center">
+              <span className="text-gray-800 text-sm mr-2">Rate Product:</span>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  className="text-gray-400 hover:text-yellow-500 focus:outline-none"
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

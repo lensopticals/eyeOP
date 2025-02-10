@@ -59,7 +59,7 @@ const UserDashboard = () => {
       {/* Cards for profile menu */}
       <div className="flex flex-wrap gap-5 md:gap-10 items-center">
         <MenuItem
-          link="/my/orders"
+          link="/orders"
           detail={"View your Orders here"}
           title={"Orders"}
           icon={<CiDeliveryTruck className="text-4xl text-gray-600" />}

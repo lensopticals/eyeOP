@@ -54,22 +54,16 @@ const OrderPage = () => {
     dispatch(getOrders());
     // console.log("orders: "+orders);
   }, []);
-  const navigate = useNavigate();
-  const handleClick = async (orderId) => {
-    navigate(`/orders/${orderId}`);
-  };
+  
   return (
     <>
-      <div className="mt-10 mx-5">
+      <div className="mt-10 mb-20 mx-5">
         <h1 className="font-serif text-[2rem] font-semibold">Orders</h1>
         <div className="flex flex-col gap-10 mt-7">
           {orders.map((order) => (
             <div
-              onClick={() => {
-                handleClick(order._id);
-              }}
             >
-              <Card data={order.orderItems[0].product} />
+              <Card data={order.orderItems[0].product} id={order._id} ord={order.orderId} products={order.orderItems.length} />
             </div>
           ))}
         </div>
