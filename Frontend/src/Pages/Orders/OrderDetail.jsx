@@ -114,7 +114,7 @@ const OrderDetail = () => {
             {order.orderItems?.map((ord, index) => (
               <div
                 key={index}
-                className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 border-b border-gray-300 bg-gradient-to-r from-white to-green-50/70"
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 border-b border-gray-300 bg-gradient-to-r from-white to-blue-50/70"
               >
                 <div className="w-full sm:w-24 h-24 p-2 border bg-white flex-shrink-0">
                   <img
