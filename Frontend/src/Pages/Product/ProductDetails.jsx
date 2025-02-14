@@ -23,6 +23,7 @@ import ProductDetailsSkeleton from "../../components/Skeletons/ProductDetailsSke
 import StepperModal from "../../components/StepperModal";
 import Login from "../../components/modals/auth/Login";
 import { loadUser } from "../../redux/actions/userActions";
+import ShareButton from "./Share";
 
 const RatingStar = () => {
   return (
@@ -215,14 +216,14 @@ const ProductDetails = () => {
                       <OfferBox offers={offers} />
                     </div>
                     {/* Frame Dimensions */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5 justify-between bg-gray-700 rounded-lg border border-gray-100 shadow-xl px-0 sm:px-5 py-4 pb-7 my-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5 justify-between bg-gray-100 text-black rounded-lg border border-gray-100 shadow-xl px-0 sm:px-5 py-4 pb-7 my-2">
                       <div className="flex flex-col gap-0 items-center justify-center">
                         <img
                           src="/images/dimensions/eye.svg"
                           className="sm:w-20 sm:h-16 w-16 h-10"
                           alt=""
                         />
-                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm text-white">
+                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm">
                           <h5 className="text-xs md:text-sm font-normal">
                             {product?.frame?.dimensions?.lensWidth}
                           </h5>
@@ -235,7 +236,7 @@ const ProductDetails = () => {
                           className="sm:w-20 sm:h-16 w-16 h-10"
                           alt=""
                         />
-                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm text-white">
+                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm">
                           <h5 className="text-xs md:text-sm font-normal">
                             {product?.frame?.dimensions?.bridgeWidth}
                           </h5>
@@ -248,7 +249,7 @@ const ProductDetails = () => {
                           className="sm:w-20 sm:h-16 w-16 h-10"
                           alt=""
                         />
-                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm text-white">
+                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm">
                           <h5 className="text-xs md:text-sm font-normal">
                             {product?.frame?.dimensions?.templeLength}
                           </h5>
@@ -261,7 +262,7 @@ const ProductDetails = () => {
                           className="sm:w-20 sm:h-16 w-16 h-10"
                           alt=""
                         />
-                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm text-white">
+                        <div className="flex flex-col gap-1 justify-center items-center text-xs font-semibold sm:text-sm">
                           <h5 className="text-xs md:text-sm font-normal">
                             {product?.frame?.dimensions?.lensHeight}
                           </h5>
@@ -273,7 +274,7 @@ const ProductDetails = () => {
                       <button
                         disabled={cartLoading}
                         onClick={handleCart}
-                        className="py-3 hover:bg-slate-700 hover:text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-base font-semibold md:text-lg shadow-sm border-slate-800"
+                        className="py-3 hover:bg-slate-500 rounded-md hover:text-white active:bg-slate-600 disabled:bg-slate-300 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full text-base font-semibold md:text-lg shadow-sm border-slate-800"
                       >
                         {cartLoading
                           ? "Loading..."
@@ -290,19 +291,19 @@ const ProductDetails = () => {
                             dispatch(openAuthModal("login"));
                           }
                         }}
-                        className="py-3 bg-slate-700 text-white active:bg-slate-800 disabled:bg-slate-500 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full font-semibold text-base md:text-lg shadow-sm border-slate-800 hover:bg-slate-600 "
+                        className="py-3 rounded-md bg-slate-500 text-white active:bg-slate-700 disabled:bg-slate-400 disabled:text-gray-100 disabled:cursor-not-allowed px-4 border w-full font-semibold text-base md:text-lg shadow-sm border-slate-800 hover:bg-slate-600"
                       >
                         Select Lenses{" "}
                         <span className="hidden md:inline">& Buy now</span>
                       </button>
                     </div>
 
-                    <div className="flex gap-5 p-4">
+                    {/* <div className="flex gap-5 p-4">
                       <FaFacebook className="text-4xl  text-blue-700" />
                       <FaInstagram className="text-4xl text-pink-700" />
                       <FaTwitter className="text-4xl text-sky-600" />
                       <FaWhatsapp className="text-4xl text-green-700" />
-                    </div>
+                    </div> */}
                   </div>
                   <div
                     className="flex lg:hidden p-4 justify-between items-center border-b border-gray-300  cursor-pointer bg-slate-50 hover:bg-slate-100"

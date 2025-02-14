@@ -64,25 +64,25 @@ const UserDashboard = () => {
           title={"Orders"}
           icon={<CiDeliveryTruck className="text-4xl text-gray-600" />}
         />
-        <MenuItem
+        {/* <MenuItem
           link="/my/wishlist"
           title={"Collection & Wishlist"}
           detail={"All your curated items"}
           icon={<IoBagCheckOutline className="text-4xl text-gray-600" />}
-        />
+        /> */}
         <MenuItem
           link="/my/addresses"
           detail={"Save Your Addresses"}
           title={"Addresses"}
           icon={<PiAddressBookThin className="text-4xl text-gray-600" />}
         />
-        <MenuItem
+        {/* <MenuItem
           detail={"View your Orders here"}
           title={"Orders"}
           icon={
             <MdOutlineStoreMallDirectory className="text-5xl text-gray-600" />
           }
-        />
+        /> */}
         <MenuItem
           link="/my/profile"
           detail={"View and Edit your Profile"}
