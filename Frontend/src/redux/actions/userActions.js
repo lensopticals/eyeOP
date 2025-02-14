@@ -1,6 +1,7 @@
 import API from "../../utils/API";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+
 // User Login with email and password
 export const userLogin = createAsyncThunk(
   "user/login",
@@ -16,6 +17,7 @@ export const userLogin = createAsyncThunk(
       );
       if (data && data?.success) {
         localStorage.setItem("token", data?.accessToken);
+        localStorage.setItem("refreshToken", data?.refreshToken);
         toast.success(data.message);
         return data;
       }
@@ -65,6 +67,7 @@ export const userLoginPhone = createAsyncThunk(
       const { data } = await API.post("/user/login-phone", { phone }, config);
       if (data && data?.success) {
         localStorage.setItem("token", data?.accessToken);
+        localStorage.setItem("refreshToken", data?.refreshToken);
         toast.success(data.message);
         return data;
       }
@@ -93,6 +96,7 @@ export const userSignup = createAsyncThunk(
       );
       if (data && data?.success) {
         localStorage.setItem("token", data?.accessToken);
+        localStorage.setItem("refreshToken", data?.refreshToken);
         toast.success(data.message);
         return data;
       }
@@ -117,6 +121,7 @@ export const googleAuth = createAsyncThunk(
       );
       if (data && data?.success) {
         localStorage.setItem("token", data?.accessToken);
+        localStorage.setItem("refreshToken", data?.refreshToken);
         toast.success(data.message);
         return data;
       }
@@ -181,7 +186,25 @@ export const loadUser = createAsyncThunk(
   "user/loadUser",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await API.get("/user/current-user");
+      let { data } = await API.get("/user/current-user");
+
+      if (!data?.success) {
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          const response = await API.post("/user/refresh-token", {
+            refreshToken,
+          });
+          if (response.data?.success) {
+            localStorage.setItem("token", response.data.accessToken);
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+            data = await API.get("/user/current-user");
+          } else {
+            throw new Error("Unable to refresh token");
+          }
+        } else {
+          throw new Error("No refresh token available");
+        }
+      }
       return data;
     } catch (error) {
       return rejectWithValue("");

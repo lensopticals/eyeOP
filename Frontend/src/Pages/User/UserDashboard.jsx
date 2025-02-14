@@ -57,7 +57,7 @@ const UserDashboard = () => {
       </div>
 
       {/* Cards for profile menu */}
-      <div className="flex flex-wrap gap-5 md:gap-10 items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <MenuItem
           link="/orders"
           detail={"View your Orders here"}
@@ -87,6 +87,12 @@ const UserDashboard = () => {
           link="/my/profile"
           detail={"View and Edit your Profile"}
           title={"Profile"}
+          icon={<CiUser className="text-4xl text-gray-600" />}
+        />
+        <MenuItem
+          link="/transactions"
+          detail={"View Your Transactions"}
+          title={"Transactions"}
           icon={<CiUser className="text-4xl text-gray-600" />}
         />
       </div>

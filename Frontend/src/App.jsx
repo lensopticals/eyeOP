@@ -30,6 +30,7 @@ import OrderDetail from "./Pages/Orders/OrderDetail";
 import MyAddress from "./Pages/User/MyAddress";
 import Addresses from "./Pages/Buy/Addresses";
 
+import Transactions from "./Pages/User/Transactions";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -54,6 +55,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <UserDashboard />
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route
+          path="transactions"
+          element={
+            <ProtectedRoutes>
+              <Transactions />
             </ProtectedRoutes>
           }
         ></Route>

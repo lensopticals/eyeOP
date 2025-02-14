@@ -1,29 +1,37 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../../utils/API";
 import { toast } from "react-toastify";
-import { redirect } from "react-router-dom";
 
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ productId, quantity }, { rejectWithValue }) => {
+  async (
+    { productId, quantity, purchaseType = "FRAME_ONLY", lensCustomization },
+    { rejectWithValue }
+  ) => {
     try {
       quantity = parseInt(quantity, 10);
       const config = {
         headers: { "Content-type": "application/json" },
       };
-      const { data } = await API.post(
-        `/cart/create-cart`,
-        { productId, quantity },
-        config
-      );
-      if (data && data.success === false) {
+
+      const payload = {
+        productId,
+        quantity,
+        purchaseType,
+        ...(purchaseType === "FRAME_WITH_LENS" && { lensCustomization }),
+      };
+
+      const { data } = await API.post("/cart/create-cart", payload, config);
+
+      if (!data.success) {
         return rejectWithValue(data?.message || "Error in Adding Item to Cart");
       }
-      toast.success("Item Added To Cart SuccessFully");
+
+      toast.success(data.message || "Item Added To Cart Successfully");
       window.location.replace("/cart");
-      return;
+      return data.cartItem;
     } catch (error) {
-      return rejectWithValue(error?.response?.data.message || error.message);
+      return rejectWithValue(error?.response?.data?.message || error.message);
     }
   }
 );
@@ -32,57 +40,85 @@ export const getCart = createAsyncThunk(
   "cart/fetchCart",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await API.get(`/cart/get-cart`);
-      return data?.cart;
+      const { data } = await API.get("/cart/get-cart");
+      if (!data.success) {
+        return rejectWithValue(data?.message || "Error fetching cart items");
+      }
+      return data.cart;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error?.response?.data?.message || error.message);
     }
   }
 );
 
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
-  async ({ productId }, { rejectWithValue }) => {
+  async ({ productId, purchaseType = "FRAME_ONLY" }, { rejectWithValue }) => {
     try {
-      const { data } = await API.delete(`/cart/remove-cart/${productId}`);
-      if (data && data.success === false) {
+      const { data } = await API.delete(
+        `/cart/remove-cart/${productId}/${purchaseType}`
+      );
+
+      if (!data.success) {
         return rejectWithValue(
           data?.message || "Error in Removing Item from Cart"
         );
       }
-      message.success("Item Removed");
-      return;
+
+      toast.success(data.message || "Item Removed Successfully");
+      return { productId, purchaseType };
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error?.response?.data?.message || error.message);
     }
   }
 );
 
 export const updateCart = createAsyncThunk(
   "cart/updateCartItem",
-  async ({ productId, quantity }, { rejectWithValue }) => {
+  async (
+    { productId, quantity, purchaseType = "FRAME_ONLY", lensCustomization },
+    { rejectWithValue, dispatch }
+  ) => {
     try {
       quantity = parseInt(quantity, 10);
-      const { data } = await API.put(`/cart/update-cart`, {
+
+      const payload = {
         productId,
         quantity,
-      });
-      toast.success("Cart Updated");
-      return data?.updatedCartItem;
+        purchaseType,
+        ...(purchaseType === "FRAME_WITH_LENS" && { lensCustomization }),
+      };
+
+      const { data } = await API.put("/cart/update-cart", payload);
+
+      if (!data.success) {
+        return rejectWithValue(data?.message || "Error updating cart item");
+      }
+
+      dispatch(getCart());
+
+      toast.success(data.message || "Cart Updated Successfully");
+      return data.cartItem;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error?.response?.data?.message || error.message);
     }
   }
 );
 
 export const clearCart = createAsyncThunk(
   "cart/clearCartItems",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
-      await API.delete(`/cart/clear-cart`);
+      const { data } = await API.delete("/cart/clear-cart");
+
+      if (!data.success) {
+        return rejectWithValue(data?.message || "Error clearing cart");
+      }
+      dispatch(getCart());
+      toast.success(data.message || "Cart Cleared Successfully");
+      return true;
     } catch (error) {
       return rejectWithValue(error?.response?.data?.message || error.message);
-      console.log("Error in clearing Cart: ", error);
     }
   }
 );
