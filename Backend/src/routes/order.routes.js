@@ -6,24 +6,34 @@ import {
   getSingleOrder,
   getUserOrders,
   updateOrder,
+  updatePaymentStatus,
+  cancelOrder,
 } from "../controllers/order.controller.js";
 import { authoriseRoles, verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-// secured routes
+// User routes
 router.route("/create-order").post(verifyJWT, createNewOrder);
-router.route("/get-orders").get(verifyJWT, getUserOrders);
-router.route("/order/:id").get(getSingleOrder);
+router.route("/my-orders").get(verifyJWT, getUserOrders);
+router.route("/order/:id").get(verifyJWT, getSingleOrder);
+router.route("/order/:id/cancel").post(verifyJWT, cancelOrder);
 
-// Admin ===>
-router
-  .route("/admin/update-order/:id")
-  .patch(verifyJWT, authoriseRoles("admin"), updateOrder);
-router.route("/admin/delete-order/:id").delete(verifyJWT, deleteOrder);
+// Payment routes (might need additional payment-specific middleware)
+router.route("/order/:id/update-payment").patch(verifyJWT, updatePaymentStatus);
 
+// Admin routes
 router
-  .route("/admin/get-orders")
+  .route("/admin/orders")
   .get(verifyJWT, authoriseRoles("admin"), getAllOrders);
+
+router
+  .route("/admin/order/:id")
+  .patch(verifyJWT, authoriseRoles("admin"), updateOrder)
+  .delete(verifyJWT, authoriseRoles("admin"), deleteOrder);
+
+router
+  .route("/admin/order/:id/payment")
+  .patch(verifyJWT, authoriseRoles("admin"), updatePaymentStatus);
 
 export default router;

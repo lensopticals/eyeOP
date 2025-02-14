@@ -91,7 +91,11 @@ const ProductDetails = () => {
 
   return (
     <>
-      <StepperModal isOpen={isStepperOpen} setIsOpen={setisStepperOpen} />
+      <StepperModal
+        isOpen={isStepperOpen}
+        productId={id}
+        setIsOpen={setisStepperOpen}
+      />
       {loading ? (
         <ProductDetailsSkeleton />
       ) : (

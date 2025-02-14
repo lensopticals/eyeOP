@@ -39,8 +39,8 @@ const refreshCookieOptions = {
 
 // get user details
 const getUser = (req, res) => {
-  return res.json({success: true, message: req.user});
-}
+  return res.json({ success: true, message: req.user });
+};
 
 // Register Controller
 const registerController = async (req, res, next) => {

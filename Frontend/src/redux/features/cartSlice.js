@@ -61,7 +61,6 @@ export const cartReducer = createSlice({
       .addCase(updateCart.fulfilled, (state, action) => {
         state.cartLoading = false;
         state.success = true;
-        state.cart = action.payload;
       })
       .addCase(updateCart.rejected, (state, action) => {
         state.cartLoading = false;

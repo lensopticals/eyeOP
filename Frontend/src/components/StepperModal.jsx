@@ -1,185 +1,456 @@
+// // import React, { useState, useEffect } from "react";
+// // import { FaTimes } from "react-icons/fa";
+// // import { LiaTimesSolid } from "react-icons/lia";
+// // import CheckBox from "./CheckBox"; // Assuming CheckBox is a separate component
+// // import { powerTypes } from "../data/powerTypes";
+// // import StepThree from "./StepThree";
+
+// // const StepperModal = ({ isOpen, setIsOpen }) => {
+// //   const [currentStep, setCurrentStep] = useState(2);
+// //   const [selected, setSelected] = useState(null); // State for selected power type
+
+// //   const openModal = () => setIsOpen(true);
+// //   const closeModal = () => setIsOpen(false);
+
+// //   useEffect(() => {
+// //     if (isOpen) {
+// //       document.body.style.overflow = "hidden"; // Prevent background scroll when modal is open
+// //     } else {
+// //       document.body.style.overflow = "auto"; // Allow background scroll when modal is closed
+// //     }
+// //     return () => {
+// //       document.body.style.overflow = "auto"; // Reset on unmount
+// //     };
+// //   }, [isOpen]);
+
+// //   return (
+// //     <>
+// //       {isOpen && (
+// //         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+// //           <div className="bg-white w-full h-full p-4 overflow-auto rounded-md shadow-lg">
+// //             {/* Close Button */}
+// //             <div className="sticky top-0 bg-white">
+// //               <div className="flex justify-end items-center mb-4">
+// //                 <button onClick={closeModal}>
+// //                   <LiaTimesSolid
+// //                     className="text-gray-600 hover:text-red-500"
+// //                     size={25}
+// //                   />
+// //                 </button>
+// //               </div>
+
+// //               <div>
+// //                 <h3 className="text-lg font-medium mb-2">Select Your Lenses</h3>
+// //                 <div className="">
+// //                   {/* Lens options */}
+// //                   <StepThree onComplete={closeModal} />
+// //                 </div>
+// //               </div>
+// //             </div>
+// //           </div>
+// //         </div>
+// //       )}
+// //     </>
+// //   );
+// // };
+
+// // export default StepperModal;
+
+// import React, { useState, useEffect } from "react";
+// import { LiaTimesSolid } from "react-icons/lia";
+// import { motion, AnimatePresence } from "framer-motion";
+// import StepThree from "./StepThree";
+// import { useDispatch, useSelector } from "react-redux";
+// import { clearCartErrors } from "../redux/features/cartSlice";
+// import { addToCart } from "../redux/actions/cartActions";
+// import { openAuthModal } from "../redux/features/modalSlice";
+
+// const StepperModal = ({ isOpen, setIsOpen }) => {
+//   const [currentStep, setCurrentStep] = useState(3);
+
+//   const dispatch = useDispatch();
+//   const { product, loading } = useSelector((state) => state.productDetail);
+//   const { isAuthenticated } = useSelector((state) => state.user);
+//   const { cartLoading, cartError, success } = useSelector(
+//     (state) => state.cart
+//   );
+
+//   const closeModal = () => {
+//     setIsOpen(false);
+//   };
+
+//   useEffect(() => {
+//     if (isOpen) {
+//       document.body.style.overflow = "hidden";
+//     } else {
+//       document.body.style.overflow = "auto";
+//     }
+//     return () => {
+//       document.body.style.overflow = "auto";
+//     };
+//   }, [isOpen]);
+
+//   // Animation variants
+//   const overlayVariants = {
+//     hidden: { opacity: 0 },
+//     visible: { opacity: 1 },
+//   };
+
+//   const modalVariants = {
+//     hidden: {
+//       opacity: 0,
+//       scale: 0.95,
+//       y: 20,
+//     },
+//     visible: {
+//       opacity: 1,
+//       scale: 1,
+//       y: 0,
+//       transition: {
+//         type: "spring",
+//         damping: 25,
+//         stiffness: 300,
+//       },
+//     },
+//     exit: {
+//       opacity: 0,
+//       scale: 0.95,
+//       y: 20,
+//       transition: {
+//         duration: 0.2,
+//       },
+//     },
+//   };
+
+//   useEffect(() => {
+//     if (cartError) {
+//       toast.error(cartError);
+//       dispatch(clearCartErrors());
+//     }
+//   }, [dispatch, cartError]);
+
+//   const handleCart = () => {
+//     if (!isAuthenticated) {
+//       return dispatch(openAuthModal("login"));
+//     }
+//     dispatch(addToCart({ productId: id, quantity }));
+//     closeModal();
+//   };
+
+//   return (
+//     <AnimatePresence>
+//       {isOpen && (
+//         <motion.div
+//           initial="hidden"
+//           animate="visible"
+//           exit="hidden"
+//           variants={overlayVariants}
+//           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 sm:p-6"
+//         >
+//           <motion.div
+//             variants={modalVariants}
+//             className="bg-white w-full max-w-6xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden relative"
+//           >
+//             {/* Header */}
+//             <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-100">
+//               <div className="px-6 py-4 flex justify-between items-center">
+//                 <div>
+//                   <h3 className="text-xl font-semibold text-gray-900">
+//                     Select Your Lenses
+//                   </h3>
+//                   <p className="text-sm text-gray-500 mt-1">
+//                     Step {currentStep} of 3
+//                   </p>
+//                 </div>
+//                 <motion.button
+//                   whileHover={{ scale: 1.1 }}
+//                   whileTap={{ scale: 0.9 }}
+//                   onClick={closeModal}
+//                   className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+//                 >
+//                   <LiaTimesSolid
+//                     className="text-gray-600 hover:text-red-500 transition-colors"
+//                     size={24}
+//                   />
+//                 </motion.button>
+//               </div>
+
+//               {/* Progress bar */}
+//               <div className="h-1 w-full bg-gray-100">
+//                 <motion.div
+//                   initial={{ width: 0 }}
+//                   animate={{ width: `${(currentStep / 3) * 100}%` }}
+//                   className="h-full bg-emerald-500"
+//                   transition={{ duration: 0.5, ease: "easeInOut" }}
+//                 />
+//               </div>
+//             </div>
+
+//             {/* Content area with custom scrollbar */}
+//             <div className="overflow-auto max-h-[calc(90vh-80px)] custom-scrollbar">
+//               <div className="relative">
+//                 <StepThree onComplete={handleCart} />
+//               </div>
+//             </div>
+//           </motion.div>
+
+//           {/* Add custom scrollbar styles */}
+//           <style jsx global>{`
+//             .custom-scrollbar::-webkit-scrollbar {
+//               width: 8px;
+//             }
+//             .custom-scrollbar::-webkit-scrollbar-track {
+//               background: #f1f1f1;
+//             }
+//             .custom-scrollbar::-webkit-scrollbar-thumb {
+//               background: #d1d5db;
+//               border-radius: 4px;
+//             }
+//             .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+//               background: #9ca3af;
+//             }
+//           `}</style>
+//         </motion.div>
+//       )}
+//     </AnimatePresence>
+//   );
+// };
+
+// export default StepperModal;
+
 import React, { useState, useEffect } from "react";
-import { FaTimes } from "react-icons/fa";
 import { LiaTimesSolid } from "react-icons/lia";
-import CheckBox from "./CheckBox"; // Assuming CheckBox is a separate component
-import { powerTypes } from "../data/powerTypes";
+import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCartErrors } from "../redux/features/cartSlice";
+import { addToCart } from "../redux/actions/cartActions";
+import { openAuthModal } from "../redux/features/modalSlice";
+import { toast } from "react-toastify";
+import StepThree from "./StepThree";
 
-const StepperModal = ({ isOpen, setIsOpen }) => {
-  const [currentStep, setCurrentStep] = useState(2);
-  const [selected, setSelected] = useState(null); // State for selected power type
+const StepperModal = ({ isOpen, setIsOpen, productId }) => {
+  const [currentStep, setCurrentStep] = useState(3);
+  const [lensCustomization, setLensCustomization] = useState({
+    lensType: {
+      id: null,
+      title: "",
+      description: "",
+    },
+    selectedPackage: {
+      id: null,
+      name: "",
+      price: 0,
+      features: {
+        warrantyPeriod: "",
+        index: "",
+        powerRange: "",
+        blueLightBlocker: false,
+        antiScratchCoating: false,
+        antiGlareCoating: false,
+        antiReflectiveCoating: false,
+      },
+    },
+  });
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const dispatch = useDispatch();
+  const { product } = useSelector((state) => state.productDetail);
+  const { isAuthenticated } = useSelector((state) => state.user);
+  const { cartError } = useSelector((state) => state.cart);
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
-  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+  const closeModal = () => {
+    setIsOpen(false);
+    // Reset lens customization when modal closes
+    setLensCustomization({
+      lensType: {
+        id: null,
+        title: "",
+        description: "",
+      },
+      selectedPackage: {
+        id: null,
+        name: "",
+        price: 0,
+        features: {
+          warrantyPeriod: "",
+          index: "",
+          powerRange: "",
+          blueLightBlocker: false,
+          antiScratchCoating: false,
+          antiGlareCoating: false,
+          antiReflectiveCoating: false,
+        },
+      },
+    });
+  };
+
+  // Handle lens customization updates from StepThree
+  const handleLensCustomization = (data) => {
+    setLensCustomization(data);
+  };
+
+  const handleCart = () => {
+    if (!isAuthenticated) {
+      return dispatch(openAuthModal("login"));
+    }
+
+    // Validate lens customization data
+    if (
+      !lensCustomization.lensType.id ||
+      !lensCustomization.selectedPackage.id
+    ) {
+      toast.error("Please complete lens selection");
+      return;
+    }
+
+    // Prepare cart data
+    const cartData = {
+      productId,
+      quantity: 1, // Default to 1 for lens customization
+      purchaseType: "FRAME_WITH_LENS",
+      lensCustomization: {
+        lensType: {
+          id: lensCustomization.lensType.id,
+          title: lensCustomization.lensType.title,
+          description: lensCustomization.lensType.description,
+        },
+        selectedPackage: {
+          id: lensCustomization.selectedPackage.id,
+          name: lensCustomization.selectedPackage.name,
+          price: lensCustomization.selectedPackage.price,
+          features: { ...lensCustomization.selectedPackage.features },
+        },
+      },
+    };
+
+    dispatch(addToCart(cartData));
+    closeModal();
+  };
+
+  useEffect(() => {
+    if (cartError) {
+      toast.error(cartError);
+      dispatch(clearCartErrors());
+    }
+  }, [dispatch, cartError]);
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"; // Prevent background scroll when modal is open
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"; // Allow background scroll when modal is closed
+      document.body.style.overflow = "auto";
     }
     return () => {
-      document.body.style.overflow = "auto"; // Reset on unmount
+      document.body.style.overflow = "auto";
     };
   }, [isOpen]);
 
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  const modalVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.95,
+      y: 20,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 25,
+        stiffness: 300,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      y: 20,
+      transition: {
+        duration: 0.2,
+      },
+    },
+  };
+
   return (
-    <>
+    <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white w-full h-full p-4 overflow-auto rounded-md shadow-lg">
-            {/* Close Button */}
-            <div className="sticky top-0 bg-white">
-              <div className="flex justify-end items-center mb-4">
-                <button onClick={closeModal}>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          variants={overlayVariants}
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 sm:p-6"
+        >
+          <motion.div
+            variants={modalVariants}
+            className="bg-white w-full max-w-6xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden relative"
+          >
+            <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-100">
+              <div className="px-6 py-4 flex justify-between items-center">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    Select Your Lenses
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Step {currentStep} of 3
+                  </p>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={closeModal}
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                >
                   <LiaTimesSolid
-                    className="text-gray-600 hover:text-red-500"
-                    size={25}
+                    className="text-gray-600 hover:text-red-500 transition-colors"
+                    size={24}
                   />
-                </button>
+                </motion.button>
               </div>
 
-              {/* Stepper Content */}
-              <div className="border-b mb-4">
-                <ul className="flex justify-between text-sm font-medium">
-                  <li
-                    className={`flex-1 text-center ${
-                      currentStep === 1 &&
-                      "text-emerald-600 bg-emerald-100 rounded py-1"
-                    }`}
-                  >
-                    Select Frame
-                  </li>
-                  <li
-                    className={`flex-1 text-center ${
-                      currentStep === 2 &&
-                      "text-emerald-600 bg-emerald-100 rounded py-1"
-                    }`}
-                  >
-                    Select Power Type
-                  </li>
-                  <li
-                    className={`flex-1 text-center ${
-                      currentStep === 3 &&
-                      "text-emerald-600 bg-emerald-100 rounded py-1"
-                    }`}
-                  >
-                    Select Lenses
-                  </li>
-                </ul>
+              <div className="h-1 w-full bg-gray-100">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(currentStep / 3) * 100}%` }}
+                  className="h-full bg-emerald-500"
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                />
               </div>
             </div>
 
-            {/* Step 1 */}
-            {currentStep === 1 && (
-              <div className="mb-4">
-                <h3 className="text-xl md:text-2xl text-center font-medium mb-2">
-                  Choose Frame Type
-                </h3>
-                <div className="flex justify-between mt-4">
-                  <button
-                    onClick={prevStep}
-                    className="px-4 invisible py-2 bg-gray-300 rounded"
-                  ></button>
-                  <button
-                    onClick={nextStep}
-                    className="px-4 py-2 bg-blue-600 text-white rounded"
-                  >
-                    Continue
-                  </button>
-                </div>
+            <div className="overflow-auto max-h-[calc(90vh-80px)] custom-scrollbar">
+              <div className="relative">
+                <StepThree
+                  onComplete={handleCart}
+                  onLensCustomization={handleLensCustomization}
+                  currentLensCustomization={lensCustomization}
+                />
               </div>
-            )}
+            </div>
+          </motion.div>
 
-            {/* Step 2 */}
-            {currentStep === 2 && (
-              <div className="mb-4 px-4 md:px-10 lg:px-20 flex flex-col justify-center">
-                <h3 className="text-2xl md:text-4xl text-slate-700 text-center font-medium mb-2">
-                  Select Power Type
-                </h3>
-                <div className="space-y-4 w-full max-w-2xl mx-auto">
-                  {powerTypes.map((item) => (
-                    <div
-                      className={`addressCard p-3 mt-5 rounded-md border-2 ${
-                        selected === item.id
-                          ? "bg-blue-100 border-blue-500"
-                          : "bg-white border-slate-200"
-                      }`}
-                      key={item.id}
-                      onClick={() => {
-                        setSelected(item.id);
-                      }}
-                    >
-                      <div className="flex items-center">
-                        <div className="w-20 h-20 mr-4">
-                          <img
-                            className="w-full h-full"
-                            src={item.imageUrl}
-                            alt={item.title}
-                          />
-                        </div>
-                        <div className="flex flex-col gap-3 flex-1">
-                          <h2 className="text-xl text-slate-700">
-                            {item.title}
-                          </h2>
-                          <p className="text-sm text-slate-600">
-                            {item.description}
-                          </p>
-                        </div>
-                        {selected === item.id ? (
-                          <div className="circle bg-transparent ml-auto w-6 h-6">
-                            <CheckBox isChecked={true} />
-                          </div>
-                        ) : (
-                          <div className="circle bg-transparent ml-auto w-6 h-6">
-                            <CheckBox />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex justify-center mt-4">
-                  <button
-                    onClick={nextStep}
-                    className="px-4 py-3 min-w-36 rounded bg-slate-700 text-white disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={!selected}
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Step 3 */}
-            {currentStep === 3 && (
-              <div>
-                <h3 className="text-lg font-medium mb-2">Select Your Lenses</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Lens options */}
-                </div>
-                <div className="flex justify-between mt-4">
-                  <button
-                    onClick={prevStep}
-                    className="px-4 py-2 bg-gray-300 rounded"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={closeModal}
-                    className="px-4 py-2 bg-green-600 text-white rounded"
-                  >
-                    Complete
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+          <style jsx global>{`
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 8px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+              background: #f1f1f1;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+              background: #d1d5db;
+              border-radius: 4px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+              background: #9ca3af;
+            }
+          `}</style>
+        </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 

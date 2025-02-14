@@ -16,6 +16,7 @@
     "axios": "^1.6.7",
     "caniuse-lite": "^1.0.30001697",
     "firebase": "^10.8.1",
+    "framer-motion": "^12.4.2",
     "lottie-react": "^2.4.0",
     "razorpay": "^2.9.4",
     "rc-slider": "^11.1.5",

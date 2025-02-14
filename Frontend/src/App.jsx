@@ -33,6 +33,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import OrderPage from "./Pages/Orders/OrderPage";
 import OrderDetail from "./Pages/Orders/OrderDetail";
+import Transactions from "./Pages/User/Transactions";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -57,6 +58,14 @@ function App() {
           element={
             <ProtectedRoutes>
               <UserDashboard />
+            </ProtectedRoutes>
+          }
+        ></Route>
+        <Route
+          path="transactions"
+          element={
+            <ProtectedRoutes>
+              <Transactions />
             </ProtectedRoutes>
           }
         ></Route>

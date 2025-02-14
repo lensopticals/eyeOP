@@ -1,4 +1,41 @@
-import mongoose, { Mongoose, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
+
+const lensCustomizationSchema = new Schema({
+  lensType: {
+    id: {
+      type: Number,
+      required: [true, "Lens type ID is required"],
+    },
+    title: {
+      type: String,
+      required: [true, "Lens type title is required"],
+    },
+    description: String,
+  },
+  selectedPackage: {
+    id: {
+      type: Number,
+      required: [true, "Lens package ID is required"],
+    },
+    name: {
+      type: String,
+      required: [true, "Lens package name is required"],
+    },
+    price: {
+      type: Number,
+      required: [true, "Lens package price is required"],
+    },
+    features: {
+      warrantyPeriod: String,
+      index: String,
+      powerRange: String,
+      blueLightBlocker: Boolean,
+      antiScratchCoating: Boolean,
+      antiGlareCoating: Boolean,
+      antiReflectiveCoating: Boolean,
+    },
+  },
+});
 
 const orderSchema = new Schema(
   {
@@ -8,10 +45,34 @@ const orderSchema = new Schema(
     },
     orderItems: [
       {
-        product: {},
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        purchaseType: {
+          type: String,
+          enum: ["FRAME_ONLY", "FRAME_WITH_LENS"],
+          required: true,
+          default: "FRAME_ONLY",
+        },
+        lensCustomization: {
+          type: lensCustomizationSchema,
+          required: function () {
+            return this.purchaseType === "FRAME_WITH_LENS";
+          },
+        },
         quantity: {
           type: Number,
           required: true,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+        lensPrice: {
+          type: Number,
+          default: 0,
         },
         total: {
           type: Number,
@@ -24,14 +85,13 @@ const orderSchema = new Schema(
       ref: "User",
       required: true,
     },
-
     shippingCharge: {
       type: Number,
-      default: 0
+      default: 0,
     },
     deliveryCharge: {
       type: Number,
-      default: 0
+      default: 0,
     },
     totalAmount: {
       type: Number,
@@ -39,33 +99,128 @@ const orderSchema = new Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["Pay on delivery", "online"],
-      default: "Pay on delivery"
+      enum: ["COD", "RAZORPAY"],
+      default: "RAZORPAY",
     },
-    status: {
+    paymentStatus: {
       type: String,
-      enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
-      default: "Pending",
+      enum: ["PENDING", "SUCCESS", "FAILED"],
+      default: "PENDING",
+    },
+    orderStatus: {
+      type: String,
+      enum: [
+        "PENDING",
+        "CONFIRMED",
+        "PROCESSING",
+        "SHIPPED",
+        "DELIVERED",
+        "CANCELLED",
+      ],
+      default: "PENDING",
     },
     paymentId: {
       type: String,
-      required: [true, "Payment id is required!"],
+      required: false, // Changed to false since it won't be available when order is first created
     },
     shippingInfo: {
       type: Schema.Types.ObjectId,
       ref: "Address",
       required: [true, "Shipping Information is Required"],
     },
+    paymentAttempts: [
+      {
+        attemptId: String,
+        paymentId: String,
+        amount: Number,
+        status: {
+          type: String,
+          enum: ["PENDING", "SUCCESS", "FAILED"],
+        },
+        failureReason: String,
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    cancelReason: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );
 
-// Pre-save hook to generate a unique orderId if it doesn't exist
+// Pre-save hook to generate orderId and calculate totals
 orderSchema.pre("save", function (next) {
+  // Generate orderId if it doesn't exist
   if (!this.orderId) {
-    this.orderId = `ORD${Date.now()}`;
+    const timestamp = new Date().getTime();
+    const random = Math.floor(Math.random() * 1000);
+    this.orderId = `ORD${timestamp}${random}`;
   }
+
+  // Calculate total amount
+  this.totalAmount =
+    this.orderItems.reduce((total, item) => {
+      return total + item.total;
+    }, 0) +
+    this.shippingCharge +
+    this.deliveryCharge;
+
   next();
 });
+
+// Validation middleware
+orderSchema.pre("validate", function (next) {
+  // Validate lens customization for FRAME_WITH_LENS items
+  const invalidItems = this.orderItems.filter(
+    (item) => item.purchaseType === "FRAME_WITH_LENS" && !item.lensCustomization
+  );
+
+  if (invalidItems.length > 0) {
+    next(new Error("Lens customization is required for frame with lens items"));
+    return;
+  }
+
+  next();
+});
+
+// Method to update payment status
+orderSchema.methods.updatePaymentStatus = async function (
+  status,
+  paymentDetails
+) {
+  this.paymentStatus = status;
+
+  if (paymentDetails) {
+    this.paymentAttempts.push({
+      attemptId: paymentDetails.attemptId,
+      paymentId: paymentDetails.paymentId,
+      amount: paymentDetails.amount,
+      status: status,
+      failureReason: paymentDetails.failureReason,
+    });
+
+    if (status === "SUCCESS") {
+      this.paymentId = paymentDetails.paymentId;
+      this.orderStatus = "CONFIRMED";
+    }
+  }
+
+  return this.save();
+};
+
+// Method to cancel order
+orderSchema.methods.cancelOrder = async function (reason) {
+  if (this.orderStatus === "SHIPPED" || this.orderStatus === "DELIVERED") {
+    throw new Error("Cannot cancel order after shipping");
+  }
+
+  this.orderStatus = "CANCELLED";
+  this.cancelReason = reason;
+  return this.save();
+};
 
 export const Order = mongoose.model("Order", orderSchema);

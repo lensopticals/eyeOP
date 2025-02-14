@@ -1,184 +1,580 @@
+// import React, { useCallback, useEffect, useState } from "react";
+// import {
+//   createAddress,
+//   deleteAddress,
+//   getAddress,
+//   getAddressById,
+// } from "../../redux/actions/addressAction";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate, useParams } from "react-router-dom";
+// import { getProductDetails } from "../../redux/actions/productAction";
+// import correct from "../../assets/Images/correct.png";
+// import plus from "../../assets/Images/plus.png";
+// import home from "../../assets/Images/home.png";
+// import work from "../../assets/Images/bag.png";
+// import other from "../../assets/Images/location.png";
+// import { clearCart, getCart } from "../../redux/actions/cartActions";
+// import { toast } from "react-toastify";
+// import useRazorpay from "react-razorpay-integration";
+// import { CiCirclePlus } from "react-icons/ci";
+// import { createOrder } from "../../redux/actions/orderActions";
+// import {
+//   clearNewOrderErrors,
+//   resetNewOrder,
+// } from "../../redux/features/orderSlice";
+// import { clearCartErrors } from "../../redux/features/cartSlice";
+// import SmallUnderline from "../../components/SmallUnderline";
+// import AddressForm from "../../components/AddressForm";
+// import { FaChevronDown, FaHome } from "react-icons/fa";
+// import { HiBuildingOffice } from "react-icons/hi2";
+// import CheckBox from "../../components/CheckBox";
+// import CheckoutSkeleton from "../../components/Skeletons/CheckoutSkeleton";
+
+// const Addresses = () => {
+//   const navigate = useNavigate();
+//   const dispatch = useDispatch();
+//   // const [address, setAddress] = useState([]);
+//   const [total, setTotal] = useState(0);
+//   const [isAddressOpen, setIsAddressOpen] = useState(false);
+//   const { cart, cartError, cartLoading } = useSelector((state) => state.cart);
+//   const { user } = useSelector((state) => state.user);
+//   const { error, loading, success } = useSelector((state) => state.newOrder);
+//   const {
+//     success: addressSuccess,
+//     address,
+//     addressError,
+//   } = useSelector((state) => state.address);
+//   const { id } = useParams();
+//   const [selected, setSelected] = useState(address?.[0]?._id);
+//   const [Razorpay] = useRazorpay();
+
+//   const tax = 10;
+//   const shipping = 50;
+//   useEffect(() => {
+//     dispatch(getCart());
+//   }, []);
+
+//   useEffect(() => {
+//     if (cartError) {
+//       toast.error(cartError);
+//       dispatch(clearCartErrors());
+//     }
+//   }, [cartError]);
+
+//   const toggleCreateForm = () => {
+//     setIsAddressOpen(!isAddressOpen);
+//   };
+
+//   const calculateSubtotal = (items) => {
+//     const subtotal = items.reduce((accumulator, item) => {
+//       return accumulator + item.total;
+//     }, 0);
+
+//     return subtotal;
+//   };
+
+//   const calculateDiscount = (items) => {
+//     const subtotal = items.reduce((accumulator, item) => {
+//       return (
+//         accumulator +
+//         item.product?.price +
+//         (item.product?.price *
+//           item.product?.discountPercentage *
+//           item.quantity) /
+//           100 -
+//         item.product?.price
+//       );
+//     }, 0);
+//     return subtotal;
+//   };
+
+//   const handleDelete = async (id) => {
+//     dispatch(deleteAddress({ id: id }));
+//   };
+//   const handleEdit = async (aId) => {
+//     const { payload } = await dispatch(getAddressById({ id: aId }));
+//     localStorage.setItem("pId", id);
+//     navigate(`/address/edit/${aId}`);
+//   };
+
+//   useEffect(() => {
+//     dispatch(getAddress());
+//   }, [dispatch]);
+
+//   const handleCreateOrder = async (paymentId, address = "") => {
+//     const orderData = {
+//       totalAmount: total,
+//       paymentId,
+//       shippingInfo: selected ? selected : address,
+//       orderItems: cart,
+//     };
+//     dispatch(createOrder(orderData));
+//   };
+
+//   const handlePayment = async (address = "") => {
+//     if (!selected && !address) {
+//       toast.error("First select/create your order address!");
+//       return;
+//     }
+//     if (address) {
+//       setSelected(address);
+//     }
+//     setIsAddressOpen(false);
+//     const options = {
+//       key: import.meta.env.VITE_APP_RAZOR_API_KEY,
+//       amount: Math.ceil(total) * 100,
+//       currency: "INR",
+//       name: "Eye OP",
+//       description: "Test Transaction",
+//       image: "http://localhost:5173/src/assets/Images/logo.png",
+
+//       handler: (res) => {
+//         handleCreateOrder(res.razorpay_payment_id, address);
+//         toast.success("Payment successful");
+//       },
+//       prefill: {
+//         name: user?.name,
+//         email: user?.email,
+//         contact: user?.phone,
+//       },
+//       theme: {
+//         color: "#3399cc",
+//       },
+//     };
+
+//     const rzpay = new Razorpay(options);
+//     rzpay.on("payment.failed", function (response) {
+//       toast.error("Payment falied \n Error Code: " + response.error.code);
+//     });
+//     rzpay.open();
+//   };
+
+//   useEffect(() => {
+//     if (success && !error) {
+//       dispatch(clearCart());
+//       dispatch(resetNewOrder());
+//       navigate("/my/dashboard");
+//     }
+//     if (error) {
+//       toast.error(error);
+//       dispatch(clearNewOrderErrors());
+//     }
+//   }, [error, dispatch, success]);
+
+//   useEffect(() => {
+//     if (cart && cart.length > 0) {
+//       setTotal(calculateSubtotal(cart));
+//     }
+//   }, [cart]);
+
+//   useEffect(() => {
+//     if (address && address.length > 0) {
+//       setSelected(address[0]?._id);
+//     }
+//   }, [addressSuccess, dispatch]);
+
+//   // if (cartLoading)
+//   //   return (
+//   //     <>
+//   //       <CartSkeleton />;
+//   //     </>
+//   //   );
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import useRazorpay from "react-razorpay-integration";
+import { CiCirclePlus } from "react-icons/ci";
+import { FaHome } from "react-icons/fa";
+import { HiBuildingOffice } from "react-icons/hi2";
+import axios from "axios";
+
 import {
   createAddress,
   deleteAddress,
   getAddress,
   getAddressById,
 } from "../../redux/actions/addressAction";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { getProductDetails } from "../../redux/actions/productAction";
-import correct from "../../assets/Images/correct.png";
-import plus from "../../assets/Images/plus.png";
-import home from "../../assets/Images/home.png";
-import work from "../../assets/Images/bag.png";
-import other from "../../assets/Images/location.png";
 import { clearCart, getCart } from "../../redux/actions/cartActions";
-import { toast } from "react-toastify";
-import useRazorpay from "react-razorpay-integration";
-import { CiCirclePlus } from "react-icons/ci";
 import { createOrder } from "../../redux/actions/orderActions";
 import {
   clearNewOrderErrors,
   resetNewOrder,
 } from "../../redux/features/orderSlice";
 import { clearCartErrors } from "../../redux/features/cartSlice";
+
 import SmallUnderline from "../../components/SmallUnderline";
 import AddressForm from "../../components/AddressForm";
-import { FaChevronDown, FaHome } from "react-icons/fa";
-import { HiBuildingOffice } from "react-icons/hi2";
 import CheckBox from "../../components/CheckBox";
 import CheckoutSkeleton from "../../components/Skeletons/CheckoutSkeleton";
+import API from "../../utils/API";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Addresses = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const [address, setAddress] = useState([]);
+  const [Razorpay] = useRazorpay();
+
+  // State
   const [total, setTotal] = useState(0);
   const [isAddressOpen, setIsAddressOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [orderId, setOrderId] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Redux state (only for non-payment features)
   const { cart, cartError, cartLoading } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
   const { error, loading, success } = useSelector((state) => state.newOrder);
-  const {
-    success: addressSuccess,
-    address,
-    addressError,
-  } = useSelector((state) => state.address);
-  const { id } = useParams();
-  const [selected, setSelected] = useState(address?.[0]?._id);
-  const [Razorpay] = useRazorpay();
+  const { address, addressSuccess } = useSelector((state) => state.address);
 
+  // Constants
   const tax = 10;
   const shipping = 50;
+
+  // API calls for payments
+  const createPayment = async (paymentData) => {
+    try {
+      const config = {
+        headers: { "Content-type": "application/json" },
+      };
+      const response = await API.post(`/payments/create`, paymentData, config);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Error creating payment"
+      );
+    }
+  };
+
+  const updatePaymentStatus = async (paymentId, statusData) => {
+    try {
+      const config = {
+        headers: { "Content-type": "application/json" },
+      };
+      const response = await API.patch(
+        `/payments/${paymentId}/status`,
+        statusData,
+        config
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Error updating payment status"
+      );
+    }
+  };
+
+  const updateOrderStatus = async (orderId, status) => {
+    try {
+      const config = {
+        headers: { "Content-type": "application/json" },
+      };
+      const response = await API.patch(
+        `/order/${orderId}/update-payment`,
+        { status },
+        config
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Error updating order status"
+      );
+    }
+  };
+
+  // Fetch initial data
   useEffect(() => {
     dispatch(getCart());
-  }, []);
+    dispatch(getAddress());
+  }, [dispatch]);
 
+  // Handle errors
   useEffect(() => {
     if (cartError) {
       toast.error(cartError);
       dispatch(clearCartErrors());
     }
-  }, [cartError]);
+  }, [cartError, dispatch]);
 
-  const toggleCreateForm = () => {
-    setIsAddressOpen(!isAddressOpen);
-  };
+  // Calculate totals
+  const calculateSubtotal = useCallback((items) => {
+    return items.reduce((acc, item) => acc + item.total, 0);
+  }, []);
 
-  const calculateSubtotal = (items) => {
-    const subtotal = items.reduce((accumulator, item) => {
-      return accumulator + item.total;
-    }, 0);
-
-    return subtotal;
-  };
-
-  const calculateDiscount = (items) => {
-    const subtotal = items.reduce((accumulator, item) => {
-      return (
-        accumulator +
-        item.product?.price +
+  const calculateDiscount = useCallback((items) => {
+    return items.reduce((acc, item) => {
+      const discount =
         (item.product?.price *
           item.product?.discountPercentage *
           item.quantity) /
-          100 -
-        item.product?.price
-      );
+        100;
+      return acc + discount;
     }, 0);
-    return subtotal;
-  };
+  }, []);
 
-  const handleDelete = async (id) => {
-    dispatch(deleteAddress({ id: id }));
-  };
-  const handleEdit = async (aId) => {
-    const { payload } = await dispatch(getAddressById({ id: aId }));
-    localStorage.setItem("pId", id);
-    navigate(`/address/edit/${aId}`);
-  };
-
+  // Update total when cart changes
   useEffect(() => {
-    dispatch(getAddress());
-  }, [dispatch]);
-
-  const handleCreateOrder = async (paymentId, address = "") => {
-    const orderData = {
-      totalAmount: total,
-      paymentId,
-      shippingInfo: selected ? selected : address,
-      orderItems: cart,
-    };
-    dispatch(createOrder(orderData));
-  };
-
-  const handlePayment = async (address = "") => {
-    if (!selected && !address) {
-      toast.error("First select/create your order address!");
-      return;
-    }
-    if (address) {
-      setSelected(address);
-    }
-    setIsAddressOpen(false);
-    const options = {
-      key: import.meta.env.VITE_APP_RAZOR_API_KEY,
-      amount: Math.ceil(total) * 100,
-      currency: "INR",
-      name: "Eye OP",
-      description: "Test Transaction",
-      image: "http://localhost:5173/src/assets/Images/logo.png",
-
-      handler: (res) => {
-        handleCreateOrder(res.razorpay_payment_id, address);
-        toast.success("Payment successful");
-      },
-      prefill: {
-        name: user?.name,
-        email: user?.email,
-        contact: user?.phone,
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-
-    const rzpay = new Razorpay(options);
-    rzpay.on("payment.failed", function (response) {
-      toast.error("Payment falied \n Error Code: " + response.error.code);
-    });
-    rzpay.open();
-  };
-
-  useEffect(() => {
-    if (success && !error) {
-      dispatch(clearCart());
-      dispatch(resetNewOrder());
-      navigate("/my/dashboard");
-    }
-    if (error) {
-      toast.error(error);
-      dispatch(clearNewOrderErrors());
-    }
-  }, [error, dispatch, success]);
-
-  useEffect(() => {
-    if (cart && cart.length > 0) {
+    if (cart?.length > 0) {
       setTotal(calculateSubtotal(cart));
     }
-  }, [cart]);
+  }, [cart, calculateSubtotal]);
 
+  // Set default address
   useEffect(() => {
-    if (address && address.length > 0) {
+    if (address?.length > 0) {
       setSelected(address[0]?._id);
     }
-  }, [addressSuccess, dispatch]);
+  }, [addressSuccess, address]);
 
-  // if (cartLoading)
-  //   return (
-  //     <>
-  //       <CartSkeleton />;
-  //     </>
-  //   );
+  // Create initial order
+  // const createInitialOrder = async () => {
+  //   if (!selected) {
+  //     toast.error("Please select a shipping address");
+  //     return null;
+  //   }
+
+  //   try {
+  //     const selectedAddress = address.find((addr) => addr._id === selected);
+  //     const orderData = {
+  //       shippingInfo: selectedAddress,
+  //       orderItems: cart,
+  //       totalAmount: total,
+  //       status: "PENDING",
+  //     };
+  //     const config = {
+  //       headers: { "Content-type": "application/json" },
+  //     };
+  //     const { data } = await API.post("/create-order", orderData, config);
+
+  //     return data.order._id;
+  //   } catch (error) {
+  //     toast.error(error.response?.data?.message || "Error creating order");
+  //     return null;
+  //   }
+  // };
+
+  const createInitialOrder = async () => {
+    if (!selected) {
+      toast.error("Please select a shipping address");
+      return null;
+    }
+
+    try {
+      const selectedAddress = address.find((addr) => addr._id === selected);
+      const orderData = {
+        shippingInfo: selectedAddress,
+        orderItems: cart.map((item) => ({
+          product: item.product._id,
+          quantity: item.quantity,
+          purchaseType: item.purchaseType,
+          lensCustomization: item.lensCustomization,
+        })),
+        totalAmount: total,
+        status: "PENDING",
+      };
+
+      const { data } = await API.post("/create-order", orderData);
+      return data.order.orderId;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error creating order");
+      return null;
+    }
+  };
+
+  const handlePayment = async () => {
+    setIsProcessing(true);
+
+    try {
+      // Step 1: Create initial order
+      const newOrderId = await createInitialOrder();
+      if (!newOrderId) {
+        setIsProcessing(false);
+        return;
+      }
+      setOrderId(newOrderId);
+
+      const options = {
+        key: import.meta.env.VITE_APP_RAZOR_API_KEY,
+        amount: Math.ceil(total) * 100,
+        currency: "INR",
+        name: "Eye OP",
+        description: "Test Transaction",
+        image: "http://localhost:5173/src/assets/Images/logo.png",
+
+        handler: async (response) => {
+          await handlePaymentResponse(response, newOrderId);
+          toast.success("Payment successful");
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+          contact: user?.phone,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzpay = new Razorpay(options);
+      rzpay.on("payment.failed", handlePaymentFailure);
+      rzpay.open();
+    } catch (error) {
+      setIsProcessing(false);
+
+      toast.error("Payment initialization failed");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // // Handle payment response
+  // const handlePaymentResponse = async (response, orderId) => {
+  //   try {
+  //     // Create payment record
+  //     const paymentData = {
+  //       orderId,
+  //       transactionId: response.razorpay_payment_id,
+  //       amount: total,
+  //       status: "SUCCESS",
+  //       paymentMethod: "RAZORPAY",
+  //     };
+
+  //     await createPayment(paymentData);
+
+  //     // Update order status
+  //     await updateOrderStatus(orderId, "CONFIRMED");
+
+  //     // Clear cart and redirect
+  //     dispatch(clearCart());
+  //     toast.success("Order placed successfully!");
+  //     navigate("/orders");
+  //   } catch (error) {
+  //     handlePaymentFailure(error);
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
+
+  // // Handle payment failure
+  // const handlePaymentFailure = async (error) => {
+  //   try {
+  //     if (orderId) {
+  //       // Update order status to FAILED
+  //       await updateOrderStatus(orderId, "FAILED");
+
+  //       // Create failed payment record
+  //       await createPayment({
+  //         orderId,
+  //         status: "FAILED",
+  //         paymentMethod: "RAZORPAY",
+  //         failureReason: error.message || "Payment failed",
+  //       });
+  //     }
+
+  //     toast.error("Payment failed. Please try again.");
+  //   } catch (err) {
+  //     console.error("Error handling payment failure:", err);
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
+
+  const handlePaymentResponse = async (response, orderId) => {
+    try {
+      // Create payment record
+      const paymentData = {
+        orderId,
+        transactionId: response.razorpay_payment_id,
+        paymentMethod: "RAZORPAY",
+        totalAmount: total,
+        status: "SUCCESS",
+        items: cart.map((item) => ({
+          product: item.product._id,
+          quantity: item.quantity,
+          purchaseType: item.purchaseType,
+          lensCustomization:
+            item.purchaseType === "FRAME_WITH_LENS"
+              ? item.lensCustomization
+              : undefined,
+          itemPrice: item.product.price,
+          totalPrice: item.total,
+        })),
+      };
+
+      await API.post("/payments/create", paymentData);
+
+      // Update order payment status
+      await API.patch(`/order/${orderId}/update-payment`, {
+        status: "SUCCESS",
+        paymentDetails: {
+          transactionId: response.razorpay_payment_id,
+          amount: total,
+        },
+      });
+
+      // Clear cart and redirect
+      dispatch(clearCart());
+      toast.success("Order placed successfully!");
+      navigate("/orders");
+    } catch (error) {
+      handlePaymentFailure(error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Handle payment failure with corrected API endpoints
+  const handlePaymentFailure = async (error) => {
+    try {
+      if (orderId) {
+        // Update order payment status to failed
+        await API.patch(`/order/${orderId}/update-payment`, {
+          status: "FAILED",
+          paymentDetails: {
+            failureReason: error.message || "Payment failed",
+          },
+        });
+
+        // Create failed payment record
+        const paymentData = {
+          orderId,
+          status: "FAILED",
+          paymentMethod: "RAZORPAY",
+          failureReason: error.message || "Payment failed",
+          totalAmount: total,
+          items: cart.map((item) => ({
+            product: item.product._id,
+            quantity: item.quantity,
+            itemPrice: item.product.price,
+            totalPrice: item.total,
+          })),
+        };
+
+        await API.post("/payments/create", paymentData);
+      }
+
+      toast.error("Payment failed. Please try again.");
+    } catch (err) {
+      console.error("Error handling payment failure:", err);
+      toast.error("Error processing payment failure");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Address management functions remain the same
+  const toggleCreateForm = () => setIsAddressOpen(!isAddressOpen);
+
+  const handleDelete = async (id) => {
+    dispatch(deleteAddress({ id }));
+  };
+
+  const handleEdit = async (addressId) => {
+    const { payload } = await dispatch(getAddressById({ id: addressId }));
+    navigate(`/address/edit/${addressId}`);
+  };
 
   return (
     <>
@@ -444,11 +840,11 @@ const Addresses = () => {
                       </p>
                     </div>
                     <button
-                      disabled={!selected}
+                      disabled={!selected || isProcessing}
                       onClick={handlePayment}
                       className="text-base disabled:cursor-not-allowed disabled:opacity-65 rounded leading-none w-full py-3 bg-gray-700 hover:bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white"
                     >
-                      Proceed to buy
+                      {isProcessing ? "Processing..." : "Proceed to buy"}
                     </button>
                   </div>
                 </div>
