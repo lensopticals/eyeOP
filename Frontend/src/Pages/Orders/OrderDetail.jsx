@@ -38,10 +38,27 @@ const cartItem = {
   total: 1599.99, // Total price for the quantity of the product
 };
 
+import { FaCalendarAlt, FaClock } from "react-icons/fa";
+
 const OrderDetail = () => {
   const dispatch = useDispatch();
   const { order } = useSelector((state) => state.orderDetails);
   const { id } = useParams();
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const formatTime = (dateString) => {
+    return new Date(dateString).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   useEffect(() => {
     dispatch(getOrderDetails(id));
@@ -55,10 +72,17 @@ const OrderDetail = () => {
           <h1 className="font-semibold text-xl sm:text-2xl mb-2">
             Order Details
           </h1>
-          <p className="text-sm sm:text-base">
-            Order on {order.createdAt?.split("T")[0]} &nbsp; | &nbsp; #
-            {order.orderId}
-          </p>
+
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <FaCalendarAlt className="w-4 h-4" />
+            {formatDate(order.createdAt)}
+            <FaClock className="w-4 h-4 ml-2" />
+            {formatTime(order.createdAt)}
+            <p className="text-sm sm:text-base">
+              {" "}
+              &nbsp; | &nbsp; #{order.orderId}
+            </p>
+          </div>
           <div className="flex flex-col lg:flex-row mt-6 gap-6 p-4 sm:p-6 border border-gray-300 rounded-lg">
             <div className="flex-1">
               <h2 className="font-semibold text-lg text-gray-600 mb-2">
@@ -139,7 +163,13 @@ const OrderDetail = () => {
                       {ord.product.frame.color[0].name}
                     </p>
                   </div>
-                  <Link to={`/product/${ord?.product?.name.toLowerCase().trim().replace(/\s+/g, "-")}/${ord?.product?._id}`} className="text-sm font-normal text-blue-900/80 cursor-pointer" >
+                  <Link
+                    to={`/product/${ord?.product?.name
+                      .toLowerCase()
+                      .trim()
+                      .replace(/\s+/g, "-")}/${ord?.product?._id}`}
+                    className="text-sm font-normal text-blue-900/80 cursor-pointer"
+                  >
                     {ord.product.name}
                   </Link>
                   <div className="flex items-center justify-between">

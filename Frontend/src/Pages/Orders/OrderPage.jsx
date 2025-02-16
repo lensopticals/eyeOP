@@ -63,7 +63,7 @@ const OrderPage = () => {
           {orders.map((order) => (
             <div
             >
-              <Card data={order.orderItems[0].product} id={order._id} ord={order.orderId} products={order.orderItems.length} />
+              <Card order={order} />
             </div>
           ))}
         </div>

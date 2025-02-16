@@ -105,7 +105,7 @@ function App() {
         <Route path="/address/edit/:id" element={<EditAddressPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/orders" element={<OrderPage />} />
-        <Route path="/orders/:id" element={<OrderDetail />} />
+        <Route path="/order/:id" element={<OrderDetail />} />
         <Route
           path="cart"
           element={

@@ -79,7 +79,7 @@ export const getUserOrders = async (req, res) => {
 // Get a single order
 export const getSingleOrder = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id)
+    const order = await Order.findOne({orderId: req.params.id})
       .populate("orderItems.product")
       .populate("shippingInfo")
       .populate("user", "name email");
