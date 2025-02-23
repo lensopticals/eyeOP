@@ -7,7 +7,7 @@ import {
   FaInbox,
   FaChevronDown,
 } from "react-icons/fa";
-import ReviewSummary from "../../components/product/Reviews/ReviewSummary";
+// import ReviewSummary from "../../components/product/Reviews/ReviewSummary";
 import ImageModal from "../../components/modals/Product/ImageModal";
 import ImageSlider from "../../components/product/ImageSlider";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,6 +24,7 @@ import StepperModal from "../../components/StepperModal";
 import Login from "../../components/modals/auth/Login";
 import { loadUser } from "../../redux/actions/userActions";
 import ShareButton from "./Share";
+import ReviewSummary from "../Reviews/ReviewSummary";
 
 const RatingStar = () => {
   return (
