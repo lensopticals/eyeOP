@@ -1,46 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrderDetails } from "../../redux/actions/orderActions";
 import { Link, useParams } from "react-router-dom";
-
-const order_ = {
-  orderId: "ORD001",
-  name: "Classic Aviator",
-  material: "Metal",
-  price: 1500,
-  total: 1540,
-  charges: 0,
-  shipping: 40,
-  quantity: 2,
-  thumbnail: "/images/frames/cateye.jpg",
-  user: "Abhay Rana",
-  phone: "9058044318",
-  address: "Bagi, New Tehri, Uttrakhand - 249124",
-  date: "27th September 2023",
-  method: "cash on delivery",
-};
-
-const cartItem = {
-  product: {
-    modelNo: "A12345", // Model number of the product
-    thumbnail: "/images/frames/cateye.jpg", // URL of the product image
-    frame: {
-      color: [
-        {
-          colorCode: "#FF5733", // Color code for the product (e.g., Hex color)
-          name: "Sunset Orange", // Name of the color
-        },
-      ],
-    },
-    name: "Stylish Sunglasses", // Name of the product
-  },
-  quantity: 2, // Quantity of the product in the cart
-  total: 1599.99, // Total price for the quantity of the product
-};
-
-import { FaCalendarAlt, FaClock } from "react-icons/fa";
+import { FaCalendarAlt, FaCheck, FaCheckCircle, FaClock } from "react-icons/fa";
+import UploadPrescriptions from "./UploadPrescriptions";
+import ViewPrescriptionModal from "./ViewPrescriptionModal";
 
 const OrderDetail = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+
   const dispatch = useDispatch();
   const { order } = useSelector((state) => state.orderDetails);
   const { id } = useParams();
@@ -73,15 +42,17 @@ const OrderDetail = () => {
             Order Details
           </h1>
 
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <FaCalendarAlt className="w-4 h-4" />
-            {formatDate(order.createdAt)}
-            <FaClock className="w-4 h-4 ml-2" />
-            {formatTime(order.createdAt)}
-            <p className="text-sm sm:text-base">
-              {" "}
-              &nbsp; | &nbsp; #{order.orderId}
-            </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <FaCalendarAlt className="w-4 h-4" />
+              {formatDate(order.createdAt)}
+              <FaClock className="w-4 h-4 ml-2" />
+              {formatTime(order.createdAt)}
+              <p className="text-sm sm:text-base">
+                {" "}
+                &nbsp; | &nbsp; #{order.orderId}
+              </p>
+            </div>
           </div>
           <div className="flex flex-col lg:flex-row mt-6 gap-6 p-4 sm:p-6 border border-gray-300 rounded-lg">
             <div className="flex-1">
@@ -177,9 +148,49 @@ const OrderDetail = () => {
                       <span className="font-normal">Quantity: </span>
                       {ord?.quantity}
                     </p>
-                    <p className="text-sm font-semibold text-emerald-500">
-                      ₹ {ord.total?.toFixed(2)}
-                    </p>
+                    <div className="flex flex-col gap-2 items-end">
+                      <p className="text-sm font-semibold text-emerald-500">
+                        ₹ {ord.total?.toFixed(2)}
+                      </p>
+                      {ord?.purchaseType === "FRAME_WITH_LENS" && (
+                        <>
+                          {ord?.lensCustomization?.prescription ? (
+                            <>
+                              <ViewPrescriptionModal
+                                key={`${id}-${ord?._id}`}
+                                isOpen={isViewOpen}
+                                onClose={() => setIsViewOpen(false)}
+                                prescription={
+                                  ord?.lensCustomization?.prescription
+                                }
+                              />
+                              <button
+                                onClick={() => setIsViewOpen(true)}
+                                className="py-2 text-emerald-600 flex gap-2 items-center rounded-lg  transition-colors"
+                              >
+                                <FaCheckCircle /> Prescription Uploaded
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => setIsOpen(true)}
+                                className="text-white p-2 rounded bg-emerald-600 hover:bg-emerald-700 transition-colors"
+                              >
+                                Upload Prescription
+                              </button>
+                              <UploadPrescriptions
+                                key={`${id}-${ord?._id}`}
+                                isOpen={isOpen}
+                                setIsOpen={setIsOpen}
+                                orderId={id}
+                                orderItemId={ord?._id}
+                              />
+                            </>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

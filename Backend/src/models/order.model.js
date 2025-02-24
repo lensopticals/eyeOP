@@ -1,5 +1,63 @@
 import mongoose, { Schema } from "mongoose";
 
+// New Prescription Schema
+const prescriptionSchema = new Schema(
+  {
+    rightEye: {
+      sphere: {
+        type: Number,
+        required: false,
+      },
+      cylinder: {
+        type: Number,
+        required: false,
+      },
+      axis: {
+        type: Number,
+        required: false,
+      },
+    },
+    leftEye: {
+      sphere: {
+        type: Number,
+        required: false,
+      },
+      cylinder: {
+        type: Number,
+        required: false,
+      },
+      axis: {
+        type: Number,
+        required: false,
+      },
+    },
+    pupillaryDistance: {
+      type: Number,
+      required: false,
+    },
+    prescriptionImage: {
+      type: String,
+      required: false,
+    },
+    doctorName: {
+      type: String,
+      required: false,
+    },
+    clinicName: {
+      type: String,
+      required: false,
+    },
+    prescriptionDate: {
+      type: Date,
+      required: false,
+    },
+    submittedAt: {
+      type: Date,
+    },
+  },
+  { timestamps: true }
+);
+
 const lensCustomizationSchema = new Schema({
   lensType: {
     id: {
@@ -33,6 +91,12 @@ const lensCustomizationSchema = new Schema({
       antiScratchCoating: Boolean,
       antiGlareCoating: Boolean,
       antiReflectiveCoating: Boolean,
+    },
+  },
+  prescription: {
+    type: prescriptionSchema,
+    required: function () {
+      return this.parent().purchaseType === "FRAME_WITH_LENS";
     },
   },
 });
@@ -186,6 +250,29 @@ orderSchema.pre("validate", function (next) {
 
   next();
 });
+
+// Method to submit prescription for an order item
+orderSchema.methods.submitPrescription = async function (
+  orderItemId,
+  prescriptionData
+) {
+  const orderItem = this.orderItems.id(orderItemId);
+  if (!orderItem) {
+    throw new Error("Order item not found");
+  }
+
+  if (orderItem.purchaseType !== "FRAME_WITH_LENS") {
+    throw new Error("Prescription not required for frame-only purchase");
+  }
+
+  orderItem.lensCustomization.prescription = {
+    ...prescriptionData,
+    status: "SUBMITTED",
+    submittedAt: new Date(),
+  };
+
+  return this.save();
+};
 
 // Method to update payment status
 orderSchema.methods.updatePaymentStatus = async function (

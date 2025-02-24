@@ -79,7 +79,7 @@ export const getUserOrders = async (req, res) => {
 // Get a single order
 export const getSingleOrder = async (req, res) => {
   try {
-    const order = await Order.findOne({orderId: req.params.id})
+    const order = await Order.findOne({ orderId: req.params.id })
       .populate("orderItems.product")
       .populate("shippingInfo")
       .populate("user", "name email");
@@ -210,6 +210,84 @@ export const updatePaymentStatus = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to update payment status",
+    });
+  }
+};
+
+// Submit prescription for an order item
+export const submitPrescription = async (req, res) => {
+  try {
+    const { orderId, orderItemId } = req.params;
+    const prescriptionData = req.body;
+    console.log(orderId, orderItemId, prescriptionData);
+
+    const order = await Order.findOne({ orderId });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // Use the model method to submit prescription
+    await order.submitPrescription(orderItemId, prescriptionData);
+
+    return res.status(200).json({
+      success: true,
+      message: "Prescription submitted successfully",
+      prescription:
+        order.orderItems.id(orderItemId).lensCustomization.prescription,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to submit prescription",
+    });
+  }
+};
+
+// Get prescription details for an order item
+export const getPrescriptionDetails = async (req, res) => {
+  try {
+    const { orderId, orderItemId } = req.params;
+
+    const order = await Order.findOne({ orderId });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    const orderItem = order.orderItems.id(orderItemId);
+
+    if (!orderItem) {
+      return res.status(404).json({
+        success: false,
+        message: "Order item not found",
+      });
+    }
+
+    if (!orderItem.lensCustomization?.prescription) {
+      return res.status(404).json({
+        success: false,
+        message: "No prescription found for this order item",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      prescription: orderItem.lensCustomization.prescription,
+      message: "Prescription details fetched successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch prescription details",
     });
   }
 };

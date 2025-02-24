@@ -8,6 +8,8 @@ import {
   updateOrder,
   updatePaymentStatus,
   cancelOrder,
+  submitPrescription,
+  getPrescriptionDetails,
 } from "../controllers/order.controller.js";
 import { authoriseRoles, verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -18,6 +20,14 @@ router.route("/create-order").post(verifyJWT, createNewOrder);
 router.route("/my-orders").get(verifyJWT, getUserOrders);
 router.route("/order/:id").get(verifyJWT, getSingleOrder);
 router.route("/order/:id/cancel").post(verifyJWT, cancelOrder);
+
+// Prescriptions routes
+router
+  .route("/orders/:orderId/items/:orderItemId/prescription")
+  .post(submitPrescription);
+router
+  .route("/orders/:orderId/items/:orderItemId/prescription")
+  .get(getPrescriptionDetails);
 
 // Payment routes (might need additional payment-specific middleware)
 router.route("/order/:id/update-payment").patch(verifyJWT, updatePaymentStatus);
