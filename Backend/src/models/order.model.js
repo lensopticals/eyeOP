@@ -1,32 +1,164 @@
 import mongoose, { Schema } from "mongoose";
 
-// New Prescription Schema
+// Prescription Schema
+// const prescriptionSchema = new Schema(
+//   {
+//     rightEye: {
+//       sphere: {
+//         type: Number,
+//         required: false,
+//       },
+//       cylinder: {
+//         type: Number,
+//         required: false,
+//       },
+//       axis: {
+//         type: Number,
+//         required: false,
+//       },
+//       visualAcuity: {
+//         type: String,
+//         required: false,
+//       },
+
+//       add: {
+//         type: Number,
+//         required: false,
+//       },
+//     },
+//     leftEye: {
+//       sphere: {
+//         type: Number,
+//         required: false,
+//       },
+//       cylinder: {
+//         type: Number,
+//         required: false,
+//       },
+//       axis: {
+//         type: Number,
+//         required: false,
+//       },
+//       visualAcuity: {
+//         type: String,
+//         required: false,
+//       },
+
+//       add: {
+//         type: Number,
+//         required: false,
+//       },
+//     },
+//     pupillaryDistance: {
+//       type: Number,
+//       required: false,
+//     },
+//     prescriptionImage: {
+//       type: String,
+//       required: false,
+//     },
+//     doctorName: {
+//       type: String,
+//       required: false,
+//     },
+//     clinicName: {
+//       type: String,
+//       required: false,
+//     },
+//     prescriptionDate: {
+//       type: Date,
+//       required: false,
+//     },
+//     submittedAt: {
+//       type: Date,
+//     },
+//   },
+//   { timestamps: true }
+// );
+
+// Prescription Schema
 const prescriptionSchema = new Schema(
   {
     rightEye: {
-      sphere: {
-        type: Number,
-        required: false,
+      dv: {
+        sphere: {
+          type: Number,
+          required: false,
+        },
+        cylinder: {
+          type: Number,
+          required: false,
+        },
+        axis: {
+          type: Number,
+          required: false,
+        },
+        visualAcuity: {
+          type: String,
+          required: false,
+        },
       },
-      cylinder: {
-        type: Number,
-        required: false,
+      nv: {
+        sphere: {
+          type: Number,
+          required: false,
+        },
+        cylinder: {
+          type: Number,
+          required: false,
+        },
+        axis: {
+          type: Number,
+          required: false,
+        },
+        visualAcuity: {
+          type: String,
+          required: false,
+        },
       },
-      axis: {
+      add: {
         type: Number,
         required: false,
       },
     },
     leftEye: {
-      sphere: {
-        type: Number,
-        required: false,
+      dv: {
+        sphere: {
+          type: Number,
+          required: false,
+        },
+        cylinder: {
+          type: Number,
+          required: false,
+        },
+        axis: {
+          type: Number,
+          required: false,
+        },
+        visualAcuity: {
+          type: String,
+          required: false,
+        },
       },
-      cylinder: {
-        type: Number,
-        required: false,
+      nv: {
+        sphere: {
+          type: Number,
+          required: false,
+        },
+        cylinder: {
+          type: Number,
+          required: false,
+        },
+        axis: {
+          type: Number,
+          required: false,
+        },
+        visualAcuity: {
+          type: String,
+          required: false,
+        },
       },
-      axis: {
+      add: {
         type: Number,
         required: false,
       },
@@ -53,6 +185,10 @@ const prescriptionSchema = new Schema(
     },
     submittedAt: {
       type: Date,
+    },
+    additionalNotes: {
+      type: String,
+      required: false,
     },
   },
   { timestamps: true }
@@ -95,9 +231,7 @@ const lensCustomizationSchema = new Schema({
   },
   prescription: {
     type: prescriptionSchema,
-    required: function () {
-      return this.parent().purchaseType === "FRAME_WITH_LENS";
-    },
+    required: false,
   },
 });
 

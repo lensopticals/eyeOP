@@ -137,8 +137,8 @@ const MainHeader = ({ setOpen }) => {
 const Navbar = () => {
   const customClass = ({ isActive }) =>
     `text-[1.1rem]  duration-200 ${
-      isActive ? "font-semibold text-emerald-600" : "text-gray-500"
-    } border-b inline-block border-gray-100 hover:bg-gray-100 backdrop-blur-sm whitespace-nowrap hover:text-emerald-600  lg:p-0`;
+      isActive ? "font-semibold text-emerald-600" : "text-gray-800"
+    } hover:border-b-2 hover:border-green-500 inline-block border-gray-100 hover:bg-gray-100 backdrop-blur-sm whitespace-nowrap hover:text-emerald-600  lg:p-0`;
 
   document.onclick = (e) => {
     if (e.target.id !== "sidebar" && e.target.id !== "bars") {
@@ -151,7 +151,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className=" bg-gray-100 sticky top-0 z-50">
+    <div className=" bg-white sticky top-0 z-50">
       {/* Main(Common) Header */}
       <MainHeader setOpen={setOpen} />
       {/* Menu Header */}

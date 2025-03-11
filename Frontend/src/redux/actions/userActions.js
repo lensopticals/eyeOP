@@ -188,16 +188,22 @@ export const loadUser = createAsyncThunk(
     try {
       let { data } = await API.get("/user/current-user");
 
-      if (!data?.success) {
+      return data;
+    } catch (error) {
+      if (error.response?.status === 401) {
         const refreshToken = localStorage.getItem("refreshToken");
+
         if (refreshToken) {
           const response = await API.post("/user/refresh-token", {
             refreshToken,
           });
+
           if (response.data?.success) {
             localStorage.setItem("token", response.data.accessToken);
             localStorage.setItem("refreshToken", response.data.refreshToken);
-            data = await API.get("/user/current-user");
+            const { data } = await API.get("/user/current-user");
+
+            return data;
           } else {
             throw new Error("Unable to refresh token");
           }
@@ -205,8 +211,6 @@ export const loadUser = createAsyncThunk(
           throw new Error("No refresh token available");
         }
       }
-      return data;
-    } catch (error) {
       return rejectWithValue("");
     }
   }

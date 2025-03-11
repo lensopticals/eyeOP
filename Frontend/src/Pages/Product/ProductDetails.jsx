@@ -221,7 +221,7 @@ const ProductDetails = () => {
                       <OfferBox offers={offers} />
                     </div>
                     {/* Frame Dimensions */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5 justify-between bg-gray-100 text-black rounded-lg border border-gray-100 shadow-xl px-0 sm:px-5 py-4 pb-7 my-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5 justify-between bg-lime-700 text-white rounded-lg border border-gray-100 px-0 sm:px-5 py-4 pb-7 my-2">
                       <div className="flex flex-col gap-0 items-center justify-center">
                         <img
                           src="/images/dimensions/eye.svg"

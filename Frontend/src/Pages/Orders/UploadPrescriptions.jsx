@@ -2,16 +2,47 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import API from "../../utils/API";
+import { getOrderDetails } from "../../redux/actions/orderActions";
+import { useDispatch } from "react-redux";
 
 const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    rightEye: { sphere: "", cylinder: "", axis: "" },
-    leftEye: { sphere: "", cylinder: "", axis: "" },
-    pupillaryDistance: "",
+    rightEye: {
+      dv: {
+        sphere: "",
+        cylinder: "",
+        axis: "",
+        visualAcuity: "",
+      },
+      nv: {
+        sphere: "",
+        cylinder: "",
+        axis: "",
+        visualAcuity: "",
+      },
+      add: "",
+    },
+    leftEye: {
+      dv: {
+        sphere: "",
+        cylinder: "",
+        axis: "",
+        visualAcuity: "",
+      },
+      nv: {
+        sphere: "",
+        cylinder: "",
+        axis: "",
+        visualAcuity: "",
+      },
+      add: "",
+    },
     prescriptionImage: null,
     doctorName: "",
     clinicName: "",
     prescriptionDate: "",
+    additionalNotes: "",
   });
   const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState(null);
@@ -19,25 +50,21 @@ const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Validate Right Eye
-    if (!formData.rightEye.sphere)
-      newErrors.rightEyeSphere = "Sphere value is required";
-    if (!formData.rightEye.cylinder)
-      newErrors.rightEyeCylinder = "Cylinder value is required";
-    if (!formData.rightEye.axis)
-      newErrors.rightEyeAxis = "Axis value is required";
+    // Validate Right Eye DV
+    if (!formData.rightEye.dv.sphere)
+      newErrors.rightEyeDvSphere = "Sphere value is required";
+    if (!formData.rightEye.dv.cylinder)
+      newErrors.rightEyeDvCylinder = "Cylinder value is required";
+    if (!formData.rightEye.dv.axis)
+      newErrors.rightEyeDvAxis = "Axis value is required";
 
-    // Validate Left Eye
-    if (!formData.leftEye.sphere)
-      newErrors.leftEyeSphere = "Sphere value is required";
-    if (!formData.leftEye.cylinder)
-      newErrors.leftEyeCylinder = "Cylinder value is required";
-    if (!formData.leftEye.axis)
-      newErrors.leftEyeAxis = "Axis value is required";
-
-    // Validate PD
-    if (!formData.pupillaryDistance)
-      newErrors.pupillaryDistance = "Pupillary distance is required";
+    // Validate Left Eye DV
+    if (!formData.leftEye.dv.sphere)
+      newErrors.leftEyeDvSphere = "Sphere value is required";
+    if (!formData.leftEye.dv.cylinder)
+      newErrors.leftEyeDvCylinder = "Cylinder value is required";
+    if (!formData.leftEye.dv.axis)
+      newErrors.leftEyeDvAxis = "Axis value is required";
 
     return newErrors;
   };
@@ -54,6 +81,7 @@ const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
           formData
         );
         toast.success(data.message);
+        dispatch(getOrderDetails(orderId));
       } catch (error) {
         console.log("Error submitting form:", error);
         toast.error("Failed to submit prescription. Please try again.");
@@ -65,47 +93,67 @@ const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
   };
 
   const handleInputChange = (
-    field,
-    value,
     eyeSide = null,
-    measurement = null
+    visionType = null,
+    field = null,
+    value
   ) => {
-    if (eyeSide) {
+    if (eyeSide && visionType && field) {
       setFormData((prev) => ({
         ...prev,
         [eyeSide]: {
           ...prev[eyeSide],
-          [measurement]: value,
+          [visionType]: {
+            ...prev[eyeSide][visionType],
+            [field]: value,
+          },
         },
       }));
-      // Clear specific eye measurement error
+      // Clear specific error
       if (
         errors[
-          `${eyeSide}${
-            measurement.charAt(0).toUpperCase() + measurement.slice(1)
+          `${eyeSide}${visionType.toUpperCase()}${
+            field.charAt(0).toUpperCase() + field.slice(1)
           }`
         ]
       ) {
         setErrors((prev) => {
           const newErrors = { ...prev };
           delete newErrors[
-            `${eyeSide}${
-              measurement.charAt(0).toUpperCase() + measurement.slice(1)
+            `${eyeSide}${visionType.toUpperCase()}${
+              field.charAt(0).toUpperCase() + field.slice(1)
             }`
           ];
           return newErrors;
         });
       }
-    } else {
+    } else if (eyeSide && field === "add") {
       setFormData((prev) => ({
         ...prev,
-        [field]: value,
+        [eyeSide]: {
+          ...prev[eyeSide],
+          add: value,
+        },
       }));
-      // Clear specific field error
-      if (errors[field]) {
+      // Clear specific error
+      if (errors[`${eyeSide}Add`]) {
         setErrors((prev) => {
           const newErrors = { ...prev };
-          delete newErrors[field];
+          delete newErrors[`${eyeSide}Add`];
+          return newErrors;
+        });
+      }
+    } else {
+      // For top-level fields like pupillaryDistance, doctorName, etc.
+      setFormData((prev) => ({
+        ...prev,
+        [eyeSide]: value, // eyeSide is used as the field name in this case
+      }));
+      // Clear specific field error
+      if (errors[eyeSide]) {
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors[eyeSide];
           return newErrors;
         });
       }
@@ -130,7 +178,7 @@ const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           {/* Modal Content */}
-          <div className="bg-white rounded w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex justify-between items-center p-6 border-b">
               <h2 className="text-2xl font-semibold text-gray-800">
@@ -148,187 +196,432 @@ const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
             <form onSubmit={handleSubmit} className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Left Eye Section */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium text-emerald-600">
+                <div className="space-y-6">
+                  <h3 className="text-lg font-medium text-emerald-600 border-b pb-2">
                     Left Eye
                   </h3>
+
+                  {/* Distance Vision */}
+                  <div className="space-y-4">
+                    <h4 className="text-md font-medium text-gray-700">
+                      Distance Vision (DV)
+                    </h4>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Sphere
+                      </label>
+                      <input
+                        type="number"
+                        step="0.25"
+                        value={formData.leftEye.dv.sphere}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "leftEye",
+                            "dv",
+                            "sphere",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                      {errors.leftEyeDvSphere && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.leftEyeDvSphere}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Cylinder
+                      </label>
+                      <input
+                        type="number"
+                        step="0.25"
+                        value={formData.leftEye.dv.cylinder}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "leftEye",
+                            "dv",
+                            "cylinder",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                      {errors.leftEyeDvCylinder && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.leftEyeDvCylinder}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Axis
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="180"
+                        value={formData.leftEye.dv.axis}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "leftEye",
+                            "dv",
+                            "axis",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                      {errors.leftEyeDvAxis && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.leftEyeDvAxis}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Visual Acuity (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 6/6, 20/20"
+                        value={formData.leftEye.dv.visualAcuity}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "leftEye",
+                            "dv",
+                            "visualAcuity",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Near Vision */}
+                  <div className="space-y-4">
+                    <h4 className="text-md font-medium text-gray-700">
+                      Near Vision (NV)
+                    </h4>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Sphere (Optional)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.25"
+                        value={formData.leftEye.nv.sphere}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "leftEye",
+                            "nv",
+                            "sphere",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Cylinder (Optional)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.25"
+                        value={formData.leftEye.nv.cylinder}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "leftEye",
+                            "nv",
+                            "cylinder",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Axis (Optional)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="180"
+                        value={formData.leftEye.nv.axis}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "leftEye",
+                            "nv",
+                            "axis",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Visual Acuity (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 6/6, 20/20"
+                        value={formData.leftEye.nv.visualAcuity}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "leftEye",
+                            "nv",
+                            "visualAcuity",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Add Power */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Sphere
+                      Add Power (Optional)
                     </label>
                     <input
                       type="number"
                       step="0.25"
-                      value={formData.leftEye.sphere}
+                      placeholder="For bifocal/progressive"
+                      value={formData.leftEye.add}
                       onChange={(e) =>
                         handleInputChange(
                           "leftEye",
-                          e.target.value,
-                          "leftEye",
-                          "sphere"
+                          null,
+                          "add",
+                          e.target.value
                         )
                       }
                       className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
                     />
-                    {errors.leftEyeSphere && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.leftEyeSphere}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Cylinder
-                    </label>
-                    <input
-                      type="number"
-                      step="0.25"
-                      value={formData.leftEye.cylinder}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "leftEye",
-                          e.target.value,
-                          "leftEye",
-                          "cylinder"
-                        )
-                      }
-                      className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
-                    />
-                    {errors.leftEyeCylinder && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.leftEyeCylinder}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Axis
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      max="180"
-                      value={formData.leftEye.axis}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "leftEye",
-                          e.target.value,
-                          "leftEye",
-                          "axis"
-                        )
-                      }
-                      className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
-                    />
-                    {errors.leftEyeAxis && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.leftEyeAxis}
-                      </p>
-                    )}
                   </div>
                 </div>
 
                 {/* Right Eye Section */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium text-emerald-600">
+                <div className="space-y-6">
+                  <h3 className="text-lg font-medium text-emerald-600 border-b pb-2">
                     Right Eye
                   </h3>
+
+                  {/* Distance Vision */}
+                  <div className="space-y-4">
+                    <h4 className="text-md font-medium text-gray-700">
+                      Distance Vision (DV)
+                    </h4>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Sphere
+                      </label>
+                      <input
+                        type="number"
+                        step="0.25"
+                        value={formData.rightEye.dv.sphere}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "rightEye",
+                            "dv",
+                            "sphere",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                      {errors.rightEyeDvSphere && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.rightEyeDvSphere}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Cylinder
+                      </label>
+                      <input
+                        type="number"
+                        step="0.25"
+                        value={formData.rightEye.dv.cylinder}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "rightEye",
+                            "dv",
+                            "cylinder",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                      {errors.rightEyeDvCylinder && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.rightEyeDvCylinder}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Axis
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="180"
+                        value={formData.rightEye.dv.axis}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "rightEye",
+                            "dv",
+                            "axis",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                      {errors.rightEyeDvAxis && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.rightEyeDvAxis}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Visual Acuity (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 6/6, 20/20"
+                        value={formData.rightEye.dv.visualAcuity}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "rightEye",
+                            "dv",
+                            "visualAcuity",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Near Vision */}
+                  <div className="space-y-4">
+                    <h4 className="text-md font-medium text-gray-700">
+                      Near Vision (NV)
+                    </h4>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Sphere (Optional)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.25"
+                        value={formData.rightEye.nv.sphere}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "rightEye",
+                            "nv",
+                            "sphere",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Cylinder (Optional)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.25"
+                        value={formData.rightEye.nv.cylinder}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "rightEye",
+                            "nv",
+                            "cylinder",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Axis (Optional)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="180"
+                        value={formData.rightEye.nv.axis}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "rightEye",
+                            "nv",
+                            "axis",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Visual Acuity (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 6/6, 20/20"
+                        value={formData.rightEye.nv.visualAcuity}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "rightEye",
+                            "nv",
+                            "visualAcuity",
+                            e.target.value
+                          )
+                        }
+                        className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Add Power */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Sphere
+                      Add Power (Optional)
                     </label>
                     <input
                       type="number"
                       step="0.25"
-                      value={formData.rightEye.sphere}
+                      placeholder="For bifocal/progressive"
+                      value={formData.rightEye.add}
                       onChange={(e) =>
                         handleInputChange(
                           "rightEye",
-                          e.target.value,
-                          "rightEye",
-                          "sphere"
+                          null,
+                          "add",
+                          e.target.value
                         )
                       }
                       className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
                     />
-                    {errors.rightEyeSphere && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.rightEyeSphere}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Cylinder
-                    </label>
-                    <input
-                      type="number"
-                      step="0.25"
-                      value={formData.rightEye.cylinder}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "rightEye",
-                          e.target.value,
-                          "rightEye",
-                          "cylinder"
-                        )
-                      }
-                      className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
-                    />
-                    {errors.rightEyeCylinder && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.rightEyeCylinder}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Axis
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      max="180"
-                      value={formData.rightEye.axis}
-                      onChange={(e) =>
-                        handleInputChange(
-                          "rightEye",
-                          e.target.value,
-                          "rightEye",
-                          "axis"
-                        )
-                      }
-                      className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
-                    />
-                    {errors.rightEyeAxis && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.rightEyeAxis}
-                      </p>
-                    )}
                   </div>
                 </div>
               </div>
 
               {/* Additional Measurements */}
               <div className="mt-6 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Pupillary Distance (mm)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.pupillaryDistance}
-                    onChange={(e) =>
-                      handleInputChange("pupillaryDistance", e.target.value)
-                    }
-                    className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 outline-none"
-                  />
-                  {errors.pupillaryDistance && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.pupillaryDistance}
-                    </p>
-                  )}
-                </div>
-
                 {/* Optional Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -339,7 +632,12 @@ const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
                       type="text"
                       value={formData.doctorName}
                       onChange={(e) =>
-                        handleInputChange("doctorName", e.target.value)
+                        handleInputChange(
+                          "doctorName",
+                          null,
+                          null,
+                          e.target.value
+                        )
                       }
                       className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
                     />
@@ -352,7 +650,12 @@ const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
                       type="text"
                       value={formData.clinicName}
                       onChange={(e) =>
-                        handleInputChange("clinicName", e.target.value)
+                        handleInputChange(
+                          "clinicName",
+                          null,
+                          null,
+                          e.target.value
+                        )
                       }
                       className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
                     />
@@ -368,8 +671,33 @@ const UploadPrescriptions = ({ isOpen, setIsOpen, orderId, orderItemId }) => {
                     type="date"
                     value={formData.prescriptionDate}
                     onChange={(e) =>
-                      handleInputChange("prescriptionDate", e.target.value)
+                      handleInputChange(
+                        "prescriptionDate",
+                        null,
+                        null,
+                        e.target.value
+                      )
                     }
+                    className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
+                  />
+                </div>
+
+                {/* Additional Notes */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Additional Notes (Optional)
+                  </label>
+                  <textarea
+                    value={formData.additionalNotes}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "additionalNotes",
+                        null,
+                        null,
+                        e.target.value
+                      )
+                    }
+                    rows={3}
                     className="mt-1 block w-full rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2"
                   />
                 </div>

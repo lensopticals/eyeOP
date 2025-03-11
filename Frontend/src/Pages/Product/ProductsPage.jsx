@@ -87,7 +87,9 @@ const ProductsPage = () => {
           <SideFilters width="25rem" clas="sideBar" />
           <div className="products w-full h-full grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10 mx-5 md:mx-10 sm:grid-cols-2 ">
             {loading
-              ? Array.from({ length: 9 }).map((_, i) => <ProductCardSkeleton />)
+              ? Array.from({ length: 9 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))
               : products.map((product) => {
                   return (
                     <div key={product._id}>
